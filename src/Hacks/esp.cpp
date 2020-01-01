@@ -682,13 +682,13 @@ static void DrawAATrace( QAngle fake, QAngle actual ) {
 //////////////////////////////////
 }
 static void DrawBulletTrace( C_BasePlayer* player ) {
-	Vector src3D, dst3D, forward;
-	Vector src, dst;
+    Vector src3D, dst3D, forward, right, up;
+    Vector src, dst, src2, dst2;
 	trace_t tr;
 	Ray_t ray;
 	CTraceFilter filter;
 
-	Math::AngleVectors( *player->GetEyeAngles(), forward );
+    Math::AngleVectors( *player->GetEyeAngles(), forward, right, up );
 	filter.pSkip = player;
 	src3D = player->GetEyePosition();
 	dst3D = src3D + ( forward * 8192 );
@@ -697,10 +697,19 @@ static void DrawBulletTrace( C_BasePlayer* player ) {
 
 	trace->TraceRay( ray, MASK_SHOT, &filter, &tr );
 
-	if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( tr.endpos, dst ) )
-		return;
+    if ( debugOverlay->ScreenPosition( src3D - (right * 3), src )  debugOverlay->ScreenPosition( tr.endpos - (right * 3), dst )
+        debugOverlay->ScreenPosition( src3D + (right * 3), src2 )  debugOverlay->ScreenPosition( tr.endpos + (right * 3), dst2 ) )
+        return;
 
-	Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
+    Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
+    Draw::AddLine( src2.x, src2.y, dst2.x, dst2.y, ESP::GetESPPlayerColor( player, true ) );
+
+    for(Vector test = src3D; test.DistTo(src3D) < tr.endpos.DistTo(src3D); test += (forward * 20)){
+        if ( debugOverlay->ScreenPosition( test - (right * 3), src ) || debugOverlay->ScreenPosition( test + (right * 3), dst ) )
+            continue;
+
+        Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
+    }
 //	Draw::AddRectFilled( ( int ) ( dst.x - 3 ), ( int ) ( dst.y - 3 ), 6, 6, ESP::GetESPPlayerColor( player, false ) );
 }
 static void DrawTracer( C_BasePlayer* player ) {
