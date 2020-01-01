@@ -6,7 +6,6 @@
 #include "../Utils/math.h"
 #include "../Utils/entity.h"
 #include "../interfaces.h"
-#include "valvedscheck.h"
 
 bool Settings::AntiAim::enabled = false;
 
@@ -39,14 +38,13 @@ float AntiAim::GetMaxDelta(CCSGOAnimState *animState) {
 static void DoAntiAim(QAngle& angle, bool bSend, CCSGOAnimState* animState, bool direction)
 {
 	float maxDelta = AntiAim::GetMaxDelta(animState);
-	float halfDelta = maxDelta / 2;
 	static bool yFlip = false;
 
     angle.x = 89.0f;
     if (yFlip)
-        angle.y += direction ? halfDelta : -halfDelta;
+        angle.y += direction ? maxDelta / 2 : -maxDelta / 2;
     else
-        angle.y += direction ? -halfDelta + 180.0f : halfDelta + 180.0f;
+        angle.y += direction ? -maxDelta / 2 + 180.0f : maxDelta / 2 + 180.0f;
 
     if (!bSend)
     {
@@ -105,7 +103,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
 
     bool should_clamp = true;
     bool needToFlick = false;
-    float tempangle = 0.f;
     static bool lbyBreak = false;
     static float lastCheck;
     static float nextUpdate = FLT_MAX;
@@ -122,7 +119,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         }
         else if (!lbyBreak && (globalVars->curtime - lastCheck) > 0.22 || lbyBreak && (globalVars->curtime - lastCheck) > 1.1)
         {
-            tempangle = Settings::AntiAim::LBYBreaker::offset;
             lbyBreak = true;
             lastCheck = globalVars->curtime;
             nextUpdate = globalVars->curtime + 1.1;
@@ -143,7 +139,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     if (needToFlick)
     {
         CreateMove::sendPacket = false;
-        angle.y += tempangle;
+        angle.y += Settings::AntiAim::LBYBreaker::offset;
     }
     else
     	DoAntiAim(angle, bSend, animState, directionSwitch);
@@ -158,7 +154,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         CreateMove::sendPacket = bSend;
 
     if (bSend)
-        AntiAim::realAngle = CreateMove::lastTickViewAngles;
+        AntiAim::realAngle = angle;
     else
         AntiAim::fakeAngle = angle;
 
