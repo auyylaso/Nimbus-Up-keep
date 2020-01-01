@@ -48,10 +48,8 @@ void AngleIndicator::Paint( ) {
     Draw::AddLine( centerX, centerY, centerX, northY, fakeColor ); // Const North line
     Draw::AddLine( centerX, centerY, leftDesyncMaxX, leftDesyncMaxY, basicColor ); // Left Max
     Draw::AddLine( centerX, centerY, rightDesyncMaxX, rightDesyncMaxY, basicColor ); // Right Max
+    Draw::AddLine( centerX, centerY, realX, realY, realColor ); // Real Line
 
-    if( Settings::AntiAim::Yaw::enabled && ( Settings::AntiAim::Yaw::typeFake != Settings::AntiAim::Yaw::type)  ){
-        Draw::AddLine( centerX, centerY, realX, realY, realColor ); // Real Line
-    }
     if( Settings::AntiAim::LBYBreaker::enabled ){
         Draw::AddLine( centerX, centerY, lbyX, lbyY, lbyColor ); // LBY Line
     }

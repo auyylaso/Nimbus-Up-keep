@@ -151,28 +151,6 @@ enum class ShowedAngle : int
     FAKE,
 };
 
-enum class AntiAimType_Y : int
-{
-	NONE,
-    MAX_DELTA_LEFT,
-	MAX_DELTA_RIGHT,
-    MAX_DELTA_FLIPPER,
-    MAX_DELTA_LBY_AVOID,
-};
-
-enum class AntiAimType_X : int
-{
-    STATIC_UP,
-    STATIC_DOWN,
-    DANCE,
-    FRONT,
-    STATIC_UP_FAKE,
-    STATIC_DOWN_FAKE,
-    LISP_DOWN,
-    ANGEL_DOWN,
-    ANGEL_UP,
-};
-
 struct AimbotWeapon_t
 {
 	bool enabled,
@@ -551,30 +529,8 @@ namespace Settings
 
     namespace AntiAim
     {
-        namespace AutoDisable
-        {
-            extern bool noEnemy;
-            extern bool knifeHeld;
-        }
+		extern bool enabled;
 
-        namespace Yaw
-        {
-            extern bool enabled;
-            extern AntiAimType_Y type;
-            extern AntiAimType_Y typeFake;
-        }
-
-        namespace Pitch
-        {
-            extern bool enabled;
-            extern AntiAimType_X type;
-        }
-
-        namespace HeadEdge
-        {
-            extern bool enabled;
-            extern float distance;
-        }
         namespace LBYBreaker
         {
             extern bool enabled;
