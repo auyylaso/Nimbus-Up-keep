@@ -8,6 +8,7 @@ bool Settings::ThirdPerson::enabled = false;
 float Settings::ThirdPerson::distance = 30.f;
 
 ShowedAngle Settings::ThirdPerson::type = ShowedAngle::REAL;
+ButtonCode_t Settings::ThirdPerson::key = ButtonCode_t::KEY_V;
 
 void ThirdPerson::OverrideView(CViewSetup *pSetup)
 {
@@ -23,6 +24,12 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		input->m_fCameraInThirdPerson = false;
 		return;
 	}
+    static bool keywasup = false;
+    if(inputSystem->IsButtonDown(Settings::ThirdPerson::key) && !keywasup)
+    {
+        Settings::ThirdPerson::enabled = !Settings::ThirdPerson::enabled;
+    }
+    keywasup = inputSystem->IsButtonDown(Settings::ThirdPerson::key);
 
 	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
 	{
