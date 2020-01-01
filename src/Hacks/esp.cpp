@@ -697,8 +697,8 @@ static void DrawBulletTrace( C_BasePlayer* player ) {
 
 	trace->TraceRay( ray, MASK_SHOT, &filter, &tr );
 
-    if ( debugOverlay->ScreenPosition( src3D - (right * 3), src )  debugOverlay->ScreenPosition( tr.endpos - (right * 3), dst )
-        debugOverlay->ScreenPosition( src3D + (right * 3), src2 )  debugOverlay->ScreenPosition( tr.endpos + (right * 3), dst2 ) )
+    if ( debugOverlay->ScreenPosition( src3D - (right * 3), src ) || debugOverlay->ScreenPosition( tr.endpos - (right * 3), dst ) ||
+        debugOverlay->ScreenPosition( src3D + (right * 3), src2 ) || debugOverlay->ScreenPosition( tr.endpos + (right * 3), dst2 ) )
         return;
 
     Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
