@@ -166,6 +166,7 @@ void Visuals::RenderTab()
 				ImGui::Checkbox(XORSTR("Defusing"), &Settings::ESP::Info::defusing);
 				ImGui::Checkbox(XORSTR("Rescuing Hostage"), &Settings::ESP::Info::rescuing);
                 ImGui::Checkbox(XORSTR("Layers Debug"), &Settings::Debug::AnimLayers::draw);
+				ImGui::Checkbox(XORSTR("Anti-Aim Debug"), &Settings::Debug::AntiAim::draw);
             }
 
 			ImGui::Columns(1);

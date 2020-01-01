@@ -1141,6 +1141,10 @@ namespace Settings
 		{
 			extern bool draw;
 		}
+		namespace AntiAim
+		{
+			extern bool draw;
+		}
     }
 
 	void LoadDefaultsOrSave(std::string path);

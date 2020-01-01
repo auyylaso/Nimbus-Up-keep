@@ -614,6 +614,10 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	}
 }
 static void DrawAATrace( QAngle fake, QAngle actual ) {
+
+	if (!Settings::Debug::AntiAim::draw)
+		return;
+
     C_BasePlayer* localPlayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
     Vector src3D, dst3D, forward;
     Vector src, dst;
