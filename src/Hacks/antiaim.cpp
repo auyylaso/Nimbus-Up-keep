@@ -8,6 +8,7 @@
 #include "../interfaces.h"
 
 bool Settings::AntiAim::enabled = false;
+AntiAimType Settings::AntiAim::type = AntiAimType::RAGE;
 
 bool Settings::AntiAim::LBYBreaker::enabled = false;
 float Settings::AntiAim::LBYBreaker::offset = 180.0f;
@@ -35,26 +36,41 @@ float AntiAim::GetMaxDelta(CCSGOAnimState *animState) {
     return delta - 0.5f;
 }
 
-static void DoAntiAim(QAngle& angle, bool bSend, CCSGOAnimState* animState, bool direction)
+static void DoAntiAim(QAngle& angle, bool bSend, CCSGOAnimState* animState, bool directionSwitch)
 {
 	float maxDelta = AntiAim::GetMaxDelta(animState);
-	static bool yFlip = false;
 
-    angle.x = 89.0f;
-    if (yFlip)
-        angle.y += direction ? maxDelta / 2 : -maxDelta / 2;
-    else
-        angle.y += direction ? -maxDelta / 2 + 180.0f : maxDelta / 2 + 180.0f;
 
-    if (!bSend)
+    switch (Settings::AntiAim::type)
     {
+    case AntiAimType::RAGE: {
+        static bool yFlip = false;
+
+        angle.x = 89.0f;
         if (yFlip)
-            angle.y += direction ? -maxDelta : maxDelta;
+            angle.y += directionSwitch ? maxDelta / 2 : -maxDelta / 2;
         else
-            angle.y += direction ? maxDelta : -maxDelta;
+            angle.y += directionSwitch ? -maxDelta / 2 + 180.0f : maxDelta / 2 + 180.0f;
+
+        if (!bSend)
+        {
+            if (yFlip)
+                angle.y += directionSwitch ? -maxDelta : maxDelta;
+            else
+                angle.y += directionSwitch ? maxDelta : -maxDelta;
+        }
+        else
+            yFlip = !yFlip;
+        } break;
+    
+    case AntiAimType::LEGIT: {
+        if (!bSend)
+            angle.y += directionSwitch ? maxDelta : -maxDelta;
+    } break;
+    
+    default:
+        break;
     }
-    else
-        yFlip = !yFlip;
 }
 
 void AntiAim::CreateMove(CUserCmd* cmd)

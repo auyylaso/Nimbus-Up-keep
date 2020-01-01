@@ -10,11 +10,17 @@
 
 void HvH::RenderTab()
 {
+    const char* aTypes[] = {
+            "Rage", "Legit"
+    };
+
     ImGui::Columns(2, nullptr, true);
     {
         ImGui::BeginChild(XORSTR("HVH1"), ImVec2(0, 0), true);
         {
             ImGui::Checkbox(XORSTR("Anti-Aim"), &Settings::AntiAim::enabled);
+            ImGui::Separator();
+            ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
             ImGui::EndChild();
         }
     }

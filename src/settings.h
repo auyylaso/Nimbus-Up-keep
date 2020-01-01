@@ -151,6 +151,12 @@ enum class ShowedAngle : int
     FAKE,
 };
 
+enum class AntiAimType: int
+{
+	RAGE,
+	LEGIT,
+};
+
 struct AimbotWeapon_t
 {
 	bool enabled,
@@ -530,6 +536,7 @@ namespace Settings
     namespace AntiAim
     {
 		extern bool enabled;
+		extern AntiAimType type;
 
         namespace LBYBreaker
         {
