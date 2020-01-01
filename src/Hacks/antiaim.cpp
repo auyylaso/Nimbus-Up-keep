@@ -12,7 +12,7 @@ bool Settings::AntiAim::AutoDisable::knifeHeld = false;
 AntiAimType Settings::AntiAim::type = AntiAimType::RAGE;
 
 ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
-ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_C;
+ButtonCode_t Settings::AntiAim::right = ButtonCode_t::KEY_C;
 
 bool Settings::AntiAim::LBYBreaker::enabled = false;
 float Settings::AntiAim::LBYBreaker::offset = 180.0f;

@@ -147,6 +147,7 @@ bool Settings::Debug::BoneMap::draw = false;
 int Settings::Debug::BoneMap::modelID = 1253;
 bool Settings::Debug::BoneMap::justDrawDots = false;
 bool Settings::Debug::AnimLayers::draw = false;
+bool Settings::Debug::AntiAim::draw = false;
 
 /* The engine->WorldToScreenMatrix() function can't be called at all times
  * So this is Updated in the Paint Hook for us */

@@ -24,7 +24,7 @@ void HvH::RenderTab()
             ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
             ImGui::Separator();
             UI::KeyBindButton(&Settings::AntiAim::left);
-            UI::KeyBindButton(&Settings::AntiAim::left);
+            UI::KeyBindButton(&Settings::AntiAim::right);
             ImGui::EndChild();
         }
     }
