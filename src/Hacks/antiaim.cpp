@@ -152,9 +152,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
 
     static bool directionSwitch = false;
 
-    if (inputSystem->IsButtonDown(KEY_LEFT))
+    if (inputSystem->IsButtonDown(Settings::AntiAim::left))
 		directionSwitch = true;
-	else if (inputSystem->IsButtonDown(KEY_RIGHT))
+	else if (inputSystem->IsButtonDown(Settings::AntiAim::right))
 		directionSwitch = false;
 
     if (needToFlick)
