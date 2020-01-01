@@ -538,6 +538,15 @@ namespace Settings
 		extern bool enabled;
 		extern AntiAimType type;
 
+		extern ButtonCode_t left;
+		extern ButtonCode_t right;
+
+		namespace AutoDisable
+        {
+            extern bool knifeHeld;
+        }
+
+
         namespace LBYBreaker
         {
             extern bool enabled;

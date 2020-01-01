@@ -8,7 +8,11 @@
 #include "../interfaces.h"
 
 bool Settings::AntiAim::enabled = false;
+bool Settings::AntiAim::AutoDisable::knifeHeld = false;
 AntiAimType Settings::AntiAim::type = AntiAimType::RAGE;
+
+ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
+ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_C;
 
 bool Settings::AntiAim::LBYBreaker::enabled = false;
 float Settings::AntiAim::LBYBreaker::offset = 180.0f;
@@ -110,6 +114,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
         return;
 
     if (localplayer->GetMoveType() == MOVETYPE_LADDER || localplayer->GetMoveType() == MOVETYPE_NOCLIP)
+        return;
+
+    if (Settings::AntiAim::AutoDisable::knifeHeld && localplayer->GetAlive() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_KNIFE)
         return;
 
     static bool bSend = true;

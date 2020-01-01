@@ -5,6 +5,7 @@
 #include "../../settings.h"
 #include "../../Hacks/valvedscheck.h"
 #include "../../ImGUI/imgui_internal.h"
+#include "../atgui.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -21,6 +22,9 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Anti-Aim"), &Settings::AntiAim::enabled);
             ImGui::Separator();
             ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
+            ImGui::Separator();
+            UI::KeyBindButton(&Settings::AntiAim::left);
+            UI::KeyBindButton(&Settings::AntiAim::left);
             ImGui::EndChild();
         }
     }
