@@ -84,8 +84,6 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     QAngle oldAngle = cmd->viewangles;
     float oldForward = cmd->forwardmove;
     float oldSideMove = cmd->sidemove;
-    
-    // AntiAim::realAngle = AntiAim::fakeAngle = CreateMove::lastTickViewAngles;
 
     QAngle angle = cmd->viewangles;
 
@@ -155,7 +153,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     if (needToFlick)
     {
         CreateMove::sendPacket = false;
-        angle.y += Settings::AntiAim::LBYBreaker::offset;
+        angle.y += directionSwitch ? Settings::AntiAim::LBYBreaker::offset : -Settings::AntiAim::LBYBreaker::offset;
     }
     else
     	DoAntiAim(angle, bSend, animState, directionSwitch);
@@ -169,7 +167,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     if (!needToFlick)
         CreateMove::sendPacket = bSend;
 
-    if (bSend)
+    if (CreateMove::sendPacket)
         AntiAim::realAngle = angle;
     else
         AntiAim::fakeAngle = angle;
