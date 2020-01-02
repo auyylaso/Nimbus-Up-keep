@@ -44,7 +44,6 @@ static void DoAntiAim(QAngle& angle, bool bSend, CCSGOAnimState* animState, bool
 {
 	float maxDelta = AntiAim::GetMaxDelta(animState);
 
-
     switch (Settings::AntiAim::type)
     {
     case AntiAimType::RAGE: {
