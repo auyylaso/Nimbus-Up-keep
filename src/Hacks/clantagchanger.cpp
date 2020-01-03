@@ -96,7 +96,7 @@ void ClanTagChanger::UpdateClanTagCallback()
 	if (current_animation >= 0)
 		ClanTagChanger::animation = &ClanTagChanger::animations[current_animation];
 }
-void ClanTagChanger::BeginFrame(float frameTime)
+void ClanTagChanger::CreateMove(CUserCmd* cmd)
 {
 	if (!Settings::ClanTagChanger::enabled)
 		return;

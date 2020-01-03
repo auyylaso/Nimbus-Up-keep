@@ -21,6 +21,7 @@
 #include "../Hacks/esp.h"
 #include "../Hacks/tracereffect.h"
 #include "../Hacks/nofall.h"
+#include "../Hacks/clantagchanger.h"
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
@@ -50,6 +51,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
         EdgeJump::PrePredictionCreateMove(cmd);
 		Autoblock::CreateMove(cmd);
 		NoFall::PrePredictionCreateMove(cmd);
+		ClanTagChanger::CreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
 			Aimbot::CreateMove(cmd);
