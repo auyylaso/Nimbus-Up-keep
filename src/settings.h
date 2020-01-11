@@ -749,6 +749,11 @@ namespace Settings
 			extern float size;
 		}
 
+		namespace Backtrack
+		{
+			extern bool enabled;
+		}
+
 		namespace Spread
 		{
 			extern bool enabled; // show current spread
@@ -864,6 +869,11 @@ namespace Settings
 	}
 
 	namespace NoDuckCooldown
+	{
+		extern bool enabled;
+	}
+
+	namespace LagComp
 	{
 		extern bool enabled;
 	}
