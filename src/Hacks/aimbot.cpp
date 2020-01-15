@@ -1,5 +1,6 @@
 #include "aimbot.h"
 #include "autowall.h"
+#include "lagcomp.h"
 
 #include "../Utils/xorstring.h"
 #include "../Utils/math.h"
@@ -565,6 +566,21 @@ static void Smooth(C_BasePlayer* player, QAngle& angle)
 	angle = viewAngles + toChange;
 }
 
+static void Backtrack(C_BasePlayer* localplayer, C_BasePlayer* player, CUserCmd* cmd)
+{
+	// TODO: Implement a way for the aimbot to shoot backtrack.
+	if (!localplayer)
+		return;
+
+	if (!player)
+		return;
+
+	for (auto& tick : LagComp::ticks)
+	{
+		cmd->tick_count = tick.tickcount;
+	}
+}
+
 static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 {
 	if (!Settings::Aimbot::AutoCrouch::enabled)
@@ -826,6 +842,7 @@ void Aimbot::CreateMove(CUserCmd* cmd)
     }
 
     AimStep(player, angle, cmd);
+	Backtrack(localplayer, player, cmd);
 	AutoCrouch(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
