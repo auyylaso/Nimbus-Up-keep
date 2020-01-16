@@ -145,16 +145,12 @@ enum class SpammerType : int
 	SPAMMER_POSITIONS,
 };
 
-enum class ShowedAngle : int
-{
-    REAL,
-    FAKE,
-};
-
 enum class AntiAimType: int
 {
 	RAGE,
 	LEGIT,
+	CUSTOM,
+	FREESTAND,
 };
 
 struct AimbotWeapon_t
@@ -537,6 +533,7 @@ namespace Settings
     {
 		extern bool enabled;
 		extern AntiAimType type;
+		extern float yaw;
 
 		extern ButtonCode_t left;
 		extern ButtonCode_t right;
@@ -546,10 +543,39 @@ namespace Settings
             extern bool knifeHeld;
         }
 
+		namespace States
+		{
+			extern bool enabled;
+
+			namespace Stand
+			{
+				extern AntiAimType type;
+				extern float angle;
+			} // namespace Stand
+
+			namespace Walk
+			{
+				extern AntiAimType type;
+				extern float angle;
+			} // namespace Walk
+
+			namespace Run
+			{
+				extern AntiAimType type;
+				extern float angle;
+			} // namespace Run
+
+			namespace Air
+			{
+				extern AntiAimType type;
+				extern float angle;
+			} // namespace Air
+		}		
 
         namespace LBYBreaker
         {
             extern bool enabled;
+			extern bool custom;
             extern float offset;
         }
     }
@@ -1065,7 +1091,6 @@ namespace Settings
 	{
 		extern bool enabled;
 		extern float distance;
-        extern ShowedAngle type;
         extern ButtonCode_t key;
 	}
 
@@ -1122,10 +1147,7 @@ namespace Settings
  			extern bool allies;
  		}
  	}
-	namespace AngleIndicator
-	{
-		extern bool enabled;
-	}
+	
     namespace Debug
     {
         namespace AutoWall

@@ -5,7 +5,15 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
-Version 1.0.0
+Version 1.0.1 (Jan 16)
+- Added player move-state based anti-aim
+- Thirdperson angle is now last-tick viewangle
+- Automatic LBY breaker values (customs are still available)
+- Added disable anti-aim on knife-held back
+- Changed default third-person value from 30 to 150
+- Removed angle-indicator
+
+Version 1.0.0 (Jan 15)
 - Added new anti-aim
 - Anti-aim angle keys
 - New pretty bullet tracer

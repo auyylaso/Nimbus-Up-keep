@@ -221,10 +221,21 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("type")] = (int) Settings::AntiAim::type;
+	settings[XORSTR("AntiAim")][XORSTR("states")] = Settings::AntiAim::States::enabled;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")] = (int) Settings::AntiAim::States::Stand::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")] = Settings::AntiAim::States::Stand::angle;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")] = (int) Settings::AntiAim::States::Walk::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")] = Settings::AntiAim::States::Walk::angle;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")] = (int) Settings::AntiAim::States::Run::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")] = Settings::AntiAim::States::Run::angle;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")] = (int) Settings::AntiAim::States::Air::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")] = Settings::AntiAim::States::Air::angle;
 	settings[XORSTR("AntiAim")][XORSTR("left")] = Util::GetButtonName(Settings::AntiAim::left);
 	settings[XORSTR("AntiAim")][XORSTR("right")] = Util::GetButtonName(Settings::AntiAim::right);
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")] = Settings::AntiAim::LBYBreaker::enabled;
+	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("custom")] = Settings::AntiAim::LBYBreaker::custom;
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")] = Settings::AntiAim::LBYBreaker::offset;
+	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")] = Settings::AntiAim::AutoDisable::knifeHeld;
 
 	settings[XORSTR("Resolver")][XORSTR("resolve_all")] = Settings::Resolver::resolveAll;
 
@@ -595,7 +606,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("ThirdPerson")][XORSTR("enabled")] = Settings::ThirdPerson::enabled;
 	settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
-	settings[XORSTR("ThirdPerson")][XORSTR("type")] = (int) Settings::ThirdPerson::type;
 
 	settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")] = Settings::DisablePostProcessing::enabled;
 	settings[XORSTR("NoFall")][XORSTR("enabled")] = Settings::NoFall::enabled;
@@ -726,10 +736,22 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Aimbot::AutoShoot::velocityCheck);
 
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*)& Settings::AntiAim::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*)& Settings::AntiAim::States::Stand::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")], &Settings::AntiAim::States::Stand::angle);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")], (int*)& Settings::AntiAim::States::Walk::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")], &Settings::AntiAim::States::Walk::angle);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*)& Settings::AntiAim::States::Run::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")], &Settings::AntiAim::States::Run::angle);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*)& Settings::AntiAim::States::Air::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")], &Settings::AntiAim::States::Air::angle);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("left")], &Settings::AntiAim::left);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("right")], &Settings::AntiAim::right);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("custom")], &Settings::AntiAim::LBYBreaker::custom);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")], &Settings::AntiAim::AutoDisable::knifeHeld);
 
 	GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_all")], &Settings::Resolver::resolveAll);
 
@@ -1159,7 +1181,6 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("enabled")], &Settings::ThirdPerson::enabled);
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("distance")], &Settings::ThirdPerson::distance);
-	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("type")], (int*)&Settings::ThirdPerson::type);
 
 	GetVal(settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")], &Settings::DisablePostProcessing::enabled);
 
