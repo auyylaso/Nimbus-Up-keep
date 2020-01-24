@@ -577,7 +577,10 @@ static void Backtrack(C_BasePlayer* localplayer, C_BasePlayer* player, CUserCmd*
 
 	for (auto& tick : LagComp::ticks)
 	{
-		cmd->tick_count = tick.tickcount;
+		for (auto& record : tick.records)
+		{
+			cmd->tick_count = tick.tickcount;
+		}
 	}
 }
 

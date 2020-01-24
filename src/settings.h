@@ -553,11 +553,13 @@ namespace Settings
 				extern float angle;
 			} // namespace Stand
 
+			/*
 			namespace Walk
 			{
 				extern AntiAimType type;
 				extern float angle;
 			} // namespace Walk
+			*/
 
 			namespace Run
 			{

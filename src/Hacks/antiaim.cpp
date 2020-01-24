@@ -14,14 +14,14 @@ float Settings::AntiAim::yaw = 180.0f;
 bool Settings::AntiAim::States::enabled = false;
 
 float Settings::AntiAim::States::Stand::angle = 180.0f;
-float Settings::AntiAim::States::Walk::angle = 180.0f;
+// float Settings::AntiAim::States::Walk::angle = 180.0f;
 float Settings::AntiAim::States::Run::angle = 180.0f;
 float Settings::AntiAim::States::Air::angle = 180.0f;
 
 AntiAimType Settings::AntiAim::States::Stand::type = AntiAimType::RAGE;
-AntiAimType Settings::AntiAim::States::Walk::type = AntiAimType::CUSTOM;
+// AntiAimType Settings::AntiAim::States::Walk::type = AntiAimType::CUSTOM;
 AntiAimType Settings::AntiAim::States::Run::type = AntiAimType::CUSTOM;
-AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::RAGE;
+AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::CUSTOM;
 
 ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
 ButtonCode_t Settings::AntiAim::right = ButtonCode_t::KEY_C;
@@ -60,8 +60,10 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
             type = Settings::AntiAim::States::Stand::type;
         else if (!(localplayer->GetFlags() & FL_ONGROUND))
             type = Settings::AntiAim::States::Air::type;
+        /* Doesn't work
         else if (cmd->buttons & IN_WALK)
             type = Settings::AntiAim::States::Walk::type;
+        */
         else
             type = Settings::AntiAim::States::Run::type;
     }
@@ -107,8 +109,10 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
                 angle.y += Settings::AntiAim::States::Stand::angle;
             else if (!(localplayer->GetFlags() & FL_ONGROUND))
                 angle.y += Settings::AntiAim::States::Air::angle;
+            /* Doesn't work
             else if (cmd->buttons & IN_WALK)
                 angle.y += Settings::AntiAim::States::Walk::angle;
+            */
             else
                 angle.y += Settings::AntiAim::States::Run::angle;
         }

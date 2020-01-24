@@ -38,13 +38,15 @@ void HvH::RenderTab()
                     ImGui::SliderFloat(XORSTR("##STANDANGLE"), &Settings::AntiAim::States::Stand::angle, 0, 360, "Yaw angle: %1.0f");
                 } ImGui::Separator();
 
+                /* Removed due to broken flag will fix later.
                 ImGui::Combo(XORSTR("Walk-type (IN_WALK flag broken)"), (int*)& Settings::AntiAim::States::Walk::type, aTypes, IM_ARRAYSIZE(aTypes));
                 if (Settings::AntiAim::States::Walk::type == AntiAimType::CUSTOM) {
                     ImGui::Separator();
                     ImGui::SliderFloat(XORSTR("##WALKANGLE"), &Settings::AntiAim::States::Walk::angle, 0, 360, "Yaw angle: %1.0f");
                 } ImGui::Separator();
+                */
 
-                ImGui::Combo(XORSTR("Run-type"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
+                ImGui::Combo(XORSTR("Moving-type"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
                 if (Settings::AntiAim::States::Run::type == AntiAimType::CUSTOM) {
                     ImGui::Separator();
                     ImGui::SliderFloat(XORSTR("##RUNANGLE"), &Settings::AntiAim::States::Run::angle, 0, 360, "Yaw angle: %1.0f");
@@ -79,10 +81,7 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Knife"), &Settings::AntiAim::AutoDisable::knifeHeld);
             ImGui::Separator();
 
-            ImGui::Text(XORSTR("Freestanding"));
-            ImGui::Separator();
-
-            if (Settings::AntiAim::type == AntiAimType::CUSTOM || !Settings::AntiAim::States::enabled) {
+            if (Settings::AntiAim::type == AntiAimType::CUSTOM || Settings::AntiAim::States::enabled) {
                 ImGui::Separator();
                 ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw angle %1.0f");
             }

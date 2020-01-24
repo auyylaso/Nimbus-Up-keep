@@ -224,8 +224,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("AntiAim")][XORSTR("states")] = Settings::AntiAim::States::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")] = (int) Settings::AntiAim::States::Stand::type;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")] = Settings::AntiAim::States::Stand::angle;
-	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")] = (int) Settings::AntiAim::States::Walk::type;
-	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")] = Settings::AntiAim::States::Walk::angle;
+	// settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")] = (int) Settings::AntiAim::States::Walk::type;
+	// settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")] = Settings::AntiAim::States::Walk::angle;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")] = (int) Settings::AntiAim::States::Run::type;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")] = Settings::AntiAim::States::Run::angle;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")] = (int) Settings::AntiAim::States::Air::type;
@@ -740,8 +740,8 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*)& Settings::AntiAim::States::Stand::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")], &Settings::AntiAim::States::Stand::angle);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")], (int*)& Settings::AntiAim::States::Walk::type);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")], &Settings::AntiAim::States::Walk::angle);
+	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")], (int*)& Settings::AntiAim::States::Walk::type);
+	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")], &Settings::AntiAim::States::Walk::angle);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*)& Settings::AntiAim::States::Run::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")], &Settings::AntiAim::States::Run::angle);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*)& Settings::AntiAim::States::Air::type);
