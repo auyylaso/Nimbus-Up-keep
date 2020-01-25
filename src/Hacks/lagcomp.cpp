@@ -8,7 +8,6 @@
 bool Settings::LagComp::enabled = false;
 
 std::vector<LagComp::BacktrackTick> LagComp::ticks;
-CUserCmd* pubcmd;
 
 float GetLerpTime()
 {
@@ -38,20 +37,17 @@ bool IsTickValid( float time ) // polak's invalid tick remover
 {
     float correct = 0;
 
-    // correct += GetLocalClientFn->GetNetChannelInfo()->GetLatency( FLOW_OUTGOING );
-    // correct += GetLocalClientFn->GetNetChannelInfo()->GetLatency( FLOW_INCOMING );
+    // static INetChannelInfo* netInfo;
+
+    // correct += netInfo->GetLatency(FLOW_OUTGOING);
+    // correct += netInfo->GetLatency(FLOW_INCOMING);
 
     correct += GetLerpTime();
     correct = std::clamp( correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
  
     float deltaTime = correct - ( globalVars->curtime - time );
  
-    if( fabsf( deltaTime ) < 0.2f )
-    {
-        return true;
-    }
- 
-    return false;
+    return fabsf(deltaTime) < 0.2f;
 }
 
 void RemoveBadRecords(std::vector<LagComp::BacktrackTick>& records)
@@ -69,7 +65,8 @@ void RemoveBadRecords(std::vector<LagComp::BacktrackTick>& records)
     }
 }
 
-void LagComp::FrameStageNotify(ClientFrameStage_t stage){
+void LagComp::FrameStageNotify(ClientFrameStage_t stage)
+{
     if (!Settings::LagComp::enabled)
         return;
 
@@ -77,9 +74,6 @@ void LagComp::FrameStageNotify(ClientFrameStage_t stage){
     {
         LagComp::ticks.insert(LagComp::ticks.begin(), {globalVars->tickcount, globalVars->curtime});
         auto& cur = LagComp::ticks[0];
-
-        // while (LagComp::ticks.size() > 40) // i think i don't really need that
-        //     LagComp::ticks.pop_back();
     
         RemoveBadRecords(LagComp::ticks);
 
@@ -96,7 +90,7 @@ void LagComp::FrameStageNotify(ClientFrameStage_t stage){
                 entity->GetImmune())
                 continue;
 
-            LagComp::BacktrackRecord record = LagComp::BacktrackRecord{entity, entity->GetBonePosition(BONE_HEAD), entity->GetVecOrigin()};
+            LagComp::BacktrackRecord record = {entity, entity->GetBonePosition(BONE_HEAD), entity->GetVecOrigin()};
 
             // *(int*)((uintptr_t)record.entity + 0xA30) = globalVars->framecount; getting some weird stretch of model pls send halp
             // *(int*)((uintptr_t)record.entity + 0xA28) = 0;
@@ -107,7 +101,7 @@ void LagComp::FrameStageNotify(ClientFrameStage_t stage){
     }
 }
 
-// This will be moved to aimbot.cpp
+/* This will be moved to aimbot.cpp
 void LagComp::CreateMove(CUserCmd* cmd)
 {
     if (!Settings::LagComp::enabled)
@@ -153,3 +147,4 @@ void LagComp::CreateMove(CUserCmd* cmd)
         }
     }
 }
+*/

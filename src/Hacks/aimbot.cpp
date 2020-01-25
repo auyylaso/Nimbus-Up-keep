@@ -569,6 +569,9 @@ static void Smooth(C_BasePlayer* player, QAngle& angle)
 static void Backtrack(C_BasePlayer* localplayer, C_BasePlayer* player, CUserCmd* cmd)
 {
 	// TODO: Implement a way for the aimbot to shoot backtrack.
+	if (!Settings::LagComp::enabled)
+		return;
+
 	if (!localplayer)
 		return;
 
@@ -577,7 +580,12 @@ static void Backtrack(C_BasePlayer* localplayer, C_BasePlayer* player, CUserCmd*
 
 	for (auto& tick : LagComp::ticks)
 	{
-		cmd->tick_count = tick.tickcount;
+		for (auto& record : tick.records)
+		{
+			cmd->tick_count = tick.tickcount;
+			if (Entity::IsSpotVisible(player, record.head))
+				player->GetEyePosition() = record.head;
+		}
 	}
 }
 

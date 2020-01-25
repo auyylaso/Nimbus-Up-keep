@@ -232,7 +232,6 @@ void Misc::RenderTab()
 			{
 				ImGui::PushItemWidth(-1);
 				ImGui::SliderFloat(XORSTR("##TPCAMOFFSET"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
-                ImGui::Combo(XORSTR("Showed Angle"), (int*)& Settings::ThirdPerson::type, angleTypes, IM_ARRAYSIZE(angleTypes));
 				ImGui::PopItemWidth();
                 UI::KeyBindButton(&Settings::ThirdPerson::key);
 			}

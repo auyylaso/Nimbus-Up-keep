@@ -5,9 +5,8 @@
 #include "../interfaces.h"
 
 bool Settings::ThirdPerson::enabled = false;
-float Settings::ThirdPerson::distance = 30.f;
+float Settings::ThirdPerson::distance = 150.0f;
 
-ShowedAngle Settings::ThirdPerson::type = ShowedAngle::REAL;
 ButtonCode_t Settings::ThirdPerson::key = ButtonCode_t::KEY_V;
 
 void ThirdPerson::OverrideView(CViewSetup *pSetup)
@@ -66,16 +65,6 @@ void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
-		{
-            switch (Settings::ThirdPerson::type)
-            {
-                case ShowedAngle::REAL:
-                    *localplayer->GetVAngles() = AntiAim::realAngle;
-                    break;
-                case ShowedAngle::FAKE:
-                    *localplayer->GetVAngles() = AntiAim::fakeAngle;
-                    break;
-            }
-		}
+			*localplayer->GetVAngles() = CreateMove::lastTickViewAngles;
 	}
 }
