@@ -38,8 +38,10 @@ bool IsTickValid( float time ) // polak's invalid tick remover
 {
     float correct = 0;
 
-    // correct += GetLocalClientFn->GetNetChannelInfo()->GetLatency( FLOW_OUTGOING );
-    // correct += GetLocalClientFn->GetNetChannelInfo()->GetLatency( FLOW_INCOMING );
+    // static INetChannelInfo* netInfo;
+
+    // correct += netInfo->GetLatency(FLOW_OUTGOING);
+    // correct += netInfo->GetLatency(FLOW_INCOMING);
 
     correct += GetLerpTime();
     correct = std::clamp( correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
@@ -69,7 +71,8 @@ void RemoveBadRecords(std::vector<LagComp::BacktrackTick>& records)
     }
 }
 
-void LagComp::FrameStageNotify(ClientFrameStage_t stage){
+void LagComp::FrameStageNotify(ClientFrameStage_t stage)
+{
     if (!Settings::LagComp::enabled)
         return;
 
@@ -107,7 +110,7 @@ void LagComp::FrameStageNotify(ClientFrameStage_t stage){
     }
 }
 
-// This will be moved to aimbot.cpp
+/* This will be moved to aimbot.cpp
 void LagComp::CreateMove(CUserCmd* cmd)
 {
     if (!Settings::LagComp::enabled)
@@ -153,3 +156,4 @@ void LagComp::CreateMove(CUserCmd* cmd)
         }
     }
 }
+*/

@@ -12,6 +12,8 @@ Version 1.0.1 (Jan 16)
 - Added disable anti-aim on knife-held back
 - Changed default third-person value from 30 to 150
 - Removed angle-indicator
+- Adjusted auto-defuser
+- Adjusted backtrack
 
 Version 1.0.0 (Jan 15)
 - Added new anti-aim
