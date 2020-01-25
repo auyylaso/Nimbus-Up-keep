@@ -5,6 +5,12 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.0.2 (Jan 25)
+- Adjusted auto-defuser
+- Adjusted backtrack
+- Removed anti-aim debug duplicate in menus
+- Added key save for third-person
+
 Version 1.0.1 (Jan 16)
 - Added player move-state based anti-aim
 - Thirdperson angle is now last-tick viewangle
@@ -12,8 +18,6 @@ Version 1.0.1 (Jan 16)
 - Added disable anti-aim on knife-held back
 - Changed default third-person value from 30 to 150
 - Removed angle-indicator
-- Adjusted auto-defuser
-- Adjusted backtrack
 
 Version 1.0.0 (Jan 15)
 - Added new anti-aim
