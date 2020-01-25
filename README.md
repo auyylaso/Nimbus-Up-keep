@@ -6,6 +6,16 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.1.0 (Jan 25)
+- Third-person key added
+- Third-person optimization
+- Added Anti-Aim debug
+- Backtrack optimization
+- Misc features updated
+- Removed angle-indicator (because of anti-aim debug this is useless)
+- LBY breaker optimization
+- Move-state anti-aim added
+
 Version 1.0.2 (Jan 25)
 - Adjusted auto-defuser
 - Adjusted backtrack
