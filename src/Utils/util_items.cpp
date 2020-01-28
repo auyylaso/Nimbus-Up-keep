@@ -278,20 +278,6 @@ namespace Util
 			}
 		}
 
-		bool IsShotgun(ItemDefinitionIndex index)
-		{
-			switch (index)
-			{
-			case ItemDefinitionIndex::WEAPON_NOVA:
-			case ItemDefinitionIndex::WEAPON_MAG7:
-			case ItemDefinitionIndex::WEAPON_SAWEDOFF:
-			case ItemDefinitionIndex::WEAPON_XM1014:
-				return true;		
-			default:
-				return false;
-			}
-		}
-
 		bool IsSMG(ItemDefinitionIndex index)
 		{
 			switch (index)
