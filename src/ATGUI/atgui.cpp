@@ -17,10 +17,10 @@ bool UI::isVisible = false;
 
 bool Settings::ScreenshotCleaner::enabled = false;
 
-ColorVar Settings::UI::mainColor = ImColor(25, 25, 25, 255);
-ColorVar Settings::UI::bodyColor = ImColor(5, 5, 5, 255);
-ColorVar Settings::UI::fontColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::UI::accentColor = ImColor(39, 106, 219, 255);
+ColorVar Settings::UI::mainColor = ImColor(25, 25, 25, 225);
+ColorVar Settings::UI::bodyColor = ImColor(5, 5, 5, 200);
+ColorVar Settings::UI::fontColor = ImColor(255, 255, 255, 225);
+ColorVar Settings::UI::accentColor = ImColor(200, 100, 100, 200);
 /* Window Position/Size Defaults */
 int Settings::UI::Windows::Colors::sizeX = 540;
 int Settings::UI::Windows::Colors::sizeY = 325;

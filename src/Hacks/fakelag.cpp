@@ -7,6 +7,9 @@
 bool Settings::FakeLag::enabled = false;
 int Settings::FakeLag::value = 9;
 
+bool Settings::FakeLag::lagSpike = false;
+bool FakeLag::lagSpike = false;
+
 static int ticks = 0;
 int ticksMax = 16;
 
@@ -33,6 +36,8 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		CreateMove::sendPacket = true;
 		ticks = 0;
 	}
+	else if (FakeLag::lagSpike)
+		CreateMove::sendPacket = false;
 	else
 		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
 

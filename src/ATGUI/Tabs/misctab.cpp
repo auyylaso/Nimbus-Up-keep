@@ -428,6 +428,7 @@ void Misc::RenderTab()
 			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
+				ImGui::Checkbox(XORSTR("Fake Lag On Peek"), &Settings::FakeLag::lagSpike);
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
 				ImGui::Checkbox(XORSTR("Auto Defuse"), &Settings::AutoDefuse::enabled);
@@ -435,6 +436,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
 				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::LagComp::enabled);
+				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
 			}
 			ImGui::NextColumn();
 			{

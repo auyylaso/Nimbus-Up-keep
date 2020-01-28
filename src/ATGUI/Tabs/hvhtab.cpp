@@ -23,42 +23,14 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Anti-Aim"), &Settings::AntiAim::enabled);
             ImGui::Separator();
 
-            ImGui::Checkbox(XORSTR("State Based Anti-Aim"), &Settings::AntiAim::States::enabled);
-            ImGui::Separator();
-
             if (!Settings::AntiAim::States::enabled) {
                 ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
                 ImGui::Separator();
-            }
-            else
-            {
-                ImGui::Combo(XORSTR("Stand-type"), (int*)& Settings::AntiAim::States::Stand::type, aTypes, IM_ARRAYSIZE(aTypes));
-                if (Settings::AntiAim::States::Stand::type == AntiAimType::CUSTOM) {
-                    ImGui::Separator();
-                    ImGui::SliderFloat(XORSTR("##STANDANGLE"), &Settings::AntiAim::States::Stand::angle, 0, 360, "Yaw angle: %1.0f");
-                } ImGui::Separator();
 
-                /* Removed due to broken flag will fix later.
-                ImGui::Combo(XORSTR("Walk-type (IN_WALK flag broken)"), (int*)& Settings::AntiAim::States::Walk::type, aTypes, IM_ARRAYSIZE(aTypes));
-                if (Settings::AntiAim::States::Walk::type == AntiAimType::CUSTOM) {
-                    ImGui::Separator();
-                    ImGui::SliderFloat(XORSTR("##WALKANGLE"), &Settings::AntiAim::States::Walk::angle, 0, 360, "Yaw angle: %1.0f");
-                } ImGui::Separator();
-                */
-
-                ImGui::Combo(XORSTR("Moving-type"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
-                if (Settings::AntiAim::States::Run::type == AntiAimType::CUSTOM) {
-                    ImGui::Separator();
-                    ImGui::SliderFloat(XORSTR("##RUNANGLE"), &Settings::AntiAim::States::Run::angle, 0, 360, "Yaw angle: %1.0f");
-                } ImGui::Separator();
-
-                ImGui::Combo(XORSTR("Air-type"), (int*)& Settings::AntiAim::States::Air::type, aTypes, IM_ARRAYSIZE(aTypes));
-                if (Settings::AntiAim::States::Air::type == AntiAimType::CUSTOM) {
-                    ImGui::Separator();
-                    ImGui::SliderFloat(XORSTR("##AIRANGLE"), &Settings::AntiAim::States::Air::angle, 0, 360, "Yaw angle: %1.0f");
-                } ImGui::Separator();
-            }
-            
+                if (Settings::AntiAim::type == AntiAimType::CUSTOM) {
+                    ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw angle %1.0f");
+                }
+            }            
 
             ImGui::Text(XORSTR("Anti-Aim Keys"));
             ImGui::Separator();
@@ -81,11 +53,6 @@ void HvH::RenderTab()
             ImGui::Checkbox(XORSTR("Knife"), &Settings::AntiAim::AutoDisable::knifeHeld);
             ImGui::Separator();
 
-            if (Settings::AntiAim::type == AntiAimType::CUSTOM || Settings::AntiAim::States::enabled) {
-                ImGui::Separator();
-                ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw angle %1.0f");
-            }
-
             ImGui::EndChild();
         }
     }
@@ -93,12 +60,37 @@ void HvH::RenderTab()
     {
         ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), true);
         {
-            ImGui::Text(XORSTR("Resolver"));
             ImGui::Separator();
-            ImGui::Checkbox(XORSTR("Resolve All"), &Settings::Resolver::resolveAll);
-            ImGui::Separator();
-            ImGui::Text(XORSTR("Movement"));
-            ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
+            ImGui::Checkbox(XORSTR("Move State"), &Settings::AntiAim::States::enabled);
+
+            if (Settings::AntiAim::States::enabled)
+            {
+                ImGui::Separator();
+                ImGui::Text(XORSTR("Stand Type"));
+                ImGui::Combo(XORSTR("##STAND"), (int*)& Settings::AntiAim::States::Stand::type, aTypes, IM_ARRAYSIZE(aTypes));
+                if (Settings::AntiAim::States::Stand::type == AntiAimType::CUSTOM) {
+                    ImGui::SliderFloat(XORSTR("##STANDANGLE"), &Settings::AntiAim::States::Stand::angle, 0, 360, "Yaw angle: %1.0f");
+                } ImGui::Separator();
+
+                /* Removed due to broken flag will fix later.
+                ImGui::Combo(XORSTR("Walk Type (IN_WALK flag broken)"), (int*)& Settings::AntiAim::States::Walk::type, aTypes, IM_ARRAYSIZE(aTypes));
+                if (Settings::AntiAim::States::Walk::type == AntiAimType::CUSTOM) {
+                    ImGui::SliderFloat(XORSTR("##WALKANGLE"), &Settings::AntiAim::States::Walk::angle, 0, 360, "Yaw angle: %1.0f");
+                } ImGui::Separator();
+                */
+               
+                ImGui::Text(XORSTR("Move Type"));
+                ImGui::Combo(XORSTR("##MOVE"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
+                if (Settings::AntiAim::States::Run::type == AntiAimType::CUSTOM) {
+                    ImGui::SliderFloat(XORSTR("##RUNANGLE"), &Settings::AntiAim::States::Run::angle, 0, 360, "Yaw angle: %1.0f");
+                } ImGui::Separator();
+                ImGui::Text(XORSTR("Air Type"));
+                ImGui::Combo(XORSTR("##AIR"), (int*)& Settings::AntiAim::States::Air::type, aTypes, IM_ARRAYSIZE(aTypes));
+                if (Settings::AntiAim::States::Air::type == AntiAimType::CUSTOM) {
+                    ImGui::SliderFloat(XORSTR("##AIRANGLE"), &Settings::AntiAim::States::Air::angle, 0, 360, "Yaw angle: %1.0f");
+                } ImGui::Separator();
+            }
+
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);
             if (Settings::AntiAim::LBYBreaker::enabled) {

@@ -1,6 +1,7 @@
 #include "aimbot.h"
 #include "autowall.h"
 #include "lagcomp.h"
+#include "fakelag.h"
 
 #include "../Utils/xorstring.h"
 #include "../Utils/math.h"
@@ -12,6 +13,7 @@
 
 // Default aimbot settings
 bool Settings::Aimbot::enabled = false;
+AimbotType Settings::Aimbot::type = AimbotType::LEGIT;
 bool Settings::Aimbot::silent = false;
 bool Settings::Aimbot::friendly = false;
 Bone Settings::Aimbot::bone = BONE_HEAD;
@@ -221,7 +223,7 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
 
-	float tempFov = Settings::Aimbot::AutoAim::fov;
+	float tempFov = Settings::Aimbot::type == AimbotType::LEGIT ? Settings::Aimbot::AutoAim::fov : 180.0f;
 	float tempDistance = Settings::Aimbot::AutoAim::fov * 5.f;
 
 	Vector pVecTarget = localPlayer->GetEyePosition();
@@ -282,7 +284,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	C_BasePlayer* closestEntity = nullptr;
 
-	float bestFov = Settings::Aimbot::AutoAim::fov;
+	float bestFov = Settings::Aimbot::type == AimbotType::LEGIT ? Settings::Aimbot::AutoAim::fov : 180.0f;
 	float bestRealDistance = Settings::Aimbot::AutoAim::fov * 5.f;
 
 	if( lockedOn )
@@ -440,7 +442,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 
 static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 {
-	if (!Settings::Aimbot::RCS::enabled)
+	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE)
 		return;
 
 	if (!(cmd->buttons & IN_ATTACK))
@@ -448,7 +450,10 @@ static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 
 	bool hasTarget = Settings::Aimbot::AutoAim::enabled && shouldAim && player;
 
-	if (!Settings::Aimbot::RCS::always_on && !hasTarget)
+	float valueX = Settings::Aimbot::type == AimbotType::RAGE ? 2.0f : Settings::Aimbot::RCS::valueX;
+	float valueY = Settings::Aimbot::type == AimbotType::RAGE ? 2.0f : Settings::Aimbot::RCS::valueY;
+
+	if (!Settings::Aimbot::RCS::always_on && !hasTarget && Settings::Aimbot::type != AimbotType::RAGE)
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -456,15 +461,15 @@ static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 
 	if ( Settings::Aimbot::silent || hasTarget )
 	{
-		angle.x -= CurrentPunch.x * Settings::Aimbot::RCS::valueX;
-		angle.y -= CurrentPunch.y * Settings::Aimbot::RCS::valueY;
+		angle.x -= CurrentPunch.x * valueX;
+		angle.y -= CurrentPunch.y * valueY;
 	}
 	else if (localplayer->GetShotsFired() > 1)
 	{
 		QAngle NewPunch = { CurrentPunch.x - RCSLastPunch.x, CurrentPunch.y - RCSLastPunch.y, 0 };
 
-		angle.x -= NewPunch.x * Settings::Aimbot::RCS::valueX;
-		angle.y -= NewPunch.y * Settings::Aimbot::RCS::valueY;
+		angle.x -= NewPunch.x * valueX;
+		angle.y -= NewPunch.y * valueY;
 	}
 
 	RCSLastPunch = CurrentPunch;
@@ -598,6 +603,17 @@ static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 		return;
 
 	cmd->buttons |= IN_BULLRUSH | IN_DUCK;
+}
+
+static void LagSpike(C_BasePlayer* player, CUserCmd* cmd)
+{
+	if (!Settings::FakeLag::lagSpike)
+		return;
+
+	if (!player)
+		return;
+
+	FakeLag::lagSpike = true;
 }
 
 static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
@@ -801,6 +817,9 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 		if (Util::Items::IsScopeable(*activeWeapon->GetItemDefinitionIndex()) && !localplayer->IsScoped())
 			return;
 	}
+
+	if (Settings::Aimbot::type == AimbotType::RAGE)
+		Settings::Aimbot::AutoAim::enabled = true;
 
     Vector bestSpot = {0,0,0};
 	float bestDamage = 0.0f;

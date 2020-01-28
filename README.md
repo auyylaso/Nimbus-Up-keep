@@ -6,6 +6,13 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.1.1
+- New menu design (beta)
+- New aimbot tab (beta)
+- New HvH tab
+- Removed resolver from HvH tab (available on player selection)
+- Auto crouch added to misc tab
+
 Version 1.1.0 (Jan 25)
 - Third-person key added
 - Third-person optimization

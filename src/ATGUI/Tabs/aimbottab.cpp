@@ -179,11 +179,43 @@ void Aimbot::RenderTab()
 {
 	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
 	const char* smoothTypes[] = { "Slow Near End", "Constant Speed", "Fast Near End" };
+	const char* aimType[] = { "Legit", "Rage" };
 	static char filterWeapons[32];
 
 	if (ImGui::Checkbox(XORSTR("Enabled"), &enabled))
 		UI::UpdateWeaponSettings();
 	ImGui::Separator();
+
+	static int weaponTypes = 0;
+
+	const char* tabs[] = {
+		"All",
+		"Pistol",
+		"Shotgun",
+		"SMG",
+		"Rifle",
+		"Sniper"
+	};
+
+	for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
+	{
+		int distance = i == weaponTypes ? 0 : i > weaponTypes ? i - weaponTypes : weaponTypes - i;
+
+		ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
+				Settings::UI::mainColor.Color().Value.x - (distance * 0.035f),
+				Settings::UI::mainColor.Color().Value.y - (distance * 0.035f),
+				Settings::UI::mainColor.Color().Value.z - (distance * 0.035f),
+				Settings::UI::mainColor.Color().Value.w
+		);
+
+		if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9, 0)))
+			weaponTypes = i;
+
+		ImGui::GetStyle().Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
+
+		if (i < IM_ARRAYSIZE(tabs) - 1)
+			ImGui::SameLine();
+	}
 
 	ImGui::Columns(3, nullptr, true);
 	{
@@ -192,42 +224,212 @@ void Aimbot::RenderTab()
 		ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 		ImGui::PopItemWidth();
 		ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
-		for (auto it : ItemDefinitionIndexMap)
+		switch (weaponTypes)
 		{
-			bool isDefault = (int) it.first < 0;
-			if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
-				continue;
-
-			if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
-				continue;
-
-			const bool item_selected = ((int) it.first == (int) currentWeapon);
-			ImGui::PushID((int) it.first);
-			std::string formattedName;
-			char changeIndicator = ' ';
-			bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
-			if (!isDefault && isChanged)
-				changeIndicator = '*';
-			formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
-			if (ImGui::Selectable(formattedName.c_str(), item_selected))
+		case 0: {
+			for (auto it : ItemDefinitionIndexMap)
 			{
-				currentWeapon = it.first;
-				UI::ReloadWeaponSettings();
+				bool isDefault = (int) it.first < 0;
+				if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+					continue;
+
+				if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+					continue;
+
+				const bool item_selected = ((int) it.first == (int) currentWeapon);
+				ImGui::PushID((int) it.first);
+				std::string formattedName;
+				char changeIndicator = ' ';
+				bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+				if (!isDefault && isChanged)
+					changeIndicator = '*';
+				formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+				if (ImGui::Selectable(formattedName.c_str(), item_selected))
+				{
+					currentWeapon = it.first;
+					UI::ReloadWeaponSettings();
+				}
+				ImGui::PopID();
 			}
-			ImGui::PopID();
+		} break;
+
+		case 1: {
+			for (auto it : ItemDefinitionIndexMap)
+			{
+				bool isDefault = (int) it.first < 0;
+
+				if (Util::Items::IsPistol(it.first) || isDefault)
+				{
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int) it.first == (int) currentWeapon);
+					ImGui::PushID((int) it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
+			}
+		} break;
+
+		case 2: {
+			for (auto it : ItemDefinitionIndexMap)
+			{
+				bool isDefault = (int) it.first < 0;
+
+				if (Util::Items::IsShotgun(it.first) || isDefault)
+				{
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int) it.first == (int) currentWeapon);
+					ImGui::PushID((int) it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
+			}
+		} break;
+
+		case 3: {
+			for (auto it : ItemDefinitionIndexMap)
+			{
+				bool isDefault = (int) it.first < 0;
+
+				if (Util::Items::IsSMG(it.first) || isDefault)
+				{
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int) it.first == (int) currentWeapon);
+					ImGui::PushID((int) it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
+			}
+		} break;
+
+		case 4: {
+			for (auto it : ItemDefinitionIndexMap)
+			{
+				bool isDefault = (int) it.first < 0;
+
+				if (Util::Items::IsRifle(it.first) || isDefault)
+				{
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int) it.first == (int) currentWeapon);
+					ImGui::PushID((int) it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
+			}
+		} break;
+
+		case 5: {
+			for (auto it : ItemDefinitionIndexMap)
+			{
+				bool isDefault = (int) it.first < 0;
+
+				if (Util::Items::IsScopeable(it.first) || isDefault)
+				{
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int) it.first == (int) currentWeapon);
+					ImGui::PushID((int) it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
+			}
+		} break;
+		
+		default:
+			break;
 		}
+
 		ImGui::ListBoxFooter();
 	}
 	ImGui::NextColumn();
 	{
 		ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 75);
+
+		// TODO: Have a rage and legit switch
 		ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
 		{
-			ImGui::Text(XORSTR("Target"));
+			ImGui::Combo(XORSTR("##AIMTYPE"), (int*)& Settings::Aimbot::type, aimType, IM_ARRAYSIZE(aimType));
+			switch (Settings::Aimbot::type)
+			{
+				case AimbotType::LEGIT: {
+					ImGui::Text(XORSTR("Targeting"));
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, false);
 			{
-				if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
+						if(ImGui::Checkbox(XORSTR("Multi Bone"), &closestBone))
 					UI::UpdateWeaponSettings();
 			}
 			ImGui::NextColumn();
@@ -326,30 +528,29 @@ void Aimbot::RenderTab()
 						ImGui::EndPopup();
 					}
 				}
-				if(ImGui::Checkbox(XORSTR("ClosestBone"), &closestBone))
-					UI::UpdateWeaponSettings();
 
-				if(ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
+						if(ImGui::Checkbox(XORSTR("Ensure Lock"), &engageLock))
 					UI::UpdateWeaponSettings();
 				if(engageLock)
 				{
-					if(ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
+							if(ImGui::Checkbox(XORSTR("Targeting Delay ms"), &engageLockTR))
 						UI::UpdateWeaponSettings();
 					if( engageLockTR )
 					{
-						if(ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
+								if(ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000, "%5.0f"))
 							UI::UpdateWeaponSettings();
 					}
 				}
 				ImGui::PopItemWidth();
 			}
+
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Accuracy"));
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, true);
 			{
-				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
+						if (ImGui::Checkbox(XORSTR("FOV"), &autoAimEnabled))
 					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
 					UI::UpdateWeaponSettings();
@@ -359,7 +560,7 @@ void Aimbot::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AA"), &autoAimValue, 0, 180))
+						if (ImGui::SliderFloat(XORSTR("##AA"), &autoAimValue, 0, 180, "%0.1f"))
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
@@ -370,15 +571,16 @@ void Aimbot::RenderTab()
 					ImGui::PushItemWidth(-1);
 					if (ImGui::Checkbox(XORSTR("RCS Always on"), &rcsAlwaysOn))
 						UI::UpdateWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.3f")))
+							if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.5f")))
 						UI::UpdateWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.3f")))
+							if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.5f")))
 						UI::UpdateWeaponSettings();
 					ImGui::PopItemWidth();
 
 					ImGui::EndPopup();
 				}
 			}
+
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Humanizing"));
@@ -407,6 +609,11 @@ void Aimbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
+
+					ImGui::EndChild();
+				} break;
+
+				case AimbotType::RAGE: {
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Autoshoot"));
@@ -418,111 +625,6 @@ void Aimbot::RenderTab()
 				UI::UpdateWeaponSettings();
 			if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
 				UI::UpdateWeaponSettings();
-			ImGui::EndChild();
-		}
-	}
-	ImGui::NextColumn();
-	{
-		ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 0), true);
-		{
-			ImGui::Text(XORSTR("Aimkey Only"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Enabled"), &aimkeyOnly))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
-			{
-				UI::KeyBindButton(&aimkey);
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Casual / DM Only"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Aim Step"), &aimStepEnabled))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				ImGui::Text(XORSTR("Min"));
-				if (ImGui::SliderFloat(XORSTR("##STEPMIN"), &aimStepMin, 5, 35))
-					UI::UpdateWeaponSettings();
-				ImGui::Text(XORSTR("Max"));
-				if (ImGui::SliderFloat(XORSTR("##STEPMAX"), &aimStepMax, (aimStepMin) + 1.0f, 35))
-					UI::UpdateWeaponSettings();
-				ImGui::PopItemWidth();
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Other"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-
-				switch (currentWeapon)
-				{
-					case ItemDefinitionIndex::INVALID:
-					case ItemDefinitionIndex::WEAPON_DEAGLE:
-					case ItemDefinitionIndex::WEAPON_ELITE:
-					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-					case ItemDefinitionIndex::WEAPON_GLOCK:
-					case ItemDefinitionIndex::WEAPON_TEC9:
-					case ItemDefinitionIndex::WEAPON_HKP2000:
-					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-					case ItemDefinitionIndex::WEAPON_P250:
-					case ItemDefinitionIndex::WEAPON_CZ75A:
-					case ItemDefinitionIndex::WEAPON_REVOLVER:
-						if (ImGui::Checkbox(XORSTR("Auto Pistol"), &autoPistolEnabled))
-							UI::UpdateWeaponSettings();
-						break;
-					default:
-						break;
-				}
-
-				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
-			{
-				if (ImGui::Checkbox(XORSTR("No Shoot"), &noShootEnabled))
-					UI::UpdateWeaponSettings();
-
-				switch (currentWeapon)
-				{
-					case ItemDefinitionIndex::WEAPON_DEAGLE:
-					case ItemDefinitionIndex::WEAPON_ELITE:
-					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
-					case ItemDefinitionIndex::WEAPON_GLOCK:
-					case ItemDefinitionIndex::WEAPON_TEC9:
-					case ItemDefinitionIndex::WEAPON_HKP2000:
-					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
-					case ItemDefinitionIndex::WEAPON_P250:
-					case ItemDefinitionIndex::WEAPON_CZ75A:
-					case ItemDefinitionIndex::WEAPON_REVOLVER:
-						break;
-					default:
-						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
-							UI::UpdateWeaponSettings();
-						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
-							UI::UpdateWeaponSettings();
-				}
-
-				if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))
-					UI::UpdateWeaponSettings();
-			}
-
 
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -628,11 +730,121 @@ void Aimbot::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %f")))
+						if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %1.0f")))
+							UI::UpdateWeaponSettings();
+						ImGui::PopItemWidth();
+					}
+
+					ImGui::EndChild();
+				} break;
+			}
+		}
+	}
+	ImGui::NextColumn();
+	{
+		ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 0), true);
+		{
+			ImGui::Text(XORSTR("Aimkey Only"));
+			ImGui::Separator();
+			ImGui::Columns(2, nullptr, true);
+			{
+				if (ImGui::Checkbox(XORSTR("Enabled"), &aimkeyOnly))
+					UI::UpdateWeaponSettings();
+			}
+			ImGui::NextColumn();
+			{
+				UI::KeyBindButton(&aimkey);
+			}
+
+			ImGui::Columns(1);
+			ImGui::Separator();
+			ImGui::Text(XORSTR("Casual / DM Only"));
+			ImGui::Separator();
+			ImGui::Columns(2, nullptr, true);
+			{
+				if (ImGui::Checkbox(XORSTR("Aim Step"), &aimStepEnabled))
+					UI::UpdateWeaponSettings();
+			}
+			ImGui::NextColumn();
+			{
+				ImGui::PushItemWidth(-1);
+				ImGui::Text(XORSTR("Min"));
+				if (ImGui::SliderFloat(XORSTR("##STEPMIN"), &aimStepMin, 5, 35))
+					UI::UpdateWeaponSettings();
+				ImGui::Text(XORSTR("Max"));
+				if (ImGui::SliderFloat(XORSTR("##STEPMAX"), &aimStepMax, (aimStepMin) + 1.0f, 35))
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
 
+			ImGui::Columns(1);
+			ImGui::Separator();
+			ImGui::Text(XORSTR("Other"));
+			ImGui::Separator();
+			ImGui::Columns(2, nullptr, true);
+			{
+
+				switch (currentWeapon)
+				{
+					case ItemDefinitionIndex::INVALID:
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
+						if (ImGui::Checkbox(XORSTR("Auto Pistol"), &autoPistolEnabled))
+							UI::UpdateWeaponSettings();
+						break;
+					default:
+						break;
+				}
+
+				if (ImGui::Checkbox(XORSTR("Silent Aim"), &silent))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Friendly Fire"), &friendly))
+					UI::UpdateWeaponSettings();
+			}
+			ImGui::NextColumn();
+			{
+				if (ImGui::Checkbox(XORSTR("No Shoot"), &noShootEnabled))
+					UI::UpdateWeaponSettings();
+
+				switch (currentWeapon)
+				{
+					case ItemDefinitionIndex::WEAPON_DEAGLE:
+					case ItemDefinitionIndex::WEAPON_ELITE:
+					case ItemDefinitionIndex::WEAPON_FIVESEVEN:
+					case ItemDefinitionIndex::WEAPON_GLOCK:
+					case ItemDefinitionIndex::WEAPON_TEC9:
+					case ItemDefinitionIndex::WEAPON_HKP2000:
+					case ItemDefinitionIndex::WEAPON_USP_SILENCER:
+					case ItemDefinitionIndex::WEAPON_P250:
+					case ItemDefinitionIndex::WEAPON_CZ75A:
+					case ItemDefinitionIndex::WEAPON_REVOLVER:
+						break;
+					default:
+						if (ImGui::Checkbox(XORSTR("Auto Scope"), &autoScopeEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Scope Control"), &scopeControlEnabled))
+							UI::UpdateWeaponSettings();
+				}
+
+				if (ImGui::Checkbox(XORSTR("Flash Check"), &flashCheck))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Ignore Jump (Self)"), &ignoreJumpEnabled))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))
+					UI::UpdateWeaponSettings();
+			}
 
 			ImGui::Columns(1);
 			ImGui::Separator();

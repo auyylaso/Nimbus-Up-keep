@@ -130,6 +130,12 @@ enum class SmokeType : int
 	NONE,
 };
 
+enum class AimbotType : int
+{
+	LEGIT,
+	RAGE,
+};
+
 enum class AimTargetType : int
 {
 	FOV,
@@ -376,6 +382,7 @@ namespace Settings
 	namespace Aimbot
 	{
 		extern bool enabled;
+		extern AimbotType type;
 		extern bool silent;
 		extern bool friendly;
 		extern Bone bone;
@@ -1024,6 +1031,7 @@ namespace Settings
 	namespace FakeLag
 	{
 		extern bool enabled;
+		extern bool lagSpike;
 		extern int value;
 	}
 
