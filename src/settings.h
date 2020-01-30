@@ -1031,8 +1031,32 @@ namespace Settings
 	namespace FakeLag
 	{
 		extern bool enabled;
-		extern bool lagSpike;
 		extern int value;
+
+		extern bool lagSpike;
+
+		namespace States
+		{
+			extern bool enabled;
+
+			namespace Standing
+			{
+				extern bool enabled;
+				extern int value;
+			}
+
+			namespace Moving
+			{
+				extern bool enabled;
+				extern int value;
+			}
+
+			namespace Air
+			{
+				extern bool enabled;
+				extern int value;
+			}
+		}
 	}
 
 	namespace AutoAccept

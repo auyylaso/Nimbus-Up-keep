@@ -10,6 +10,14 @@ int Settings::FakeLag::value = 9;
 bool Settings::FakeLag::lagSpike = false;
 bool FakeLag::lagSpike = false;
 
+bool Settings::FakeLag::States::enabled = false;
+bool Settings::FakeLag::States::Standing::enabled = false;
+int Settings::FakeLag::States::Standing::value = 9;
+bool Settings::FakeLag::States::Moving::enabled = false;
+int Settings::FakeLag::States::Moving::value = 9;
+bool Settings::FakeLag::States::Air::enabled = false;
+int Settings::FakeLag::States::Air::value = 9;
+
 static int ticks = 0;
 int ticksMax = 16;
 
@@ -20,9 +28,6 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer || !localplayer->GetAlive())
-		return;
-
-	if (localplayer->GetVelocity().Length() <= 0.0f)
 		return;
 
 	if (cmd->buttons & IN_ATTACK)
@@ -38,6 +43,15 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 	}
 	else if (FakeLag::lagSpike)
 		CreateMove::sendPacket = false;
+	else if (Settings::FakeLag::States::enabled)
+	{
+		if (Settings::FakeLag::States::Air::enabled && !(localplayer->GetFlags() & FL_ONGROUND))
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Air::value;
+		else if (Settings::FakeLag::States::Moving::enabled && localplayer->GetVelocity().Length() > 0.0f)
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Moving::value;
+		else if (Settings::FakeLag::States::Standing::enabled)
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Standing::value;
+	}
 	else
 		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
 

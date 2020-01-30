@@ -6,12 +6,20 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
-Version 1.1.1
+Version 1.1.2 (Jan 30)
+- Fake-lag moved to HvH tab
+- Move state fake-lag added (beta)
+- Put all anti-aim settings to "rage" by default
+- Adjusted HvH tab
+- Fixed fake-lag on peek
+
+Version 1.1.1 (Jan 28)
 - New menu design (beta)
 - New aimbot tab (beta)
 - New HvH tab
 - Removed resolver from HvH tab (available on player selection)
 - Auto crouch added to misc tab
+- Fake-lag on peek added
 
 Version 1.1.0 (Jan 25)
 - Third-person key added

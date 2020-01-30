@@ -19,9 +19,9 @@ float Settings::AntiAim::States::Run::angle = 180.0f;
 float Settings::AntiAim::States::Air::angle = 180.0f;
 
 AntiAimType Settings::AntiAim::States::Stand::type = AntiAimType::RAGE;
-// AntiAimType Settings::AntiAim::States::Walk::type = AntiAimType::CUSTOM;
-AntiAimType Settings::AntiAim::States::Run::type = AntiAimType::CUSTOM;
-AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::CUSTOM;
+// AntiAimType Settings::AntiAim::States::Walk::type = AntiAimType::RAGE;
+AntiAimType Settings::AntiAim::States::Run::type = AntiAimType::RAGE;
+AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::RAGE;
 
 ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
 ButtonCode_t Settings::AntiAim::right = ButtonCode_t::KEY_C;

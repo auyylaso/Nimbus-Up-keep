@@ -611,7 +611,10 @@ static void LagSpike(C_BasePlayer* player, CUserCmd* cmd)
 		return;
 
 	if (!player)
+	{
+		FakeLag::lagSpike = false;
 		return;
+	}
 
 	FakeLag::lagSpike = true;
 }

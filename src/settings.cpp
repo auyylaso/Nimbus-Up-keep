@@ -565,6 +565,14 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
 
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")] = Settings::FakeLag::States::enabled;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")] = Settings::FakeLag::States::Standing::enabled;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("value")] = Settings::FakeLag::States::Standing::value;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("enabled")] = Settings::FakeLag::States::Moving::enabled;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("value")] = Settings::FakeLag::States::Moving::value;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("enabled")] = Settings::FakeLag::States::Air::enabled;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("value")] = Settings::FakeLag::States::Air::value;
+
 	settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
 	settings[XORSTR("NoSky")][XORSTR("enabled")] = Settings::NoSky::enabled;
@@ -1140,6 +1148,14 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
+
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")], &Settings::FakeLag::States::enabled);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")], &Settings::FakeLag::States::Standing::enabled);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("value")], &Settings::FakeLag::States::Standing::value);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("enabled")], &Settings::FakeLag::States::Moving::enabled);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("value")], &Settings::FakeLag::States::Moving::value);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("enabled")], &Settings::FakeLag::States::Air::enabled);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("value")], &Settings::FakeLag::States::Air::value);
 
 	GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 
