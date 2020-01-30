@@ -874,6 +874,7 @@ void Aimbot::CreateMove(CUserCmd* cmd)
     AimStep(player, angle, cmd);
 	Backtrack(localplayer, player, cmd);
 	AutoCrouch(player, cmd);
+	LagSpike(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
 	AutoShoot(player, activeWeapon, cmd);
