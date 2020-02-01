@@ -218,6 +218,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Aimbot::AutoCrouch::enabled;
 	settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Aimbot::AutoShoot::velocityCheck;
+	settings[XORSTR("Aimbot")][XORSTR("type")] = (int) Settings::Aimbot::type;
 
 	settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("type")] = (int) Settings::AntiAim::type;

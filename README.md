@@ -6,6 +6,10 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.0 (Feb 1)
+- Updated menus
+- Updated fake-lag
+
 Version 1.1.2 (Jan 30)
 - Fake-lag moved to HvH tab
 - Move state fake-lag added (beta)
