@@ -101,7 +101,6 @@ void LagComp::FrameStageNotify(ClientFrameStage_t stage)
     }
 }
 
-/* This will be moved to aimbot.cpp
 void LagComp::CreateMove(CUserCmd* cmd)
 {
     if (!Settings::LagComp::enabled)
@@ -121,7 +120,6 @@ void LagComp::CreateMove(CUserCmd* cmd)
 
     if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
     {
-        float fov = 7.f;
         int tickcount = 0;
         bool hasTarget = false;
 
@@ -132,9 +130,9 @@ void LagComp::CreateMove(CUserCmd* cmd)
 
                 float tmpFOV = Math::GetFov(myAngle_rcs, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
-                if (tmpFOV < fov)
+                if (tmpFOV < Settings::Aimbot::AutoAim::fov)
                 {
-                    fov = tmpFOV;
+                    Settings::Aimbot::AutoAim::fov = tmpFOV;
                     tickcount = tick.tickcount;
                     hasTarget = true;
                 }
@@ -147,4 +145,3 @@ void LagComp::CreateMove(CUserCmd* cmd)
         }
     }
 }
-*/

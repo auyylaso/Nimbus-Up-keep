@@ -6,6 +6,9 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.1 (Feb 5)
+- Backtrack fixed
+
 Version 1.2.0 (Feb 1)
 - Updated menus
 - Updated fake-lag

@@ -1,6 +1,5 @@
 #include "aimbot.h"
 #include "autowall.h"
-#include "lagcomp.h"
 #include "fakelag.h"
 
 #include "../Utils/xorstring.h"
@@ -223,7 +222,7 @@ static Vector GetClosestSpot( CUserCmd* cmd, C_BasePlayer* localPlayer, C_BasePl
 	QAngle viewAngles;
 	engine->GetViewAngles(viewAngles);
 
-	float tempFov = Settings::Aimbot::type == AimbotType::LEGIT ? Settings::Aimbot::AutoAim::fov : 180.0f;
+	float tempFov = Settings::Aimbot::AutoAim::fov;
 	float tempDistance = Settings::Aimbot::AutoAim::fov * 5.f;
 
 	Vector pVecTarget = localPlayer->GetEyePosition();
@@ -284,7 +283,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	C_BasePlayer* closestEntity = nullptr;
 
-	float bestFov = Settings::Aimbot::type == AimbotType::LEGIT ? Settings::Aimbot::AutoAim::fov : 180.0f;
+	float bestFov = Settings::Aimbot::AutoAim::fov;
 	float bestRealDistance = Settings::Aimbot::AutoAim::fov * 5.f;
 
 	if( lockedOn )
@@ -571,29 +570,6 @@ static void Smooth(C_BasePlayer* player, QAngle& angle)
 	angle = viewAngles + toChange;
 }
 
-static void Backtrack(C_BasePlayer* localplayer, C_BasePlayer* player, CUserCmd* cmd)
-{
-	// TODO: Implement a way for the aimbot to shoot backtrack.
-	if (!Settings::LagComp::enabled)
-		return;
-
-	if (!localplayer)
-		return;
-
-	if (!player)
-		return;
-
-	for (auto& tick : LagComp::ticks)
-	{
-		for (auto& record : tick.records)
-		{
-			cmd->tick_count = tick.tickcount;
-			if (Entity::IsSpotVisible(player, record.head))
-				player->GetEyePosition() = record.head;
-		}
-	}
-}
-
 static void AutoCrouch(C_BasePlayer* player, CUserCmd* cmd)
 {
 	if (!Settings::Aimbot::AutoCrouch::enabled)
@@ -822,7 +798,10 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 	}
 
 	if (Settings::Aimbot::type == AimbotType::RAGE)
+	{
 		Settings::Aimbot::AutoAim::enabled = true;
+		Settings::Aimbot::AutoAim::fov = 180.0f;
+	}
 
     Vector bestSpot = {0,0,0};
 	float bestDamage = 0.0f;
@@ -872,7 +851,6 @@ void Aimbot::CreateMove(CUserCmd* cmd)
     }
 
     AimStep(player, angle, cmd);
-	Backtrack(localplayer, player, cmd);
 	AutoCrouch(player, cmd);
 	LagSpike(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
