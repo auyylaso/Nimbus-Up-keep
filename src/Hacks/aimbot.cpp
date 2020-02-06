@@ -68,6 +68,8 @@ bool Aimbot::aimStepInProgress = false;
 std::vector<int64_t> Aimbot::friends = { };
 std::vector<long> killTimes = { 0 }; // the Epoch time from when we kill someone
 
+Vector prePredVel;
+
 bool shouldAim;
 QAngle AimStepLastAngle;
 QAngle RCSLastPunch;
@@ -595,51 +597,41 @@ static void LagSpike(C_BasePlayer* player, CUserCmd* cmd)
 	FakeLag::lagSpike = true;
 }
 
-static void AutoSlow(C_BasePlayer* player, float& forward, float& sideMove, float& bestDamage, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
+static void AutoSlow(C_BasePlayer* player, float& forwardMove, float& sideMove, C_BaseCombatWeapon* active_weapon, CUserCmd* cmd)
 {
+    if (!Settings::Aimbot::AutoSlow::enabled)
+        return;
 
-	if (!Settings::Aimbot::AutoSlow::enabled){
-		Settings::Aimbot::AutoSlow::goingToSlow = false;
-		return;
-	}
+    if (!player)
+        return;
 
-	if (!player){
-		Settings::Aimbot::AutoSlow::goingToSlow = false;
-		return;
-	}
+    float nextPrimaryAttack = active_weapon->GetNextPrimaryAttack();
 
-	float nextPrimaryAttack = active_weapon->GetNextPrimaryAttack();
+    if (nextPrimaryAttack > globalVars->curtime)
+        return;
 
-	if (nextPrimaryAttack > globalVars->curtime){
-		Settings::Aimbot::AutoSlow::goingToSlow = false;
-		return;
-	}
+    C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 
-	Settings::Aimbot::AutoSlow::goingToSlow = true;
+    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+    if (!activeWeapon || activeWeapon->GetAmmo() == 0)
+        return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+    Vector velocity = prePredVel;
+    float speed = localplayer->GetVelocity().Length();
 
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
-		return;
+    QAngle direction;
+    Math::VectorAngles(velocity, direction);
 
-	if( Settings::Aimbot::SpreadLimit::enabled )
-	{
-		if( (activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value )
-		{
-			cmd->buttons |= IN_WALK;
-			forward = -forward;
-			sideMove = -sideMove;
-			cmd->upmove = 0;
-		}
-	}
-	else if( localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3) ) // https://youtu.be/ZgjYxBRuagA
-	{
-		cmd->buttons |= IN_WALK;
-		forward = -forward;
-		sideMove = -sideMove;
-		cmd->upmove = 0;
-	}
+    Vector forward;
+    Math::AngleVectors(direction, forward);
+
+    auto negated_direction = forward * -speed;
+
+    float factor = std::max(negated_direction.x, negated_direction.y) / 450.f;
+    negated_direction *= factor;
+
+    forwardMove = negated_direction.x;
+    sideMove = negated_direction.y;
 }
 
 static void AutoCock(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
@@ -757,6 +749,13 @@ static void FixMouseDeltas(CUserCmd* cmd, const QAngle &angle, const QAngle &old
     cmd->mousedx = -delta.y / ( m_yaw * sens * zoomMultiplier );
     cmd->mousedy = delta.x / ( m_pitch * sens * zoomMultiplier );
 }
+
+void Aimbot::PrePredictionCreateMove(CUserCmd* cmd)
+{
+    C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+    prePredVel = localplayer->GetVelocity();
+}
+
 void Aimbot::CreateMove(CUserCmd* cmd)
 {
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -853,7 +852,7 @@ void Aimbot::CreateMove(CUserCmd* cmd)
     AimStep(player, angle, cmd);
 	AutoCrouch(player, cmd);
 	LagSpike(player, cmd);
-	AutoSlow(player, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
+	AutoSlow(player, oldForward, oldSideMove, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
 	AutoShoot(player, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);

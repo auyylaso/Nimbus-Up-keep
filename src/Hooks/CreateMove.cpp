@@ -42,6 +42,7 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
         CreateMove::sendPacket = true;
 
 		/* run code that affects movement before prediction */
+		Aimbot::PrePredictionCreateMove(cmd);
 		BHop::CreateMove(cmd);
 		NoDuckCooldown::CreateMove(cmd);
 		AutoStrafe::CreateMove(cmd);
