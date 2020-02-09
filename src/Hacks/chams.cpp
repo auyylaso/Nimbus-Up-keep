@@ -12,12 +12,12 @@ bool Settings::ESP::Chams::Arms::enabled = false;
 bool Settings::ESP::Chams::Weapon::enabled = false;
 ArmsType Settings::ESP::Chams::Arms::type = ArmsType::DEFAULT;
 WeaponType Settings::ESP::Chams::Weapon::type = WeaponType::DEFAULT;
-HealthColorVar Settings::ESP::Chams::allyColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::ESP::Chams::allyVisibleColor = ImColor(0, 255, 0, 255);
-HealthColorVar Settings::ESP::Chams::enemyColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::ESP::Chams::enemyVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::ESP::Chams::localplayerColor = ImColor(0, 255, 255, 255);
-ColorVar Settings::ESP::Chams::Arms::color = ImColor(255, 255, 255, 255);
+HealthColorVar Settings::ESP::Chams::allyColor = ImColor(0, 128, 255, 255);
+HealthColorVar Settings::ESP::Chams::allyVisibleColor = ImColor(0, 255, 128, 255);
+HealthColorVar Settings::ESP::Chams::enemyColor = ImColor(255, 128, 0, 255);
+HealthColorVar Settings::ESP::Chams::enemyVisibleColor = ImColor(128, 255, 0, 255);
+HealthColorVar Settings::ESP::Chams::localplayerColor = ImColor(128, 128, 128, 128);
+ColorVar Settings::ESP::Chams::Arms::color = ImColor(0, 128, 128, 128);
 ColorVar Settings::ESP::Chams::Weapon::color = ImColor(255, 255, 255, 255);
 ChamsType Settings::ESP::Chams::type = ChamsType::CHAMS;
 
@@ -219,4 +219,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 		DrawArms(pInfo);
 	else if (modelName.find(XORSTR("weapon")) != std::string::npos)
 		DrawWeapon(pInfo);
+
+	if (Settings::ESP::Backtrack::enabled)
+		DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
 }

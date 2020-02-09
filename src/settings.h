@@ -136,6 +136,14 @@ enum class AimbotType : int
 	RAGE,
 };
 
+enum class ResolverType : int
+{
+	Fuzion,
+	Nasa,
+	skerei,
+	Zede,
+};
+
 enum class AimTargetType : int
 {
 	FOV,
@@ -592,6 +600,10 @@ namespace Settings
 	namespace Resolver
 	{
 		extern bool resolveAll;
+		extern float x;
+		extern float y;
+		extern int RandMax;
+		extern ResolverType type;
 	}
 
 	namespace ESP
@@ -676,6 +688,7 @@ namespace Settings
 			extern bool rescuing;
 			extern bool location;
 			extern bool money;
+			extern bool missedShots;
 		}
 
 		namespace Skeleton
@@ -750,6 +763,12 @@ namespace Settings
 				extern ColorVar color;
 				extern WeaponType type;
 			}
+		}
+
+		namespace ZeusRadius
+		{
+			extern bool enabled;
+			extern ColorVar color;
 		}
 
 		namespace Sounds
@@ -1181,6 +1200,12 @@ namespace Settings
  			extern bool allies;
  		}
  	}
+
+	namespace LogShots
+	{
+		extern bool enabled;
+	} // namespace LogShots
+	
 	
     namespace Debug
     {
