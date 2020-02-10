@@ -567,6 +567,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
+	settings[XORSTR("FakeLag")][XORSTR("lagSpike")] = Settings::FakeLag::lagSpike;
 
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")] = Settings::FakeLag::States::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")] = Settings::FakeLag::States::Standing::enabled;
@@ -746,18 +747,18 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Aimbot::AutoCrouch::enabled);
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Aimbot::AutoShoot::velocityCheck);
-	GetVal(settings[XORSTR("Aimbot")][XORSTR("type")], (int*)& Settings::Aimbot::type);
+	GetVal(settings[XORSTR("Aimbot")][XORSTR("type")], (int*) &Settings::Aimbot::type);
 
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*)& Settings::AntiAim::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*) &Settings::AntiAim::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*)& Settings::AntiAim::States::Stand::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*) &Settings::AntiAim::States::Stand::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")], &Settings::AntiAim::States::Stand::angle);
 	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")], (int*)& Settings::AntiAim::States::Walk::type);
 	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")], &Settings::AntiAim::States::Walk::angle);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*)& Settings::AntiAim::States::Run::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*) &Settings::AntiAim::States::Run::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")], &Settings::AntiAim::States::Run::angle);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*)& Settings::AntiAim::States::Air::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*) &Settings::AntiAim::States::Air::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")], &Settings::AntiAim::States::Air::angle);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("left")], &Settings::AntiAim::left);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("right")], &Settings::AntiAim::right);
@@ -1154,6 +1155,7 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("lagSpike")], &Settings::FakeLag::lagSpike);
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")], &Settings::FakeLag::States::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")], &Settings::FakeLag::States::Standing::enabled);
