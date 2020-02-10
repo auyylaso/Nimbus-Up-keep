@@ -3,6 +3,7 @@
 #include "esp.h"
 #include "autowall.h"
 #include "lagcomp.h"
+#include "logshots.h"
 #include "../fonts.h"
 #include "../settings.h"
 #include "../interfaces.h"
@@ -91,6 +92,7 @@ bool Settings::ESP::Info::grabbingHostage = false;
 bool Settings::ESP::Info::rescuing = false;
 bool Settings::ESP::Info::location = false;
 bool Settings::ESP::Info::money = false;
+bool Settings::ESP::Info::missedShots = false;
 bool Settings::ESP::Boxes::enabled = false;
 BoxType Settings::ESP::Boxes::type = BoxType::FRAME_2D;
 bool Settings::ESP::Sprite::enabled = false;
@@ -1063,6 +1065,13 @@ static void DrawPlayerText( C_BasePlayer* player, C_BasePlayer* localplayer, int
 	if ( Settings::ESP::Info::health ) {
 		std::string buf = std::to_string( player->GetHealth() ) + XORSTR( " HP" );
 		Draw::AddText( x + w + boxSpacing, ( y + h - textSize.y ), buf.c_str(), Entity::IsTeamMate(player, localplayer) ? Settings::ESP::allyInfoColor.Color() : Settings::ESP::enemyInfoColor.Color() );
+	}
+
+	// Missed shots
+	if (Settings::ESP::Info::missedShots)
+	{
+		std::string buf = XORSTR("Missed : ") + std::to_string(LogShots::missedShots[player->GetIndex() - 1]);
+		Draw::Text(x + w + boxSpacing, (int)(y + h - textSize.y * (Settings::ESP::Info::health ? 2 : 1)), buf.c_str(), esp_font, Color(255, 255, 255));
 	}
 
 	// armor

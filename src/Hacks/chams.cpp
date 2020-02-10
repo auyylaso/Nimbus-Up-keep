@@ -219,4 +219,7 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 		DrawArms(pInfo);
 	else if (modelName.find(XORSTR("weapon")) != std::string::npos)
 		DrawWeapon(pInfo);
+
+	if (Settings::ESP::Backtrack::enabled)
+		DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
 }

@@ -16,6 +16,10 @@ void HvH::RenderTab()
             "Rage", "Legit", "Custom"
     };
 
+    const char* resTypes[] = {
+            "Fuzion", "Nasa", "skerei", "Zede"
+    };
+
     ImGui::Columns(2, nullptr, true);
     {
         ImGui::BeginChild(XORSTR("HVH1"), ImVec2(0, 0), true);
@@ -102,6 +106,10 @@ void HvH::RenderTab()
     {
         ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), true);
         {
+            ImGui::Checkbox(XORSTR("Resolve All"), &Settings::Resolver::resolveAll);
+            if(Settings::Resolver::resolveAll == true)
+                ImGui::Combo("Resolver Type",(int*)&Settings::Resolver::type, resTypes, IM_ARRAYSIZE(resTypes));
+                
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("Anti-Aim States"), &Settings::AntiAim::States::enabled);
 
