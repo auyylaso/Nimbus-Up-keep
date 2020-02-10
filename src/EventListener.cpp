@@ -8,7 +8,6 @@
 #include "Hacks/skinchanger.h"
 #include "Hacks/spammer.h"
 #include "Hacks/valvedscheck.h"
-#include "Hacks/logshots.h"
 #include "interfaces.h"
 #include "SDK/IGameEvent.h"
 
@@ -29,7 +28,6 @@ void EventListener::FireGameEvent(IGameEvent* event)
     Hitmarkers::FireGameEvent(event);
     Eventlog::FireGameEvent(event);
     NameStealer::FireGameEvent(event);
-    LogShots::FireGameEvent(event);
     Resolver::FireGameEvent(event);
     Spammer::FireGameEvent(event);
     ValveDSCheck::FireGameEvent(event);

@@ -23,7 +23,6 @@
 #include "../Hacks/nofall.h"
 #include "../Hacks/clantagchanger.h"
 #include "../Hacks/lagcomp.h"
-#include "../Hacks/logshots.h"
 
 bool CreateMove::sendPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
@@ -55,7 +54,6 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		Autoblock::CreateMove(cmd);
 		NoFall::PrePredictionCreateMove(cmd);
 		ClanTagChanger::CreateMove(cmd);
-		LogShots::CreateMove(cmd);
 
 		PredictionSystem::StartPrediction(cmd);
 			Aimbot::CreateMove(cmd);

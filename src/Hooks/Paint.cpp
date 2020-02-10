@@ -13,7 +13,6 @@
 #include "../Hacks/hitmarkers.h"
 #include "../Hacks/eventlog.h"
 #include "../Hacks/snipercrosshair.h"
-#include "../Hacks/logshots.h"
 
 #include <mutex>
 
@@ -51,7 +50,6 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
         Hitmarkers::Paint();
         Eventlog::Paint();
         GrenadePrediction::Paint();
-        LogShots::Paint();
 
         if( Settings::ESP::backend == DrawingBackend::SURFACE ){
             StartDrawing(surface);
