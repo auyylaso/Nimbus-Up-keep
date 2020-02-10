@@ -752,6 +752,12 @@ namespace Settings
 			}
 		}
 
+		namespace ZeusRadius
+		{
+			extern bool enabled;
+			extern ColorVar color;
+		}
+
 		namespace Sounds
 		{
 			extern bool enabled;

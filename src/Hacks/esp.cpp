@@ -23,15 +23,15 @@
 bool Settings::ESP::enabled = false;
 ButtonCode_t Settings::ESP::key = ButtonCode_t::KEY_Z;
 TeamColorType Settings::ESP::teamColorType = TeamColorType::RELATIVE;
-HealthColorVar Settings::ESP::enemyColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::ESP::enemyVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::ESP::allyColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::ESP::allyVisibleColor = ImColor(0, 255, 0, 255);
-HealthColorVar Settings::ESP::tColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::ESP::tVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::ESP::ctColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::ESP::ctVisibleColor = ImColor(0, 255, 0, 255);
-HealthColorVar Settings::ESP::localplayerColor = ImColor(0, 255, 255, 255);
+HealthColorVar Settings::ESP::enemyColor = ImColor(255, 128, 0, 128);
+HealthColorVar Settings::ESP::enemyVisibleColor = ImColor(128, 255, 0, 128);
+HealthColorVar Settings::ESP::allyColor = ImColor(0, 128, 255, 128);
+HealthColorVar Settings::ESP::allyVisibleColor = ImColor(0, 255, 128, 128);
+HealthColorVar Settings::ESP::tColor = ImColor(255, 128, 0, 128);
+HealthColorVar Settings::ESP::tVisibleColor = ImColor(128, 255, 0, 128);
+HealthColorVar Settings::ESP::ctColor = ImColor(0, 128, 255, 128);
+HealthColorVar Settings::ESP::ctVisibleColor = ImColor(0, 255, 128, 128);
+HealthColorVar Settings::ESP::localplayerColor = ImColor(128, 128, 128, 128);
 ColorVar Settings::ESP::bombColor = ImColor(156, 39, 176, 255);
 ColorVar Settings::ESP::bombDefusingColor = ImColor(213, 0, 249, 255);
 ColorVar Settings::ESP::hostageColor = ImColor(121, 85, 72, 255);
@@ -50,8 +50,8 @@ ColorVar Settings::ESP::allyInfoColor = ImColor(255, 255, 255, 255);
 ColorVar Settings::ESP::enemyInfoColor = ImColor(255, 255, 255, 255);
 ColorVar Settings::ESP::Skeleton::allyColor = ImColor(255, 255, 255, 255);
 ColorVar Settings::ESP::Skeleton::enemyColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::Spread::color = ImColor(15, 200, 45, 255);
-ColorVar Settings::ESP::Spread::spreadLimitColor = ImColor(20, 5, 150, 255);
+ColorVar Settings::ESP::Spread::color = ImColor(32, 32, 32, 64);
+ColorVar Settings::ESP::Spread::spreadLimitColor = ImColor(64, 64, 64, 64);
 bool Settings::ESP::Glow::enabled = false;
 HealthColorVar Settings::ESP::Glow::allyColor = ImColor(0, 0, 255, 255);
 HealthColorVar Settings::ESP::Glow::enemyColor = ImColor(255, 0, 0, 255);
@@ -104,6 +104,8 @@ bool Settings::ESP::BulletTracers::enabled = false;
 bool Settings::ESP::FOVCrosshair::enabled = false;
 bool Settings::ESP::FOVCrosshair::filled = false;
 ColorVar Settings::ESP::FOVCrosshair::color = ImColor(255, 0, 0, 255);
+bool Settings::ESP::ZeusRadius::enabled = false;
+ColorVar Settings::ESP::ZeusRadius::color = ImColor(255,0,0,255);
 bool Settings::ESP::Skeleton::enabled = false;
 bool Settings::ESP::Sounds::enabled = false;
 int Settings::ESP::Sounds::time = 1000;
@@ -890,6 +892,32 @@ static void DrawBacktrack( C_BasePlayer* player )
     }
 }
 
+static void DrawZeusBot(ImColor playerColor)
+{
+    C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
+
+    if (!engine->IsInGame())
+		return;
+
+    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localPlayer->GetActiveWeapon());
+    ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();
+
+    float percent = (float)1 / (float)100;
+    Color drawColor = Color::FromImColor(playerColor);
+
+    float circleRadius = fabs(percent - 1.0f) * 180.0f;
+    float points = std::max(12.0f, circleRadius * 0.75f);
+
+    float circleRadiusKnife = fabs(percent - 1.0f) * 64.0f;
+    float points2 = std::max(12.0f, circleRadius * 0.75f);
+
+    if (Settings::ESP::ZeusRadius::enabled && !Util::Items::IsKnife(itemDefinitionIndex) && itemDefinitionIndex == ItemDefinitionIndex::WEAPON_TASER)
+		Draw::AddCircle3D(localPlayer->GetVecOrigin(), circleRadius, ImColor(Settings::ESP::ZeusRadius::color.Color()), (int)points);
+
+    if (Settings::ESP::ZeusRadius::enabled && Util::Items::IsKnife(itemDefinitionIndex) && itemDefinitionIndex != ItemDefinitionIndex::WEAPON_TASER)
+		Draw::AddCircle3D(localPlayer->GetVecOrigin(), circleRadiusKnife, ImColor(Settings::ESP::ZeusRadius::color.Color()), (int)points2);
+}
+
 static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
     std::unique_lock<std::mutex> lock( footstepMutex, std::try_to_lock );
     if( lock.owns_lock() ){
@@ -1164,6 +1192,9 @@ static void DrawPlayer(C_BasePlayer* player)
 
 	if (Settings::Debug::AutoAim::drawTarget)
 		DrawAimbotSpot();
+
+	if (Settings::ESP::ZeusRadius::enabled)
+		DrawZeusBot(playerColor);
 
     if (Settings::ESP::Sounds::enabled) {
 		DrawSounds( player, playerColor );
@@ -1641,34 +1672,40 @@ static void DrawFOVCrosshair()
 
 static void DrawSpread()
 {
-    if ( !Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit )
+    if (!Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit)
         return;
 
-    C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
-    if ( !localplayer )
+    C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
+    if (!localplayer)
         return;
 
-    C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(
-            localplayer->GetActiveWeapon() );
-    if ( !activeWeapon )
+    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+    if (!activeWeapon)
         return;
 
-    if ( Settings::ESP::Spread::enabled ) {
+    if (Settings::ESP::Spread::enabled)
+    {
+		int width, height;
+		engine->GetScreenSize(width, height);
+
         float cone = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
-        if ( cone > 0.0f ) {
-            float radius = ( cone * Paint::engineHeight ) / 1.5f;
-            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
-                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2,
-                               Settings::ESP::Spread::color.Color() );
+		if (cone > 0.0f)
+		{
+			float radius = (cone * height) / 1.5f;
+			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
         }
     }
-    if ( Settings::ESP::Spread::spreadLimit ) {
+	
+    if (Settings::ESP::Spread::spreadLimit)
+    {
+		int width, height;
+		engine->GetScreenSize(width, height);
+
         float cone = Settings::Aimbot::SpreadLimit::value;
-        if ( cone > 0.0f ) {
-            float radius = ( cone * Paint::engineHeight ) / 1.5f;
-            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
-                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2 ,
-                               Settings::ESP::Spread::spreadLimitColor.Color() );
+		if (cone > 0.0f)
+		{
+			float radius = (cone * height) / 1.5f;
+			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
         }
     }
 }

@@ -272,6 +272,7 @@ void Visuals::RenderTab()
 				ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
 				ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
 				ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
+				ImGui::Checkbox(XORSTR("Show Zeus/Knife Radius"), &Settings::ESP::ZeusRadius::enabled);
 				ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
 				ImGui::Checkbox(XORSTR("No Sky"), &Settings::NoSky::enabled);
 

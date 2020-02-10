@@ -127,7 +127,7 @@ void LagComp::CreateMove(CUserCmd* cmd)
         {
             for (auto& record : tick.records)
             {
-                float fov = Settings::Aimbot::AutoAim::fov * 2;
+                float fov = Settings::Aimbot::AutoAim::fov * 2 > 180 ? 180 : Settings::Aimbot::AutoAim::fov * 2;
                 float tmpFOV = Math::GetFov(myAngle_rcs, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
                 if (tmpFOV < fov)

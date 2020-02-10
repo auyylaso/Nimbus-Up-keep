@@ -67,6 +67,7 @@ void Colors::RenderWindow()
 			{ "Spread", &Settings::ESP::Spread::color },
 			{ "SpreadLimit", &Settings::ESP::Spread::spreadLimitColor},
 			{ "Hitmarker", &Settings::ESP::Hitmarker::color },
+			{ "ESP - Zeus/Knife Radius", &Settings::ESP::ZeusRadius::color },
 			{ "ESP - Enemy", &Settings::ESP::enemyColor },
 			{ "ESP - Team", &Settings::ESP::allyColor },
 			{ "ESP - Enemy Visible", &Settings::ESP::enemyVisibleColor },

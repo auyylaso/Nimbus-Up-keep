@@ -6,8 +6,16 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
-Version 1.2.1 (Feb 5)
+Version 1.2.2 (Feb 10)
+- Reverting the resolver update (very unstable)
+- Added zeus radius to visuals
+
+Version 1.2.1 (Feb 9)
 - Backtrack fixed
+- Minor visual changes
+- New resolvers (beta)
+- Added shot-logging
+- Backtrack optimized
 
 Version 1.2.0 (Feb 1)
 - Updated menus
