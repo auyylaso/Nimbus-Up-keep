@@ -550,6 +550,11 @@ namespace Settings
             extern bool knifeHeld;
         }
 
+		namespace Freestanding
+		{
+			extern bool enabled;
+		}
+
 		namespace States
 		{
 			extern bool enabled;

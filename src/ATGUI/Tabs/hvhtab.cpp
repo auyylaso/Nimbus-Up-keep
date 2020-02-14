@@ -73,6 +73,8 @@ void HvH::RenderTab()
                 }
             }
             ImGui::Separator();
+            ImGui::Checkbox(XORSTR("Freestand"), &Settings::AntiAim::Freestanding::enabled);
+            ImGui::Separator();
 
             if (Settings::FakeLag::States::enabled) {
                 ImGui::Columns(2, nullptr, true);
@@ -102,6 +104,7 @@ void HvH::RenderTab()
     {
         ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), true);
         {
+            ImGui::Checkbox(XORSTR("Resolver (beta)"), &Settings::Resolver::resolveAll);
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("Anti-Aim States"), &Settings::AntiAim::States::enabled);
 

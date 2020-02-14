@@ -12,7 +12,6 @@ AntiAimType Settings::AntiAim::type = AntiAimType::RAGE;
 float Settings::AntiAim::yaw = 180.0f;
 
 bool Settings::AntiAim::States::enabled = false;
-
 float Settings::AntiAim::States::Stand::angle = 180.0f;
 // float Settings::AntiAim::States::Walk::angle = 180.0f;
 float Settings::AntiAim::States::Run::angle = 180.0f;
@@ -25,6 +24,8 @@ AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::RAGE;
 
 ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
 ButtonCode_t Settings::AntiAim::right = ButtonCode_t::KEY_C;
+
+bool Settings::AntiAim::Freestanding::enabled = false;
 
 bool Settings::AntiAim::AutoDisable::knifeHeld = false;
 
@@ -50,6 +51,96 @@ float AntiAim::GetMaxDelta(CCSGOAnimState *animState) {
     delta = *(float*)((uintptr_t)animState + 0x3A4) * unk2;
 
     return delta - 0.5f;
+}
+
+// Pasted from space!hook, but I tried
+static bool GetBestHeadAngle(QAngle& angle)
+{
+	float b, r, l;
+
+	Vector src3D, dst3D, forward, right, up;
+
+	trace_t tr;
+	Ray_t ray, ray2, ray3;
+	CTraceFilter filter;
+
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	if (!localplayer)
+		return false;
+
+	QAngle viewAngles;
+	engine->GetViewAngles(viewAngles);
+
+	viewAngles.x = 0;
+
+	Math::AngleVectors(viewAngles, forward, right, up);
+
+	auto GetTargetEntity = [ & ] ( void )
+	{
+		float bestFov = FLT_MAX;
+		C_BasePlayer* bestTarget = NULL;
+
+		for( int i = 0; i < engine->GetMaxClients(); ++i )
+		{
+			C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
+
+			if (!player
+				|| player == localplayer
+				|| player->GetDormant()
+				|| !player->GetAlive()
+				|| player->GetImmune()
+				|| player->GetTeam() == localplayer->GetTeam())
+				continue;
+
+			float fov = Math::GetFov(viewAngles, Math::CalcAngle(localplayer->GetEyePosition(), player->GetEyePosition()));
+
+			if( fov < bestFov )
+			{
+				bestFov = fov;
+				bestTarget = player;
+			}
+		}
+
+		return bestTarget;
+	};
+
+	auto target = GetTargetEntity();
+	filter.pSkip = localplayer;
+	src3D = localplayer->GetEyePosition();
+	dst3D = src3D + (forward * 384);
+
+	if (!target)
+		return false;
+
+	ray.Init(src3D, dst3D);
+	trace->TraceRay(ray, MASK_SHOT, &filter, &tr);
+	b = (tr.endpos - tr.startpos).Length();
+
+	ray2.Init(src3D + right * 35, dst3D + right * 35);
+	trace->TraceRay(ray2, MASK_SHOT, &filter, &tr);
+	r = (tr.endpos - tr.startpos).Length();
+
+	ray3.Init(src3D - right * 35, dst3D - right * 35);
+	trace->TraceRay(ray3, MASK_SHOT, &filter, &tr);
+	l = (tr.endpos - tr.startpos).Length();
+
+	if (b < r && b < l && l == r)
+		return true; //if left and right are equal and better than back
+
+	if (b > r && b > l)
+		angle.y -= 180; //if back is the best angle
+	else if (r > l && r > b)
+		angle.y += 90; //if right is the best angle
+	else if (r > l && r == b)
+		angle.y += 135; //if right is equal to back
+	else if (l > r && l > b)
+		angle.y -= 90; //if left is the best angle
+	else if (l > r && l == b)
+		angle.y -= 135; //if left is equal to back
+	else
+		return false;
+
+	return true;
 }
 
 static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimState* animState, bool directionSwitch, C_BasePlayer* localplayer, CUserCmd* cmd)
@@ -167,6 +258,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     if (Settings::AntiAim::AutoDisable::knifeHeld && localplayer->GetAlive() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_KNIFE)
         return;
 
+    QAngle edge_angle = angle;
+	bool freestanding = Settings::AntiAim::Freestanding::enabled && GetBestHeadAngle(edge_angle);
+
     static bool bSend = true;
     bSend = !bSend;
 
@@ -227,6 +321,9 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     else
     {
     	DoAntiAim(type, angle, bSend, animState, directionSwitch, localplayer, cmd);
+
+        if (freestanding)
+            angle.y = edge_angle.y;
     }
 
     if (should_clamp)

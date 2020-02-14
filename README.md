@@ -6,6 +6,11 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.3 (Feb 14)
+- Fake-lag on peek saves to config
+- Freestanding added
+- New resolver (updated version of Skerei's resolver)
+
 Version 1.2.2 (Feb 10)
 - Reverting the resolver update (very unstable)
 - Added zeus radius to visuals
