@@ -6,6 +6,10 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.4 (Feb 15)
+- Fake Lag updated (works better with anti-aim)
+- Improved HvH tab
+
 Version 1.2.3 (Feb 14)
 - Fake-lag on peek saves to config
 - Freestanding added
