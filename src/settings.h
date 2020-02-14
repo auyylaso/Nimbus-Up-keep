@@ -565,14 +565,6 @@ namespace Settings
 				extern float angle;
 			} // namespace Stand
 
-			/*
-			namespace Walk
-			{
-				extern AntiAimType type;
-				extern float angle;
-			} // namespace Walk
-			*/
-
 			namespace Run
 			{
 				extern AntiAimType type;
@@ -1050,23 +1042,9 @@ namespace Settings
 		{
 			extern bool enabled;
 
-			namespace Standing
-			{
-				extern bool enabled;
-				extern int value;
-			}
-
-			namespace Moving
-			{
-				extern bool enabled;
-				extern int value;
-			}
-
-			namespace Air
-			{
-				extern bool enabled;
-				extern int value;
-			}
+			extern int standValue;
+			extern int moveValue;
+			extern int airValue;
 		}
 	}
 

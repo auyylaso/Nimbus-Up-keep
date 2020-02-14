@@ -46,55 +46,35 @@ void HvH::RenderTab()
             ImGui::Columns(1);
             ImGui::Separator();
 
+            ImGui::Checkbox(XORSTR("Freestand"), &Settings::AntiAim::Freestanding::enabled);
+            ImGui::Separator();
+
             ImGui::Text(XORSTR("Disable"));
             ImGui::Separator();
-            ImGui::Checkbox(XORSTR("Knife"), &Settings::AntiAim::AutoDisable::knifeHeld);
+            ImGui::Checkbox(XORSTR("Holding Knife"), &Settings::AntiAim::AutoDisable::knifeHeld);
             ImGui::Separator();
 
             ImGui::Text(XORSTR("Fake Movement"));
             ImGui::Separator();
             
-            ImGui::Columns(2, nullptr, true);
+            ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
+            if (Settings::FakeLag::enabled)
             {
-                ImGui::Checkbox(XORSTR("Fake Lag"), &Settings::FakeLag::enabled);
-                if (Settings::FakeLag::enabled)
-                {
-                    ImGui::Checkbox(XORSTR("Fake Lag States"), &Settings::FakeLag::States::enabled);
-                    ImGui::Checkbox(XORSTR("Fake Lag On Peek"), &Settings::FakeLag::lagSpike);
-                }
+                ImGui::SliderInt(XORSTR("Default Fake-Lag"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
+                ImGui::Checkbox(XORSTR("Fake Lag on Peek"), &Settings::FakeLag::lagSpike);
+                ImGui::Checkbox(XORSTR("Fake Lag on Move States"), &Settings::FakeLag::States::enabled);
             }
-            ImGui::NextColumn();
-            {
-                if (Settings::FakeLag::enabled)
-                {
-                    ImGui::PushItemWidth(-1);
-                    ImGui::SliderInt(XORSTR("##FAKELAGAMOUNT"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
-                    ImGui::PopItemWidth();
-                }
-            }
-            ImGui::Separator();
-            ImGui::Checkbox(XORSTR("Freestand"), &Settings::AntiAim::Freestanding::enabled);
+
             ImGui::Separator();
 
-            if (Settings::FakeLag::States::enabled) {
-                ImGui::Columns(2, nullptr, true);
-                {
-                    ImGui::Checkbox(XORSTR("Stand Fake Lag"), &Settings::FakeLag::States::Standing::enabled);
-                    ImGui::Checkbox(XORSTR("Move Fake Lag"), &Settings::FakeLag::States::Moving::enabled);
-                    ImGui::Checkbox(XORSTR("In-air Fake Lag"), &Settings::FakeLag::States::Air::enabled);
-                }
-                ImGui::NextColumn();
-                {
-                    ImGui::PushItemWidth(-1);
-                    ImGui::SliderInt(XORSTR("##STANDFAKELAGAMOUNT"), &Settings::FakeLag::States::Standing::value, 0, 16, XORSTR("Amount: %0.f"));
-                    ImGui::PopItemWidth();
-                    ImGui::PushItemWidth(-1);
-                    ImGui::SliderInt(XORSTR("##MOVEFAKELAGAMOUNT"), &Settings::FakeLag::States::Moving::value, 0, 16, XORSTR("Amount: %0.f"));
-                    ImGui::PopItemWidth();
-                    ImGui::PushItemWidth(-1);
-                    ImGui::SliderInt(XORSTR("##INAIRFAKELAGAMOUNT"), &Settings::FakeLag::States::Air::value, 0, 16, XORSTR("Amount: %0.f"));
-                    ImGui::PopItemWidth();
-                }
+            if (Settings::FakeLag::States::enabled && Settings::FakeLag::enabled) {
+
+                ImGui::Text(XORSTR("Fake-Lag States"));
+                ImGui::Separator();
+
+                ImGui::SliderInt(XORSTR("Fake-Lag on Stand"), &Settings::FakeLag::States::standValue, 0, 16, XORSTR("Amount: %0.f"));
+                ImGui::SliderInt(XORSTR("Fake-Lag on Move"), &Settings::FakeLag::States::moveValue, 0, 16, XORSTR("Amount: %0.f"));
+                ImGui::SliderInt(XORSTR("Fake-Lag in Air"), &Settings::FakeLag::States::airValue, 0, 16, XORSTR("Amount: %0.f"));
             }
 
             ImGui::EndChild();
@@ -104,6 +84,7 @@ void HvH::RenderTab()
     {
         ImGui::BeginChild(XORSTR("HVH2"), ImVec2(0, 0), true);
         {
+            ImGui::Text(XORSTR("Resolver"));
             ImGui::Checkbox(XORSTR("Resolver (beta)"), &Settings::Resolver::resolveAll);
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("Anti-Aim States"), &Settings::AntiAim::States::enabled);
@@ -111,27 +92,17 @@ void HvH::RenderTab()
             if (Settings::AntiAim::States::enabled)
             {
                 ImGui::Separator();
-                ImGui::Text(XORSTR("Stand Anti-Aim"));
-                ImGui::Combo(XORSTR("##AASTAND"), (int*)& Settings::AntiAim::States::Stand::type, aTypes, IM_ARRAYSIZE(aTypes));
+                ImGui::Combo(XORSTR("Anti-Aim in Stand"), (int*)& Settings::AntiAim::States::Stand::type, aTypes, IM_ARRAYSIZE(aTypes));
                 if (Settings::AntiAim::States::Stand::type == AntiAimType::CUSTOM) {
                     ImGui::SliderFloat(XORSTR("##AASTANDANGLE"), &Settings::AntiAim::States::Stand::angle, 0, 360, "Yaw angle: %1.0f");
                 } ImGui::Separator();
-
-                /* Removed due to broken flag will fix later.
-                ImGui::Combo(XORSTR("Walk Type (IN_WALK flag broken)"), (int*)& Settings::AntiAim::States::Walk::type, aTypes, IM_ARRAYSIZE(aTypes));
-                if (Settings::AntiAim::States::Walk::type == AntiAimType::CUSTOM) {
-                    ImGui::SliderFloat(XORSTR("##AAWALKANGLE"), &Settings::AntiAim::States::Walk::angle, 0, 360, "Yaw angle: %1.0f");
-                } ImGui::Separator();
-                */
                
-                ImGui::Text(XORSTR("Move Anti-Aim"));
-                ImGui::Combo(XORSTR("##AAMOVE"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
+                ImGui::Combo(XORSTR("Anti-Aim in Movement"), (int*)& Settings::AntiAim::States::Run::type, aTypes, IM_ARRAYSIZE(aTypes));
                 if (Settings::AntiAim::States::Run::type == AntiAimType::CUSTOM) {
                     ImGui::SliderFloat(XORSTR("##AARUNANGLE"), &Settings::AntiAim::States::Run::angle, 0, 360, "Yaw angle: %1.0f");
                 } ImGui::Separator();
 
-                ImGui::Text(XORSTR("Air Anti-Aim"));
-                ImGui::Combo(XORSTR("##AAAIR"), (int*)& Settings::AntiAim::States::Air::type, aTypes, IM_ARRAYSIZE(aTypes));
+                ImGui::Combo(XORSTR("Anti-Aim in Air"), (int*)& Settings::AntiAim::States::Air::type, aTypes, IM_ARRAYSIZE(aTypes));
                 if (Settings::AntiAim::States::Air::type == AntiAimType::CUSTOM) {
                     ImGui::SliderFloat(XORSTR("##AAAIRANGLE"), &Settings::AntiAim::States::Air::angle, 0, 360, "Yaw angle: %1.0f");
                 } ImGui::Separator();
