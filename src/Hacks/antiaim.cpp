@@ -257,7 +257,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
 	bool freestanding = Settings::AntiAim::Freestanding::enabled && GetBestHeadAngle(edge_angle);
 
     static bool bSend = true;
-    bSend = Settings::FakeLag::enabled && CreateMove::sendPacket ? !bSend : CreateMove::sendPacket;
+    bSend = !bSend;
 
     bool should_clamp = true;
     bool needToFlick = false;
