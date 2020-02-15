@@ -6,6 +6,13 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.5 (Feb 15)
+- Desync with fake-lag improvements
+- New hitmarker sound (GameSense)
+- Changed clantag-changer
+- Crash fixes
+- Changed on the resolver (needs testing)
+
 Version 1.2.4 (Feb 15)
 - Fake Lag updated (works better with anti-aim)
 - Improved HvH tab

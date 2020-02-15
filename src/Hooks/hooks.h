@@ -57,6 +57,7 @@ namespace Hooks
 namespace CreateMove
 {
 	extern bool sendPacket;
+	extern bool desyncPacket;
 	extern QAngle lastTickViewAngles;
 }
 

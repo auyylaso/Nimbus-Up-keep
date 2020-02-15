@@ -86,6 +86,7 @@ enum class Sound : int {
 	MEME,
 	ERROR,
 	ORCHESTRAL,
+	GAMESENSE,
 
 };
 
@@ -156,7 +157,6 @@ enum class AntiAimType: int
 	RAGE,
 	LEGIT,
 	CUSTOM,
-	FREESTAND,
 };
 
 struct AimbotWeapon_t

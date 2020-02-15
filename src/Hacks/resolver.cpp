@@ -27,11 +27,12 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, float m
 	{
 		player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
 
-		if (feetYaw <= -maxDelta & feetYaw < 0)
-			player->GetEyeAngles()->y += maxDelta;
-		else if (feetYaw <= maxDelta & feetYaw > 0)
+		if (feetYaw >= -maxDelta & feetYaw < 0)
 			player->GetEyeAngles()->y -= maxDelta;
+		else if (feetYaw <= maxDelta & feetYaw > 0)
+			player->GetEyeAngles()->y += maxDelta;
 
+		/*
 		CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
 
 		for (int i = 0; i <= layers->Count(); i++)
@@ -44,6 +45,7 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, float m
 					player->GetEyeAngles()->y = resolveDelta;
 			}
 		}
+		*/
 	}
 }
 
