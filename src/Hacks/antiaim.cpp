@@ -185,7 +185,7 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
 
         if (!bSend)
             angle.y += directionSwitch ? maxDelta : -maxDelta;
-            
+
     } break;
 
     case AntiAimType::CUSTOM: {
@@ -285,7 +285,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     }
 
     if ((nextUpdate - globalVars->interval_per_tick) >= globalVars->curtime && nextUpdate <= globalVars->curtime)
-        CreateMove::desyncPacket = false;
+        CreateMove::sendPacket = false;
 
     static bool directionSwitch = false;
 
@@ -298,7 +298,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
 
     if (needToFlick)
     {
-        CreateMove::desyncPacket = false;
+        CreateMove::sendPacket = false;
         
         if (!Settings::AntiAim::LBYBreaker::custom)
             angle.y += directionSwitch ? Settings::AntiAim::LBYBreaker::offset : -Settings::AntiAim::LBYBreaker::offset;
@@ -328,7 +328,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     }
 
     if (!needToFlick)
-        CreateMove::desyncPacket = bSend;
+        CreateMove::sendPacket = bSend;
 
     cmd->viewangles = angle;
 

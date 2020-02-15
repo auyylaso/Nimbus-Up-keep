@@ -24,7 +24,6 @@
 #include "../Hacks/lagcomp.h"
 
 bool CreateMove::sendPacket = true;
-bool CreateMove::desyncPacket = true;
 QAngle CreateMove::lastTickViewAngles = QAngle(0, 0, 0);
 
 typedef bool (*CreateMoveFn) (void*, float, CUserCmd*);
@@ -39,7 +38,6 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
         uintptr_t rbp;
         asm volatile("mov %%rbp, %0" : "=r" (rbp));
         bool *sendPacket = ((*(bool **)rbp) - 0x18);
-		bool *desyncPacket = ((*(bool **)rbp) - 0x18);
         CreateMove::sendPacket = true;
 
 		/* run code that affects movement before prediction */
@@ -70,9 +68,8 @@ bool Hooks::CreateMove(void* thisptr, float flInputSampleTime, CUserCmd* cmd)
 		NoFall::PostPredictionCreateMove(cmd);
 
         *sendPacket = CreateMove::sendPacket;
-		*desyncPacket = CreateMove::desyncPacket;
 
-        if (CreateMove::sendPacket || CreateMove::desyncPacket) {
+        if (CreateMove::sendPacket) {
             CreateMove::lastTickViewAngles = cmd->viewangles;
         }
 	}

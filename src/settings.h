@@ -87,7 +87,7 @@ enum class Sound : int {
 	ERROR,
 	ORCHESTRAL,
 	GAMESENSE,
-
+	
 };
 
 enum class BarType : int
