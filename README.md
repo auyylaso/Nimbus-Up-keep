@@ -6,6 +6,10 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.6 (Feb 18)
+- Added desync multiplier slider
+- Updated LBY breaker
+
 Version 1.2.5 (Feb 15)
 - Desync with fake-lag improvements
 - New hitmarker sound (GameSense)
