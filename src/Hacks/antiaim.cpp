@@ -168,6 +168,7 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
     {
     #pragma region Default Rage
     case AntiAimType::RAGE: {
+
         static bool yFlip = false;
 
         angle.x = 89.0f;
@@ -191,13 +192,16 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
     
     #pragma region Default Legit
     case AntiAimType::LEGIT: {
+
         if (!bSend)
             angle.y += directionSwitch ? maxDelta : -maxDelta;
+
     } break;
     #pragma endregion
 
     #pragma region Custom AA (WIP)
     case AntiAimType::CUSTOM: {
+
         angle.x = 89.0f;
         
         if (Settings::AntiAim::States::enabled)
