@@ -27,7 +27,8 @@ void HvH::RenderTab()
             ImGui::Separator();
 
             if (Settings::AntiAim::type == AntiAimType::CUSTOM) {
-                ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw angle %1.0f");
+                ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw Angle: %1.0f");
+                ImGui::SliderFloat(XORSTR("Desync Multiplier"), &Settings::AntiAim::yaw, 0, 1, "Desync Multiplier: %0.2f");
             }       
 
             ImGui::Text(XORSTR("Anti-Aim Keys"));
@@ -110,12 +111,7 @@ void HvH::RenderTab()
 
             ImGui::Separator();
             ImGui::Checkbox(XORSTR("LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);
-            if (Settings::AntiAim::LBYBreaker::enabled) {
-                ImGui::Checkbox(XORSTR("Custom Breaker Angle"), &Settings::AntiAim::LBYBreaker::custom);
-            }
-            if (Settings::AntiAim::LBYBreaker::enabled && Settings::AntiAim::LBYBreaker::custom) {
-                ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %1.0f");
-            }
+            ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %1.0f");
             ImGui::EndChild();
         }
     }

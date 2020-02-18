@@ -9,19 +9,21 @@
 
 bool Settings::AntiAim::enabled = false;
 AntiAimType Settings::AntiAim::type = AntiAimType::RAGE;
+
+// Custom Settings
 float Settings::AntiAim::yaw = 180.0f;
+float Settings::AntiAim::desync = 1.0f;
 
 bool Settings::AntiAim::States::enabled = false;
 float Settings::AntiAim::States::Stand::angle = 180.0f;
-// float Settings::AntiAim::States::Walk::angle = 180.0f;
 float Settings::AntiAim::States::Run::angle = 180.0f;
 float Settings::AntiAim::States::Air::angle = 180.0f;
 
 AntiAimType Settings::AntiAim::States::Stand::type = AntiAimType::RAGE;
-// AntiAimType Settings::AntiAim::States::Walk::type = AntiAimType::RAGE;
 AntiAimType Settings::AntiAim::States::Run::type = AntiAimType::RAGE;
 AntiAimType Settings::AntiAim::States::Air::type = AntiAimType::RAGE;
 
+ButtonCode_t Settings::AntiAim::back = ButtonCode_t::KEY_Z;
 ButtonCode_t Settings::AntiAim::left = ButtonCode_t::KEY_X;
 ButtonCode_t Settings::AntiAim::right = ButtonCode_t::KEY_C;
 
@@ -124,19 +126,19 @@ static bool GetBestHeadAngle(QAngle& angle)
 	trace->TraceRay(ray3, MASK_SHOT, &filter, &tr);
 	l = (tr.endpos - tr.startpos).Length();
 
-	if (b < r && b < l && l == r)
-		return true; //if left and right are equal and better than back
+	if (b < r && b < l && l == r) // Left = Right > Back
+		return true;
 
-	if (b > r && b > l)
-		angle.y -= 180; //if back is the best angle
-	else if (r > l && r > b)
-		angle.y += 90; //if right is the best angle
-	else if (r > l && r == b)
-		angle.y += 135; //if right is equal to back
-	else if (l > r && l > b)
-		angle.y -= 90; //if left is the best angle
-	else if (l > r && l == b)
-		angle.y -= 135; //if left is equal to back
+	if (b > r && b > l) // Back
+		angle.y -= 180;
+	else if (r > l && r > b) // Right
+		angle.y += 90;
+	else if (r > l && r == b) // Right = Back
+		angle.y += 135;
+	else if (l > r && l > b) // Left
+		angle.y -= 90;
+	else if (l > r && l == b) // Left = Back
+		angle.y -= 135;
 	else
 		return false;
 
@@ -145,26 +147,26 @@ static bool GetBestHeadAngle(QAngle& angle)
 
 static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimState* animState, bool directionSwitch, C_BasePlayer* localplayer, CUserCmd* cmd)
 {
+    #pragma region Move-State Checks
     if (Settings::AntiAim::States::enabled)
     {
         if (localplayer->GetVelocity().Length() <= 0.0f)
             type = Settings::AntiAim::States::Stand::type;
         else if (!(localplayer->GetFlags() & FL_ONGROUND))
             type = Settings::AntiAim::States::Air::type;
-        /* Doesn't work
-        else if (cmd->buttons & IN_WALK)
-            type = Settings::AntiAim::States::Walk::type;
-        */
         else
             type = Settings::AntiAim::States::Run::type;
     }
     else
         type = Settings::AntiAim::type;
+    #pragma endregion
 
 	float maxDelta = AntiAim::GetMaxDelta(animState);
+    float desync = maxDelta * Settings::AntiAim::desync;
 
     switch (type)
     {
+    #pragma region Default Rage
     case AntiAimType::RAGE: {
         static bool yFlip = false;
 
@@ -185,12 +187,16 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
             yFlip = !yFlip;
 
     } break;
+    #pragma endregion
     
+    #pragma region Default Legit
     case AntiAimType::LEGIT: {
         if (!bSend)
             angle.y += directionSwitch ? maxDelta : -maxDelta;
     } break;
+    #pragma endregion
 
+    #pragma region Custom AA (WIP)
     case AntiAimType::CUSTOM: {
         angle.x = 89.0f;
         
@@ -200,10 +206,6 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
                 angle.y += Settings::AntiAim::States::Stand::angle;
             else if (!(localplayer->GetFlags() & FL_ONGROUND))
                 angle.y += Settings::AntiAim::States::Air::angle;
-            /* Doesn't work
-            else if (cmd->buttons & IN_WALK)
-                angle.y += Settings::AntiAim::States::Walk::angle;
-            */
             else
                 angle.y += Settings::AntiAim::States::Run::angle;
         }
@@ -211,8 +213,9 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
             angle.y += Settings::AntiAim::yaw;
 
         if (!bSend)
-            angle.y += directionSwitch ? maxDelta : -maxDelta;
+            angle.y += directionSwitch ? desync : -desync;
     }
+    #pragma endregion
     
     default:
         break;
@@ -221,6 +224,7 @@ static void DoAntiAim(AntiAimType type, QAngle& angle, bool bSend, CCSGOAnimStat
 
 void AntiAim::CreateMove(CUserCmd* cmd)
 {
+    #pragma region Return Checks
     if (!Settings::AntiAim::enabled)
         return;
 
@@ -257,6 +261,7 @@ void AntiAim::CreateMove(CUserCmd* cmd)
 
     if (Settings::AntiAim::AutoDisable::knifeHeld && localplayer->GetAlive() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_KNIFE)
         return;
+    #pragma endregion Return Checks
 
     QAngle edge_angle = angle;
 	bool freestanding = Settings::AntiAim::Freestanding::enabled && GetBestHeadAngle(edge_angle);
@@ -264,76 +269,67 @@ void AntiAim::CreateMove(CUserCmd* cmd)
     static bool bSend = true;
     bSend = !bSend;
 
-    bool should_clamp = true;
+    #pragma region LBY Breaker
     bool needToFlick = false;
-    static bool lbyBreak = false;
-    static float lastCheck;
-    static float nextUpdate = FLT_MAX;
-    float vel2D = localplayer->GetVelocity().Length2D();//localplayer->GetAnimState()->verticalVelocity + localplayer->GetAnimState()->horizontalVelocity;
-    CCSGOAnimState* animState = localplayer->GetAnimState();
 
     if (Settings::AntiAim::LBYBreaker::enabled)
     {
-        if (vel2D >= 0.1f || !(localplayer->GetFlags() & FL_ONGROUND) || localplayer->GetFlags() & FL_FROZEN)
+        static float lastCheck;
+        static bool lbyBreak = false;
+
+        if (localplayer->GetVelocity().Length2D() >= 0.1f || !(localplayer->GetFlags() & FL_ONGROUND) || localplayer->GetFlags() & FL_FROZEN)
         {
             lbyBreak = false;
             lastCheck = globalVars->curtime;
-            nextUpdate = globalVars->curtime + 0.22;
-        }
-        else if (!lbyBreak && (globalVars->curtime - lastCheck) > 0.22 || lbyBreak && (globalVars->curtime - lastCheck) > 1.1)
+        } 
+        else 
         {
-            lbyBreak = true;
-            lastCheck = globalVars->curtime;
-            nextUpdate = globalVars->curtime + 1.1;
-            needToFlick = true;
+            if (!lbyBreak && (globalVars->curtime - lastCheck) > 0.22)
+            {
+                angle.y -= Settings::AntiAim::LBYBreaker::offset;
+                lbyBreak = true;
+                lastCheck = globalVars->curtime;
+                needToFlick = true;
+            } 
+            else if (lbyBreak && (globalVars->curtime - lastCheck) > 1.1)
+            {
+                angle.y -= Settings::AntiAim::LBYBreaker::offset;
+                lbyBreak = true;
+                lastCheck = globalVars->curtime;
+                needToFlick = true;
+            }
         }
     }
+    #pragma endregion LBY Breaker
 
-    if ((nextUpdate - globalVars->interval_per_tick) >= globalVars->curtime && nextUpdate <= globalVars->curtime)
-        CreateMove::sendPacket = false;
-
+    #pragma region Angle Switching
     static bool directionSwitch = false;
 
     if (inputSystem->IsButtonDown(Settings::AntiAim::left))
 		directionSwitch = true;
 	else if (inputSystem->IsButtonDown(Settings::AntiAim::right))
 		directionSwitch = false;
+    #pragma endregion Angle Switching
 
-    static AntiAimType type;
-
+    #pragma region Anti-Aim
     if (needToFlick)
-    {
         CreateMove::sendPacket = false;
-        
-        if (!Settings::AntiAim::LBYBreaker::custom)
-            angle.y += directionSwitch ? Settings::AntiAim::LBYBreaker::offset : -Settings::AntiAim::LBYBreaker::offset;
-        else
-        {
-            static float maxDelta = AntiAim::GetMaxDelta(animState);
-
-            if (type != AntiAimType::RAGE)
-                angle.y += directionSwitch ? -maxDelta : maxDelta;
-            else
-                angle.y += directionSwitch ? -90.0f : 90.0f;
-        }
-        
-    }
     else
     {
+        CreateMove::sendPacket = bSend;
+        static AntiAimType type;
+
+        CCSGOAnimState* animState = localplayer->GetAnimState();
+
     	DoAntiAim(type, angle, bSend, animState, directionSwitch, localplayer, cmd);
 
         if (freestanding)
             angle.y = edge_angle.y;
     }
+    #pragma endregion Anti-Aim
 
-    if (should_clamp)
-    {
-        Math::NormalizeAngles(angle);
-        Math::ClampAngles(angle);
-    }
-
-    if (!needToFlick)
-        CreateMove::sendPacket = bSend;
+    Math::NormalizeAngles(angle);
+    Math::ClampAngles(angle);
 
     cmd->viewangles = angle;
 

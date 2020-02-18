@@ -540,10 +540,14 @@ namespace Settings
     {
 		extern bool enabled;
 		extern AntiAimType type;
+
+		// Custom Settings
 		extern float yaw;
+		extern float desync;
 
 		extern ButtonCode_t left;
 		extern ButtonCode_t right;
+		extern ButtonCode_t back;
 
 		namespace AutoDisable
         {
