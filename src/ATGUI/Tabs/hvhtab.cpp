@@ -26,7 +26,7 @@ void HvH::RenderTab()
             ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
             ImGui::Separator();
 
-            ImGui::SliderFloat(XORSTR("Desync Multiplier"), &Settings::AntiAim::yaw, 0, 1, "Desync Multiplier: %0.2f");
+            ImGui::SliderFloat(XORSTR("Desync Multiplier"), &Settings::AntiAim::yaw, -1, 1, "Desync Multiplier: %0.2f");
             ImGui::Separator();
 
             if (Settings::AntiAim::type == AntiAimType::CUSTOM) {
