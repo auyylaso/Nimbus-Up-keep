@@ -25,10 +25,10 @@ void HvH::RenderTab()
 
             ImGui::Combo(XORSTR("Mode"), (int*)& Settings::AntiAim::type, aTypes, IM_ARRAYSIZE(aTypes));
             ImGui::Separator();
-
+            
             if (Settings::AntiAim::type == AntiAimType::CUSTOM) {
                 ImGui::SliderFloat(XORSTR("Yaw Angle"), &Settings::AntiAim::yaw, 0, 360, "Yaw Angle: %1.0f");
-                ImGui::SliderFloat(XORSTR("Desync Multiplier"), &Settings::AntiAim::yaw, 0, 1, "Desync Multiplier: %0.2f");
+                ImGui::Separator();
             }       
 
             ImGui::Text(XORSTR("Anti-Aim Keys"));
