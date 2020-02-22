@@ -6,6 +6,9 @@
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
 # Changelog
+Version 1.2.6b (Feb 23)
+- Updated Resolver
+
 Version 1.2.6a (Feb 20)
 - Removed desync multiplier (due to it's not working)
 
