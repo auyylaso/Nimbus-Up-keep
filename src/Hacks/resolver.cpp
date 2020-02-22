@@ -16,24 +16,26 @@ std::vector<std::pair<C_BasePlayer*, QAngle>> player_data;
 static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, float maxDelta)
 {
 	if (player->GetVelocity().Length() > 75.77f)
-	{
-		player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
-		player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
-		Math::NormalizeYaw(player->GetEyeAngles()->y);
+    {
+        player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
+        player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
+        Math::NormalizeYaw(player->GetEyeAngles()->y);
 
-		angleYaw = (rand() % 2) ? angleYaw + (maxDelta / 2.2f) : angleYaw - (maxDelta / 2.2f);
-	}
-	else if (player->GetVelocity().Length() < 75.77f)
-	{
-		player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
+        angleYaw = (rand() % 2) ? angleYaw + (maxDelta / 2.2f) : angleYaw - (maxDelta / 2.2f);
+    }
+    else if (player->GetVelocity().Length() < 75.77f)
+    {
+        player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
+        player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
 
-		if (feetYaw >= -maxDelta & feetYaw < 0)
-			player->GetEyeAngles()->y -= maxDelta;
-		else if (feetYaw <= maxDelta & feetYaw > 0)
-			player->GetEyeAngles()->y += maxDelta;
+        Math::NormalizeYaw(player->GetEyeAngles()->y);
 
-		/*
-		CUtlVector<AnimationLayer> *layers = player->GetAnimOverlay();
+        if (feetYaw >= -maxDelta & feetYaw < 0)
+            player->GetAnimState()->goalFeetYaw -= maxDelta * 0.66f;
+        else
+            player->GetAnimState()->goalFeetYaw += maxDelta * 0.66f;
+
+		CUtlVector<AnimationLayer>* layers = player->GetAnimOverlay();
 
 		for (int i = 0; i <= layers->Count(); i++)
 		{
@@ -45,8 +47,7 @@ static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, float m
 					player->GetEyeAngles()->y = resolveDelta;
 			}
 		}
-		*/
-	}
+    }
 }
 
 void Resolver::FrameStageNotify(ClientFrameStage_t stage)
