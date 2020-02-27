@@ -5,60 +5,6 @@
 # This is a public self-maintained Fuzion fork.
 Want to chat or play with other Fuzion users? Join us on Gitter!
 
-# Changelog
-Version 1.2.0 (Feb 1)
-- Updated menus
-- Updated fake-lag
-
-Version 1.1.2 (Jan 30)
-- Fake-lag moved to HvH tab
-- Move state fake-lag added (beta)
-- Put all anti-aim settings to "rage" by default
-- Adjusted HvH tab
-- Fixed fake-lag on peek
-
-Version 1.1.1 (Jan 28)
-- New menu design (beta)
-- New aimbot tab (beta)
-- New HvH tab
-- Removed resolver from HvH tab (available on player selection)
-- Auto crouch added to misc tab
-- Fake-lag on peek added
-
-Version 1.1.0 (Jan 25)
-- Third-person key added
-- Third-person optimization
-- Added Anti-Aim debug
-- Backtrack optimization
-- Misc features updated
-- Removed angle-indicator (because of anti-aim debug this is useless)
-- LBY breaker optimization
-- Move-state anti-aim added
-
-Version 1.0.2 (Jan 25)
-- Adjusted auto-defuser
-- Adjusted backtrack
-- Removed anti-aim debug duplicate in menus
-- Added key save for third-person
-
-Version 1.0.1 (Jan 16)
-- Added player move-state based anti-aim
-- Thirdperson angle is now last-tick viewangle
-- Automatic LBY breaker values (customs are still available)
-- Added disable anti-aim on knife-held back
-- Changed default third-person value from 30 to 150
-- Removed angle-indicator
-
-Version 1.0.0 (Jan 15)
-- Added new anti-aim
-- Anti-aim angle keys
-- New pretty bullet tracer
-- Removed air-stuck
-- Removed jump-throw
-- Added backtrack
-- Fake-lag optimization (No fake-lag while standing still)
-
-
 ## What is Fuzion?
 
 A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
@@ -196,6 +142,105 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![menu](http://i.imgur.com/59TGPfw.png)
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
+# Changelog
+Version 1.3.0 (Feb 27)
+- Resolver updated
+- Various anti-aim changes
+- Crash fixes
+- Improved the menus
+- Added freestanding
+- Backtrack changes
+- Fakelag changes
+- Moved changelog to the bottom (for more clarity)
+
+Version 1.2.6b (Feb 23)
+- Updated Resolver
+
+Version 1.2.6a (Feb 20)
+- Removed desync multiplier (due to it's not working)
+
+Version 1.2.6 (Feb 18)
+- Added desync multiplier slider
+- Updated LBY breaker
+
+Version 1.2.5 (Feb 15)
+- Desync with fake-lag improvements
+- New hitmarker sound (GameSense)
+- Changed clantag-changer
+- Crash fixes
+- Changed on the resolver (needs testing)
+
+Version 1.2.4 (Feb 15)
+- Fake Lag updated (works better with anti-aim)
+- Improved HvH tab
+
+Version 1.2.3 (Feb 14)
+- Fake-lag on peek saves to config
+- Freestanding added
+- New resolver (updated version of Skerei's resolver)
+
+Version 1.2.2 (Feb 10)
+- Reverting the resolver update (very unstable)
+- Added zeus radius to visuals
+
+Version 1.2.1 (Feb 9)
+- Backtrack fixed
+- Minor visual changes
+- New resolvers (beta)
+- Added shot-logging
+- Backtrack optimized
+
+Version 1.2.0 (Feb 1)
+- Updated menus
+- Updated fake-lag
+
+Version 1.1.2 (Jan 30)
+- Fake-lag moved to HvH tab
+- Move state fake-lag added (beta)
+- Put all anti-aim settings to "rage" by default
+- Adjusted HvH tab
+- Fixed fake-lag on peek
+
+Version 1.1.1 (Jan 28)
+- New menu design (beta)
+- New aimbot tab (beta)
+- New HvH tab
+- Removed resolver from HvH tab (available on player selection)
+- Auto crouch added to misc tab
+- Fake-lag on peek added
+
+Version 1.1.0 (Jan 25)
+- Third-person key added
+- Third-person optimization
+- Added Anti-Aim debug
+- Backtrack optimization
+- Misc features updated
+- Removed angle-indicator (because of anti-aim debug this is useless)
+- LBY breaker optimization
+- Move-state anti-aim added
+
+Version 1.0.2 (Jan 25)
+- Adjusted auto-defuser
+- Adjusted backtrack
+- Removed anti-aim debug duplicate in menus
+- Added key save for third-person
+
+Version 1.0.1 (Jan 16)
+- Added player move-state based anti-aim
+- Thirdperson angle is now last-tick viewangle
+- Automatic LBY breaker values (customs are still available)
+- Added disable anti-aim on knife-held back
+- Changed default third-person value from 30 to 150
+- Removed angle-indicator
+
+Version 1.0.0 (Jan 15)
+- Added new anti-aim
+- Anti-aim angle keys
+- New pretty bullet tracer
+- Removed air-stuck
+- Removed jump-throw
+- Added backtrack
+- Fake-lag optimization (No fake-lag while standing still)
 
 ## Credits
 

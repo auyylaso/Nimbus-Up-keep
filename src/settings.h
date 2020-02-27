@@ -86,7 +86,8 @@ enum class Sound : int {
 	MEME,
 	ERROR,
 	ORCHESTRAL,
-
+	GAMESENSE,
+	
 };
 
 enum class BarType : int
@@ -156,7 +157,6 @@ enum class AntiAimType: int
 	RAGE,
 	LEGIT,
 	CUSTOM,
-	FREESTAND,
 };
 
 struct AimbotWeapon_t
@@ -439,6 +439,7 @@ namespace Settings
 			extern bool always_on;
 			extern float valueX;
 			extern float valueY;
+			extern bool disabled;
 		}
 
 		namespace AutoPistol
@@ -540,6 +541,8 @@ namespace Settings
     {
 		extern bool enabled;
 		extern AntiAimType type;
+
+		// Custom Settings
 		extern float yaw;
 
 		extern ButtonCode_t left;
@@ -550,6 +553,11 @@ namespace Settings
             extern bool knifeHeld;
         }
 
+		namespace Freestanding
+		{
+			extern bool enabled;
+		}
+
 		namespace States
 		{
 			extern bool enabled;
@@ -559,14 +567,6 @@ namespace Settings
 				extern AntiAimType type;
 				extern float angle;
 			} // namespace Stand
-
-			/*
-			namespace Walk
-			{
-				extern AntiAimType type;
-				extern float angle;
-			} // namespace Walk
-			*/
 
 			namespace Run
 			{
@@ -752,6 +752,12 @@ namespace Settings
 			}
 		}
 
+		namespace ZeusRadius
+		{
+			extern bool enabled;
+			extern ColorVar color;
+		}
+		
 		namespace Sounds
 		{
 			extern bool enabled;
@@ -1039,23 +1045,9 @@ namespace Settings
 		{
 			extern bool enabled;
 
-			namespace Standing
-			{
-				extern bool enabled;
-				extern int value;
-			}
-
-			namespace Moving
-			{
-				extern bool enabled;
-				extern int value;
-			}
-
-			namespace Air
-			{
-				extern bool enabled;
-				extern int value;
-			}
+			extern int standValue;
+			extern int moveValue;
+			extern int airValue;
 		}
 	}
 

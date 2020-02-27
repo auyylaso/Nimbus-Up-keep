@@ -11,12 +11,9 @@ bool Settings::FakeLag::lagSpike = false;
 bool FakeLag::lagSpike = false;
 
 bool Settings::FakeLag::States::enabled = false;
-bool Settings::FakeLag::States::Standing::enabled = false;
-int Settings::FakeLag::States::Standing::value = 9;
-bool Settings::FakeLag::States::Moving::enabled = false;
-int Settings::FakeLag::States::Moving::value = 9;
-bool Settings::FakeLag::States::Air::enabled = false;
-int Settings::FakeLag::States::Air::value = 9;
+int Settings::FakeLag::States::standValue = 5;
+int Settings::FakeLag::States::moveValue = 5;
+int Settings::FakeLag::States::airValue = 5;
 
 static int ticks = 0;
 int ticksMax = 16;
@@ -27,7 +24,17 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
 	if (!localplayer || !localplayer->GetAlive())
+		return;
+
+	if ((!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && localplayer->GetVelocity().Length() <= 0.0f)
+		return;
+
+	if (Settings::FakeLag::States::airValue == 0 && !(localplayer->GetFlags() & FL_ONGROUND))
+		return;
+
+	if (Settings::FakeLag::States::moveValue == 0 && localplayer->GetVelocity().Length() > 0.0f)
 		return;
 
 	if (cmd->buttons & IN_ATTACK)
@@ -45,12 +52,12 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		CreateMove::sendPacket = false;
 	else if (Settings::FakeLag::States::enabled)
 	{
-		if (Settings::FakeLag::States::Air::enabled && !(localplayer->GetFlags() & FL_ONGROUND))
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Air::value;
-		else if (Settings::FakeLag::States::Moving::enabled && localplayer->GetVelocity().Length() > 0.0f)
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Moving::value;
-		else if (Settings::FakeLag::States::Standing::enabled)
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::Standing::value;
+		if (!(localplayer->GetFlags() & FL_ONGROUND))
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::airValue;
+		else if (localplayer->GetVelocity().Length() > 0.0f)
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::moveValue;
+		else
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::standValue;
 	}
 	else
 		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;

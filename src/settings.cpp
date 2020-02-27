@@ -364,6 +364,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Damage")][XORSTR("enabled")] = Settings::ESP::Hitmarker::Damage::enabled;
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("enabled")] = Settings::ESP::Hitmarker::Sounds::enabled;
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")] = (int)Settings::ESP::Hitmarker::Sounds::sound;
+	LoadColor(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("ZeusColor")], Settings::ESP::ZeusRadius::color);
+	settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("enabled")] = Settings::ESP::ZeusRadius::enabled;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")] = Settings::ESP::HeadDot::enabled;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")] = Settings::ESP::HeadDot::size;
 	settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")] = Settings::ESP::Backtrack::enabled;
@@ -565,14 +567,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
+	settings[XORSTR("FakeLag")][XORSTR("lagSpike")] = Settings::FakeLag::lagSpike;
 
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")] = Settings::FakeLag::States::enabled;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")] = Settings::FakeLag::States::Standing::enabled;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("value")] = Settings::FakeLag::States::Standing::value;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("enabled")] = Settings::FakeLag::States::Moving::enabled;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("value")] = Settings::FakeLag::States::Moving::value;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("enabled")] = Settings::FakeLag::States::Air::enabled;
-	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("value")] = Settings::FakeLag::States::Air::value;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")] = Settings::FakeLag::States::standValue;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")] = Settings::FakeLag::States::moveValue;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")] = Settings::FakeLag::States::airValue;
 
 	settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -744,17 +744,18 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Aimbot::AutoCrouch::enabled);
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Aimbot::AutoShoot::velocityCheck);
+	GetVal(settings[XORSTR("Aimbot")][XORSTR("type")], (int*) &Settings::Aimbot::type);
 
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*)& Settings::AntiAim::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*) &Settings::AntiAim::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*)& Settings::AntiAim::States::Stand::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*) &Settings::AntiAim::States::Stand::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")], &Settings::AntiAim::States::Stand::angle);
 	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("type")], (int*)& Settings::AntiAim::States::Walk::type);
 	// GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Walk")][XORSTR("angle")], &Settings::AntiAim::States::Walk::angle);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*)& Settings::AntiAim::States::Run::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*) &Settings::AntiAim::States::Run::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")], &Settings::AntiAim::States::Run::angle);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*)& Settings::AntiAim::States::Air::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*) &Settings::AntiAim::States::Air::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")], &Settings::AntiAim::States::Air::angle);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("left")], &Settings::AntiAim::left);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("right")], &Settings::AntiAim::right);
@@ -889,6 +890,8 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Damage")][XORSTR("enabled")], &Settings::ESP::Hitmarker::Damage::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("enabled")], &Settings::ESP::Hitmarker::Sounds::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")], (int*)&Settings::ESP::Hitmarker::Sounds::sound);
+	GetVal(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("enabled")], &Settings::ESP::ZeusRadius::enabled);
+	GetVal(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("ZeusColor")], &Settings::ESP::ZeusRadius::color);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")], &Settings::ESP::HeadDot::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")], &Settings::ESP::HeadDot::size);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")], &Settings::ESP::Backtrack::enabled);
@@ -1149,14 +1152,12 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("lagSpike")], &Settings::FakeLag::lagSpike);
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")], &Settings::FakeLag::States::enabled);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("enabled")], &Settings::FakeLag::States::Standing::enabled);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Standing")][XORSTR("value")], &Settings::FakeLag::States::Standing::value);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("enabled")], &Settings::FakeLag::States::Moving::enabled);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Moving")][XORSTR("value")], &Settings::FakeLag::States::Moving::value);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("enabled")], &Settings::FakeLag::States::Air::enabled);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("Air")][XORSTR("value")], &Settings::FakeLag::States::Air::value);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")], &Settings::FakeLag::States::standValue);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")], &Settings::FakeLag::States::moveValue);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")], &Settings::FakeLag::States::airValue);
 
 	GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 
