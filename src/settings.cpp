@@ -615,7 +615,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("ThirdPerson")][XORSTR("enabled")] = Settings::ThirdPerson::enabled;
 	settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
-	settings[XORSTR("Thirdperson")][XORSTR("key")] = Util::GetButtonName(Settings::ThirdPerson::key);
+	settings[XORSTR("ThirdPerson")][XORSTR("key")] = Util::GetButtonName(Settings::ThirdPerson::key);
 
 	settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")] = Settings::DisablePostProcessing::enabled;
 	settings[XORSTR("NoFall")][XORSTR("enabled")] = Settings::NoFall::enabled;

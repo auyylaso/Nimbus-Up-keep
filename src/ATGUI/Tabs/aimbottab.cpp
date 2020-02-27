@@ -724,7 +724,7 @@ void Aimbot::RenderTab() {
 					ImGui::Separator();
 					ImGui::Columns(1);
 					ImGui::Separator();
-					ImGui::Text(XORSTR("Nospread"));
+					ImGui::Text(XORSTR("No spread HvH"));
 					ImGui::Separator();
 					ImGui::Checkbox(XORSTR("No Spread"), & Settings::Aimbot::NoSpread::enabled);
 					ImGui::Separator();

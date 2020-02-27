@@ -226,7 +226,7 @@ void Misc::RenderTab()
 			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("Enabled"), &Settings::ThirdPerson::enabled);
-			    ImGui::Text(XORSTR("Showed Angle"));
+			    ImGui::Text(XORSTR("Thirdperson Key"));
 			}
 			ImGui::NextColumn();
 			{
