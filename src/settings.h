@@ -439,6 +439,7 @@ namespace Settings
 			extern bool always_on;
 			extern float valueX;
 			extern float valueY;
+			extern bool disabled;
 		}
 
 		namespace AutoPistol

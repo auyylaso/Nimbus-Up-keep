@@ -49,6 +49,7 @@ bool Settings::Aimbot::RCS::enabled = false;
 bool Settings::Aimbot::RCS::always_on = false;
 float Settings::Aimbot::RCS::valueX = 2.0f;
 float Settings::Aimbot::RCS::valueY = 2.0f;
+bool Settings::Aimbot::RCS::disabled = false;
 bool Settings::Aimbot::AutoCrouch::enabled = false;
 bool Settings::Aimbot::NoShoot::enabled = false;
 bool Settings::Aimbot::IgnoreJump::enabled = false;
@@ -443,7 +444,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 
 static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 {
-	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE)
+	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE || Settings::Aimbot::RCS::disabled)
 		return;
 
 	if (!(cmd->buttons & IN_ATTACK))
@@ -451,8 +452,8 @@ static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 
 	bool hasTarget = Settings::Aimbot::AutoAim::enabled && shouldAim && player;
 
-	float valueX = Settings::Aimbot::type == AimbotType::RAGE ? 2.0f : Settings::Aimbot::RCS::valueX;
-	float valueY = Settings::Aimbot::type == AimbotType::RAGE ? 2.0f : Settings::Aimbot::RCS::valueY;
+	float valueX = Settings::Aimbot::RCS::valueX;
+	float valueY = Settings::Aimbot::RCS::valueY;
 
 	if (!Settings::Aimbot::RCS::always_on && !hasTarget && Settings::Aimbot::type != AimbotType::RAGE)
 		return;
@@ -800,6 +801,9 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 	{
 		Settings::Aimbot::AutoAim::enabled = true;
 		Settings::Aimbot::AutoAim::fov = 180.0f;
+		Settings::Aimbot::RCS::valueX = 2.0f;
+		Settings::Aimbot::RCS::valueY = 2.0f;
+		Settings::Aimbot::AutoAim::engageLockTR = false;
 	}
 
     Vector bestSpot = {0,0,0};
