@@ -49,7 +49,7 @@ bool Settings::Aimbot::RCS::enabled = false;
 bool Settings::Aimbot::RCS::always_on = false;
 float Settings::Aimbot::RCS::valueX = 2.0f;
 float Settings::Aimbot::RCS::valueY = 2.0f;
-bool Settings::Aimbot::RCS::disabled = false;
+bool Settings::Aimbot::NoSpread::enabled = false;
 bool Settings::Aimbot::AutoCrouch::enabled = false;
 bool Settings::Aimbot::NoShoot::enabled = false;
 bool Settings::Aimbot::IgnoreJump::enabled = false;
@@ -444,7 +444,7 @@ static C_BasePlayer* GetClosestPlayerAndSpot(CUserCmd* cmd, bool visibleCheck, V
 
 static void RCS(QAngle& angle, C_BasePlayer* player, CUserCmd* cmd)
 {
-	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE || Settings::Aimbot::RCS::disabled)
+	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE || Settings::Aimbot::NoSpread::enabled)
 		return;
 
 	if (!(cmd->buttons & IN_ATTACK))
@@ -707,7 +707,8 @@ static void AutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CU
 
 	if( Settings::Aimbot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3) )
 		return;
-	if( Settings::Aimbot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
+	if( (Settings::Aimbot::SpreadLimit::enabled || !Settings::Aimbot::NoSpread::enabled) 
+	&& ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();

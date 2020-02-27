@@ -439,7 +439,6 @@ namespace Settings
 			extern bool always_on;
 			extern float valueX;
 			extern float valueY;
-			extern bool disabled;
 		}
 
 		namespace AutoPistol
@@ -455,6 +454,11 @@ namespace Settings
 		}
 
 		namespace AutoCrouch
+		{
+			extern bool enabled;
+		}
+
+		namespace NoSpread
 		{
 			extern bool enabled;
 		}

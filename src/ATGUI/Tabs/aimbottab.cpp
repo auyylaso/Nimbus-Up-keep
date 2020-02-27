@@ -722,8 +722,12 @@ void Aimbot::RenderTab() {
 						ImGui::PopItemWidth();
 					}
 					ImGui::Separator();
-					ImGui::Text(XORSTR("For Nospread Games"));
-					ImGui::Checkbox(XORSTR("No Recoil Control"), & Settings::Aimbot::RCS::disabled);
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("No spread HvH"));
+					ImGui::Separator();
+					ImGui::Checkbox(XORSTR("No Spread"), & Settings::Aimbot::NoSpread::enabled);
+					ImGui::Separator();
 
 					ImGui::EndChild();
 				} break;
