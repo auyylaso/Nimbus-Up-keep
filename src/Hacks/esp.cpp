@@ -112,7 +112,6 @@ int Settings::ESP::Sounds::time = 1000;
 bool Settings::NoScopeBorder::enabled = false;
 bool Settings::ESP::HeadDot::enabled = false;
 float Settings::ESP::HeadDot::size = 2.f;
-bool Settings::ESP::Backtrack::enabled = false;
 
 bool Settings::ESP::Spread::enabled = false;
 bool Settings::ESP::Spread::spreadLimit = false;
@@ -877,21 +876,6 @@ static void DrawHeaddot( C_BasePlayer* player ) {
 	Draw::AddCircleFilled( head2D.x, head2D.y, Settings::ESP::HeadDot::size, ESP::GetESPPlayerColor( player, bIsVisible ), 10 );
 }
 
-static void DrawBacktrack( C_BasePlayer* player ) 
-{
-	Vector head2D;
-
-    for (auto& tick : LagComp::ticks)
-    {
-        for (auto& record : tick.records)
-        {
-        	if ( debugOverlay->ScreenPosition( record.head, head2D ) )
-				continue;
-			Draw::AddCircleFilled( head2D.x, head2D.y, Settings::ESP::HeadDot::size, ESP::GetESPPlayerColor( player, false ), 3 );
-        }
-    }
-}
-
 static void DrawZeusBot(ImColor playerColor)
 {
     C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
@@ -1180,9 +1164,6 @@ static void DrawPlayer(C_BasePlayer* player)
 
 	if (Settings::ESP::HeadDot::enabled)
 		DrawHeaddot(player);
-
-	if (Settings::ESP::Backtrack::enabled)
-		DrawBacktrack(player);
 
 	if (Settings::Debug::AutoWall::debugView)
 		DrawAutoWall(player);

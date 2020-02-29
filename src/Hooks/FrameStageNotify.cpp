@@ -11,7 +11,6 @@
 #include "../Hacks/asuswalls.h"
 #include "../Hacks/nosmoke.h"
 #include "../Hacks/thirdperson.h"
-#include "../Hacks/lagcomp.h"
 
 typedef void (*FrameStageNotifyFn) (void*, ClientFrameStage_t);
 
@@ -22,7 +21,6 @@ void Hooks::FrameStageNotify(void* thisptr, ClientFrameStage_t stage)
 	SkinChanger::FrameStageNotifySkins(stage);
 	Noflash::FrameStageNotify(stage);
 	View::FrameStageNotify(stage);
-	LagComp::FrameStageNotify(stage);
 	Resolver::FrameStageNotify(stage);
 	SkyBox::FrameStageNotify(stage);
 	ASUSWalls::FrameStageNotify(stage);
