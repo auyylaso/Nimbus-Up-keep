@@ -16,19 +16,19 @@ void RemoveInvalidTicks()
 
 void RegisterTicks()
 {
-	const auto curframe = LagComp::lagCompFrames.insert(LagComp::lagCompFrames.begin(), { globalVars->tickcount, globalVars->curtime });
-	const auto localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
+	const auto curframe = LagComp::lagCompFrames.insert(LagComp::lagCompFrames.begin(), {globalVars->tickcount, globalVars->curtime});
+	const auto localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
 	{
-		const auto player = (C_BasePlayer*)entityList->GetClientEntity(i);
+		const auto player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
 		if (!player
-			|| player == localplayer
-			|| player->GetDormant()
-			|| !player->GetAlive()
-			|| Entity::IsTeamMate(player, localplayer)
-			|| player->GetImmune())
+		|| player == localplayer
+		|| player->GetDormant()
+		|| !player->GetAlive()
+		|| Entity::IsTeamMate(player, localplayer)
+		|| player->GetImmune())
 			continue;
 
 		LagComp::LagCompRecord record;
@@ -42,7 +42,7 @@ void RegisterTicks()
 	}
 }
 
-void LagComp::CreateMove(CUserCmd* cmd)
+void LagComp::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::LagComp::enabled)
 		return;
@@ -50,13 +50,13 @@ void LagComp::CreateMove(CUserCmd* cmd)
 	RemoveInvalidTicks();
 	RegisterTicks();
 
-	C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
 	float serverTime = localplayer->GetTickBase() * globalVars->interval_per_tick;
-	const auto weapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	const auto weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
 	QAngle my_angle;
 	engine->GetViewAngles(my_angle);
@@ -69,13 +69,11 @@ void LagComp::CreateMove(CUserCmd* cmd)
 		int tickcount = 0;
 		bool has_target = false;
 
-		for (auto&& frame : LagComp::lagCompFrames)
+		for (auto &&frame : LagComp::lagCompFrames)
 		{
-			for (auto& record : frame.records)
+			for (auto &record : frame.records)
 			{
-				float tmpFOV = Math::GetFov(
-					my_angle_rcs,
-					Math::CalcAngle(localplayer->GetEyePosition(), record.head));
+				float tmpFOV = Math::GetFov(my_angle_rcs, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
 				if (tmpFOV < fov)
 				{

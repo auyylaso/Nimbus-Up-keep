@@ -143,6 +143,12 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.3.1 (Feb 29)
+- New backtrack
+- Added backtrack chams
+- Updated the code formatting in aimbottab.cpp (for devs)
+- Simplified the resolver (thank you Skerei!)
+
 Version 1.3.0 (Feb 27)
 - Resolver updated
 - Various anti-aim changes

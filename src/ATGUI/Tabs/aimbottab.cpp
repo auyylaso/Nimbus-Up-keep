@@ -1,13 +1,8 @@
 #include "aimbottab.h"
-
 #include "../../SDK/definitions.h"
-
 #include "../../settings.h"
-
 #include "../../Utils/xorstring.h"
-
 #include "../../ImGUI/imgui_internal.h"
-
 #include "../atgui.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
@@ -172,7 +167,8 @@ void UI::UpdateWeaponSettings()
 
 	Settings::Aimbot::weapons.at(currentWeapon) = settings;
 
-	if (Settings::Aimbot::weapons.at(currentWeapon) == Settings::Aimbot::weapons.at(ItemDefinitionIndex::INVALID) && currentWeapon != ItemDefinitionIndex::INVALID)
+	if (Settings::Aimbot::weapons.at(currentWeapon) == Settings::Aimbot::weapons.at(ItemDefinitionIndex::INVALID) &&
+		currentWeapon != ItemDefinitionIndex::INVALID)
 	{
 		Settings::Aimbot::weapons.erase(currentWeapon);
 		UI::ReloadWeaponSettings();
@@ -449,8 +445,6 @@ void Aimbot::RenderTab()
 		ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
 		{
 			ImGui::Combo(XORSTR("##AIMTYPE"), (int *)&Settings::Aimbot::type, aimType, IM_ARRAYSIZE(aimType));
-			switch (Settings::Aimbot::type)
-            switch (Settings::Aimbot::type) 
 			switch (Settings::Aimbot::type)
 			{
 				case AimbotType::LEGIT:
@@ -781,8 +775,6 @@ void Aimbot::RenderTab()
 			}
 		}
 	}
-	ImGui::NextColumn();
-    ImGui::NextColumn(); 
 	ImGui::NextColumn();
 	{
 		ImGui::BeginChild(XORSTR("COL2"), ImVec2(0, 0), true);
