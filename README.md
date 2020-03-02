@@ -9,7 +9,7 @@ Want to chat or play with other Fuzion users? Join us on Gitter!
 
 A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
 
-## What is Zedeware?
+## What is Apuware?
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added/optimized features.
 
@@ -17,7 +17,7 @@ It is a fork of Fuzion, keeping the style and mentality. The difference being is
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build Fuzion/Zedeware:
+#### Download the dependencies required to build Fuzion/Apuware:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -40,14 +40,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download Zedeware:
+#### Download Apuware:
 
 ```bash
-git clone --recursive https://github.com/Zedespook/zedeware
+git clone --recursive https://github.com/Zedespook/Apuware
 ```
 
 ```bash
-cd zedeware
+cd Apuware
 ```
 
 ===================
@@ -71,7 +71,7 @@ First of all, make sure CS:GO is open, it does not matter whether you are in gam
 
 Navigate to the directory where Fuzion was built if you have not ready.
 ```bash
-cd zedeware
+cd Apuware
 ```
 
 Now, you can inject the hack with the `load` script
@@ -252,5 +252,5 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
-The Zedeware project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
+The Apuware project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
 Special thanks to [@acuifex](http://www.github.com/acuifex/) for helping with the project a lot.
