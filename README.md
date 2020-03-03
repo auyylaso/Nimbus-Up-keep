@@ -143,6 +143,13 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.3.2 (March 3) - !UNDER CONSTRUCTION, NEED HELP!
+- Improved resolver
+- Thirdperson key only works if it's enabled
+- Added hit-chance (crashing, needs testing)
+- Added head multipoint scale
+- Changed the name to Apuware
+
 Version 1.3.1 (Feb 29)
 - New backtrack
 - Added backtrack chams

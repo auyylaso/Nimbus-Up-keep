@@ -58,6 +58,9 @@ bool Settings::Aimbot::SmokeCheck::enabled = false;
 bool Settings::Aimbot::FlashCheck::enabled = false;
 bool Settings::Aimbot::SpreadLimit::enabled = false;
 float Settings::Aimbot::SpreadLimit::value = 0.1f;
+bool Settings::Aimbot::HitChance::enabled = false;
+float Settings::Aimbot::HitChance::value = 80.0f;
+float Settings::Aimbot::AutoAim::headScale = 0.5f;
 bool Settings::Aimbot::Smooth::Salting::enabled = false;
 float Settings::Aimbot::Smooth::Salting::multiplier = 0.0f;
 bool Settings::Aimbot::AutoSlow::enabled = false;
@@ -113,7 +116,7 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 	Math::VectorTransform(bbox->bbmin, matrix[bbox->bone], mins);
 	Math::VectorTransform(bbox->bbmax, matrix[bbox->bone], maxs);
 
-	Vector center = ( mins + maxs ) * 0.5f;
+	Vector center = ( mins + maxs ) * Settings::Aimbot::AutoAim::headScale;
 	// 0 - center, 1 - forehead, 2 - skullcap, 3 - upperleftear, 4 - upperrightear, 5 - uppernose, 6 - upperbackofhead
 	// 7 - leftear, 8 - rightear, 9 - nose, 10 - backofhead
 	for( int i = 0; i < headVectors; i++ ) // set all points initially to center mass of head.
@@ -135,6 +138,69 @@ static bool HeadMultiPoint(C_BasePlayer *player, Vector points[])
 
 	return true;
 }
+
+bool HitChance(Vector bestSpot, C_BasePlayer *player, C_BaseCombatWeapon *activeWeapon, float hitChance)
+{
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	Vector src = localplayer->GetEyePosition();
+	QAngle angle = Math::CalcAngle(src, bestSpot);
+	Math::NormalizeAngles(angle);
+
+	Vector forward, right, up;
+	Math::AngleVectors(angle, forward, right, up);
+
+	int hitCount = 0;
+	int NeededHits = static_cast<int>(255 * (hitChance / 100));
+
+	activeWeapon->UpdateAccuracyPenalty();
+	float weap_spread = activeWeapon->GetSpread();
+	float weap_inaccuracy = activeWeapon->GetInaccuracy();
+
+	for (int i = 0; i < 255; i++)
+	{
+		RandomSeed(i + 1); // if we can't calculate spread like game does, then at least use same functions XD
+		float b = RandomFloat(0, 2 * M_PI_F);
+		float spread = weap_spread * RandomFloat(0, 1);
+		float d = RandomFloat(0, 2 * M_PI_F);
+		float inaccuracy = weap_inaccuracy * RandomFloat(0, 1);
+
+		Vector spreadView((cos(b) * inaccuracy) + (cos(d) * spread), (sin(b) * inaccuracy) + (sin(d) * spread), 0), direction;
+
+		direction.x = forward.x + (spreadView.x * right.x) + (spreadView.y * up.x);
+		direction.y = forward.y + (spreadView.x * right.y) + (spreadView.y * up.y);
+		direction.z = forward.z + (spreadView.x * right.z) + (spreadView.y * up.z);
+		direction.Normalize();
+
+		QAngle viewAnglesSpread;
+		Math::VectorAngles(direction, up, viewAnglesSpread);
+		Math::NormalizeAngles(viewAnglesSpread);
+
+		Vector viewForward;
+		Math::AngleVectors(viewAnglesSpread, viewForward);
+		viewForward.NormalizeInPlace();
+
+		viewForward = src + (viewForward * activeWeapon->GetCSWpnData()->GetRange());
+
+		trace_t tr;
+		Ray_t ray;
+
+		ray.Init(src, viewForward);
+		trace->ClipRayToEntity(ray, MASK_SHOT | CONTENTS_GRATE, player, &tr);
+
+		if (tr.m_pEntityHit == player)
+			hitCount++;
+
+		if (static_cast<int>((static_cast<float>(hitCount) / 255) * 100) >= hitChance)
+			return true;
+
+		if ((255 - i + hitCount) < NeededHits)
+			return false;
+	}
+
+	return false;
+}
+
 static float AutoWallBestSpot(C_BasePlayer *player, Vector &bestSpot)
 {
 	float bestDamage = Settings::Aimbot::AutoWall::value;
@@ -679,7 +745,7 @@ static void AutoPistol(C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
         cmd->buttons &= ~IN_ATTACK;
 }
 
-static void AutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
+static void AutoShoot(C_BasePlayer* player, Vector bestSpot, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
 {
 	if (!Settings::Aimbot::AutoShoot::enabled)
 		return;
@@ -705,10 +771,12 @@ static void AutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CU
 	    return; // continue next tick
     }
 
-	if( Settings::Aimbot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3) )
+	if (Settings::Aimbot::AutoShoot::velocityCheck && localplayer->GetVelocity().Length() > (activeWeapon->GetCSWpnData()->GetMaxPlayerSpeed() / 3))
 		return;
-	if( (Settings::Aimbot::SpreadLimit::enabled || !Settings::Aimbot::NoSpread::enabled) 
+	if ((Settings::Aimbot::SpreadLimit::enabled && !Settings::Aimbot::NoSpread::enabled)
 	&& ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
+		return;
+	if (Settings::Aimbot::HitChance::enabled && !HitChance(bestSpot, player, activeWeapon, Settings::Aimbot::HitChance::value))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
@@ -859,7 +927,7 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 	LagSpike(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
-	AutoShoot(player, activeWeapon, cmd);
+	AutoShoot(player, bestSpot, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
@@ -950,6 +1018,9 @@ void Aimbot::UpdateValues()
 	Settings::Aimbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
 	Settings::Aimbot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
 	Settings::Aimbot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
+	Settings::Aimbot::HitChance::enabled = currentWeaponSetting.hitChanceEnabled;
+	Settings::Aimbot::HitChance::value = currentWeaponSetting.hitChance;
+	Settings::Aimbot::AutoAim::headScale = currentWeaponSetting.headScale;
 	Settings::Aimbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Aimbot::AutoWall::value = currentWeaponSetting.autoWallValue;
 	Settings::Aimbot::AutoSlow::enabled = currentWeaponSetting.autoSlow;

@@ -174,6 +174,29 @@ void Math::VectorAngles(const Vector& forward, QAngle &angles)
 	angles[2] = 0.0f;
 }
 
+void Math::VectorAngles(const Vector &forward, Vector &up, QAngle &angles)
+{
+	Vector left = CrossProduct(up, forward);
+	left.NormalizeInPlace();
+
+	float forwardDist = forward.Length2D();
+
+	if (forwardDist > 0.001f)
+	{
+		angles.x = atan2f(-forward.z, forwardDist) * 180 / M_PI_F;
+		angles.y = atan2f(forward.y, forward.x) * 180 / M_PI_F;
+
+		float upZ = (left.y * forward.x) - (left.x * forward.y);
+		angles.z = atan2f(left.z, upZ) * 180 / M_PI_F;
+	}
+	else
+	{
+		angles.x = atan2f(-forward.z, forwardDist) * 180 / M_PI_F;
+		angles.y = atan2f(-left.x, left.y) * 180 / M_PI_F;
+		angles.z = 0;
+	}
+}
+
 float Math::DotProduct(const Vector &v1, const float* v2)
 {
 	return v1.x*v2[0] + v1.y*v2[1] + v1.z*v2[2];

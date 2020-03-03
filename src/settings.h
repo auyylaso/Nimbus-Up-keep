@@ -176,6 +176,7 @@ struct AimbotWeapon_t
 		 rcsEnabled,
 		 rcsAlwaysOn,
 		 spreadLimitEnabled,
+		 hitChanceEnabled,
 		 autoPistolEnabled,
 		 autoShootEnabled,
 		 autoScopeEnabled,
@@ -201,8 +202,10 @@ struct AimbotWeapon_t
 		  aimStepMax = 35.0f,
 		  rcsAmountX = 2.0f,
 		  rcsAmountY = 2.0f,
+		  headScale = 0.5f,
 		  autoWallValue = 10.0f,
-		  spreadLimit = 1.0f;
+		  spreadLimit = 1.0f,
+		  hitChance = 80.0f;
 	bool desiredBones[31];
 
 	bool operator == (const AimbotWeapon_t& another) const
@@ -249,6 +252,9 @@ struct AimbotWeapon_t
 			this->flashCheck == another.flashCheck &&
 			this->spreadLimitEnabled == another.spreadLimitEnabled &&
 			this->spreadLimit == another.spreadLimit &&
+			this->hitChanceEnabled == another.hitChanceEnabled &&
+			this->hitChance == another.hitChance &&
+			this->headScale == another.headScale &&
 			this->autoWallEnabled == another.autoWallEnabled &&
 			this->autoWallValue == another.autoWallValue &&
 			this->autoSlow == another.autoSlow &&
@@ -412,6 +418,7 @@ namespace Settings
 		{
 			extern bool enabled;
 			extern float fov;
+			extern float headScale;
 			extern bool realDistance;
 			extern bool closestBone;
 			extern bool desiredBones[];
@@ -495,6 +502,12 @@ namespace Settings
 		}
 
 		namespace SpreadLimit
+		{
+			extern bool enabled;
+			extern float value;
+		}
+
+		namespace HitChance
 		{
 			extern bool enabled;
 			extern float value;
@@ -1127,6 +1140,42 @@ namespace Settings
 	namespace NoFall
 	{
 		extern bool enabled;
+	}
+
+	namespace Override
+	{
+		extern bool enabled;
+
+		namespace Gravity
+		{
+			extern bool enabled;
+			extern int amount;
+		}
+
+		namespace Aspect
+		{
+			extern bool enabled;
+			extern float var;
+		}
+
+		namespace Bright
+		{
+			extern bool enabled;
+		}
+
+		namespace Fog
+		{
+			extern bool enabled;
+		}
+
+		namespace Viewmodel
+		{
+			extern bool enabled;
+			extern float fov;
+			extern float x;
+			extern float y;
+			extern float z;
+		}
 	}
 
 	namespace DisablePostProcessing

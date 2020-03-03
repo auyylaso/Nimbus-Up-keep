@@ -52,7 +52,7 @@ void MainThread()
 	Hooker::FindLineGoesThroughSmoke();
 	Hooker::FindInitKeyValues();
 	Hooker::FindLoadFromBuffer();
-	//Hooker::FindVstdlibFunctions();
+	Hooker::FindVstdlibFunctions();
 	Hooker::FindOverridePostProcessingDisable();
 	Hooker::HookSwapWindow();
 	Hooker::HookPollEvent();
