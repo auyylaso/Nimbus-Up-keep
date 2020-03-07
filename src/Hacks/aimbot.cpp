@@ -280,9 +280,9 @@ static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 	return aimingAt.DistTo(aimAt);
 }
 
-static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
+static Vector VelocityExtrapolate(C_BasePlayer* player, int value)
 {
-	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
+	return player->GetAbsOrigin() +  (player->GetVelocity() * globalVars->interval_per_tick * value);
 }
 
 /* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
@@ -897,9 +897,19 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 			{
 				if (Settings::Aimbot::Prediction::enabled)
 				{
-					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
-					bestSpot = VelocityExtrapolate(player, bestSpot); // get target pos next tick
+					static INetChannel *NetInf = nullptr;
+
+					newTarget = true;
+					Vector head = player->GetBonePosition((int)BONE_HEAD);
+
+					localEye = VelocityExtrapolate(localplayer, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
+					bestSpot = VelocityExtrapolate(player, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
+					head = VelocityExtrapolate(player, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
+
+					globalVars->tickcount = TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING));
+					cmd->tick_count = globalVars->tickcount;
 				}
+				
 				angle = Math::CalcAngle(localEye, bestSpot);
 
 				if (Settings::Aimbot::ErrorMargin::enabled)

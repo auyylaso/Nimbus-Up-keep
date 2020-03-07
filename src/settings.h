@@ -601,7 +601,6 @@ namespace Settings
         namespace LBYBreaker
         {
             extern bool enabled;
-			extern bool custom;
             extern float offset;
         }
     }
