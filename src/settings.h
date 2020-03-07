@@ -933,6 +933,7 @@ namespace Settings
 	namespace LagComp
 	{
 		extern bool enabled;
+		extern int value;
 	}
 
 	namespace AutoStrafe

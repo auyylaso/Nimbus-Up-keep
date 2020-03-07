@@ -5,12 +5,13 @@
 #include "../settings.h"
 
 bool Settings::LagComp::enabled = false;
+int Settings::LagComp::value = 12;
 
 std::vector<LagComp::LagCompFrameInfo> LagComp::lagCompFrames;
 
 void RemoveInvalidTicks()
 {
-	while (LagComp::lagCompFrames.size() > 24)
+	while (LagComp::lagCompFrames.size() > Settings::LagComp::value)
 		LagComp::lagCompFrames.pop_back();
 }
 
