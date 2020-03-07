@@ -444,6 +444,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
 
 	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
+	settings[XORSTR("LagComp")][XORSTR("value")] = Settings::LagComp::value;
 
 	settings[XORSTR("AutoStrafe")][XORSTR("enabled")] = Settings::AutoStrafe::enabled;
 	settings[XORSTR("AutoStrafe")][XORSTR("type")] = (int) Settings::AutoStrafe::type;
@@ -970,6 +971,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
 	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
+	GetVal(settings[XORSTR("LagComp")][XORSTR("value")], &Settings::LagComp::value);
 
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("enabled")], &Settings::AutoStrafe::enabled);
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("type")], (int*)& Settings::AutoStrafe::type);
