@@ -1653,40 +1653,34 @@ static void DrawFOVCrosshair()
 
 static void DrawSpread()
 {
-    if (!Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit)
+    if ( !Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit )
         return;
 
-    C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
-    if (!localplayer)
+    C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
+    if ( !localplayer )
         return;
 
-    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-    if (!activeWeapon)
+    C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(
+            localplayer->GetActiveWeapon() );
+    if ( !activeWeapon )
         return;
 
-    if (Settings::ESP::Spread::enabled)
-    {
-		int width, height;
-		engine->GetScreenSize(width, height);
-
+    if ( Settings::ESP::Spread::enabled ) {
         float cone = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
-		if (cone > 0.0f)
-		{
-			float radius = (cone * height) / 1.5f;
-			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
+        if ( cone > 0.0f ) {
+            float radius = ( cone * Paint::engineHeight ) / 1.5f;
+            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
+                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2,
+                               Settings::ESP::Spread::color.Color() );
         }
     }
-	
-    if (Settings::ESP::Spread::spreadLimit)
-    {
-		int width, height;
-		engine->GetScreenSize(width, height);
-
+    if ( Settings::ESP::Spread::spreadLimit ) {
         float cone = Settings::Aimbot::SpreadLimit::value;
-		if (cone > 0.0f)
-		{
-			float radius = (cone * height) / 1.5f;
-			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
+        if ( cone > 0.0f ) {
+            float radius = ( cone * Paint::engineHeight ) / 1.5f;
+            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
+                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2 ,
+                               Settings::ESP::Spread::spreadLimitColor.Color() );
         }
     }
 }

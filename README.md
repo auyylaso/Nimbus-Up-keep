@@ -143,6 +143,15 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.3.3 (March 10)
+- Updated backtrack
+- Added backtrack slider
+- Removed hit-chance
+- Reverted to the old spread indicator
+- Fixed Gamesense hitmarker
+- Updated LBY breaker
+- New resolver (Simple and very cool, thanks to Skerei!)
+
 Version 1.3.2 (March 3) - !UNDER CONSTRUCTION, NEED HELP!
 - Improved resolver
 - Thirdperson key only works if it's enabled

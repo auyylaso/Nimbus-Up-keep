@@ -58,8 +58,6 @@ bool Settings::Aimbot::SmokeCheck::enabled = false;
 bool Settings::Aimbot::FlashCheck::enabled = false;
 bool Settings::Aimbot::SpreadLimit::enabled = false;
 float Settings::Aimbot::SpreadLimit::value = 0.1f;
-bool Settings::Aimbot::HitChance::enabled = false;
-float Settings::Aimbot::HitChance::value = 80.0f;
 float Settings::Aimbot::AutoAim::headScale = 0.5f;
 bool Settings::Aimbot::Smooth::Salting::enabled = false;
 float Settings::Aimbot::Smooth::Salting::multiplier = 0.0f;
@@ -280,9 +278,9 @@ static float GetRealDistanceFOV(float distance, QAngle angle, CUserCmd* cmd)
 	return aimingAt.DistTo(aimAt);
 }
 
-static Vector VelocityExtrapolate(C_BasePlayer* player, int value)
+static Vector VelocityExtrapolate(C_BasePlayer* player, Vector aimPos)
 {
-	return player->GetAbsOrigin() +  (player->GetVelocity() * globalVars->interval_per_tick * value);
+	return aimPos + (player->GetVelocity() * globalVars->interval_per_tick);
 }
 
 /* Original Credits to: https://github.com/goldenguy00 ( study! study! study! :^) ) */
@@ -745,7 +743,7 @@ static void AutoPistol(C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
         cmd->buttons &= ~IN_ATTACK;
 }
 
-static void AutoShoot(C_BasePlayer* player, Vector bestSpot, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
+static void AutoShoot(C_BasePlayer* player, C_BaseCombatWeapon* activeWeapon, CUserCmd* cmd)
 {
 	if (!Settings::Aimbot::AutoShoot::enabled)
 		return;
@@ -775,8 +773,6 @@ static void AutoShoot(C_BasePlayer* player, Vector bestSpot, C_BaseCombatWeapon*
 		return;
 	if ((Settings::Aimbot::SpreadLimit::enabled && !Settings::Aimbot::NoSpread::enabled)
 	&& ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
-		return;
-	if (Settings::Aimbot::HitChance::enabled && !HitChance(bestSpot, player, activeWeapon, Settings::Aimbot::HitChance::value))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
@@ -897,19 +893,10 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 			{
 				if (Settings::Aimbot::Prediction::enabled)
 				{
-					static INetChannel *NetInf = nullptr;
-
-					newTarget = true;
-					Vector head = player->GetBonePosition((int)BONE_HEAD);
-
-					localEye = VelocityExtrapolate(localplayer, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
-					bestSpot = VelocityExtrapolate(player, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
-					head = VelocityExtrapolate(player, TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING)));
-
-					globalVars->tickcount = TIME_TO_TICKS(NetInf->GetAvgLatency(FLOW_INCOMING) + NetInf->GetAvgLatency(FLOW_OUTGOING));
-					cmd->tick_count = globalVars->tickcount;
+					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
+					bestSpot = VelocityExtrapolate(player, bestSpot);	  // get target pos next tick
 				}
-				
+
 				angle = Math::CalcAngle(localEye, bestSpot);
 
 				if (Settings::Aimbot::ErrorMargin::enabled)
@@ -937,7 +924,7 @@ void Aimbot::CreateMove(CUserCmd* cmd)
 	LagSpike(player, cmd);
 	AutoSlow(player, oldForward, oldSideMove, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
-	AutoShoot(player, bestSpot, activeWeapon, cmd);
+	AutoShoot(player, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);
 	RCS(angle, player, cmd);
 	Smooth(player, angle);
@@ -1028,8 +1015,6 @@ void Aimbot::UpdateValues()
 	Settings::Aimbot::FlashCheck::enabled = currentWeaponSetting.flashCheck;
 	Settings::Aimbot::SpreadLimit::enabled = currentWeaponSetting.spreadLimitEnabled;
 	Settings::Aimbot::SpreadLimit::value = currentWeaponSetting.spreadLimit;
-	Settings::Aimbot::HitChance::enabled = currentWeaponSetting.hitChanceEnabled;
-	Settings::Aimbot::HitChance::value = currentWeaponSetting.hitChance;
 	Settings::Aimbot::AutoAim::headScale = currentWeaponSetting.headScale;
 	Settings::Aimbot::AutoWall::enabled = currentWeaponSetting.autoWallEnabled;
 	Settings::Aimbot::AutoWall::value = currentWeaponSetting.autoWallValue;

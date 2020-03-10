@@ -176,7 +176,6 @@ struct AimbotWeapon_t
 		 rcsEnabled,
 		 rcsAlwaysOn,
 		 spreadLimitEnabled,
-		 hitChanceEnabled,
 		 autoPistolEnabled,
 		 autoShootEnabled,
 		 autoScopeEnabled,
@@ -204,8 +203,7 @@ struct AimbotWeapon_t
 		  rcsAmountY = 2.0f,
 		  headScale = 0.5f,
 		  autoWallValue = 10.0f,
-		  spreadLimit = 1.0f,
-		  hitChance = 80.0f;
+		  spreadLimit = 1.0f;
 	bool desiredBones[31];
 
 	bool operator == (const AimbotWeapon_t& another) const
@@ -252,8 +250,6 @@ struct AimbotWeapon_t
 			this->flashCheck == another.flashCheck &&
 			this->spreadLimitEnabled == another.spreadLimitEnabled &&
 			this->spreadLimit == another.spreadLimit &&
-			this->hitChanceEnabled == another.hitChanceEnabled &&
-			this->hitChance == another.hitChance &&
 			this->headScale == another.headScale &&
 			this->autoWallEnabled == another.autoWallEnabled &&
 			this->autoWallValue == another.autoWallValue &&
@@ -502,12 +498,6 @@ namespace Settings
 		}
 
 		namespace SpreadLimit
-		{
-			extern bool enabled;
-			extern float value;
-		}
-
-		namespace HitChance
 		{
 			extern bool enabled;
 			extern float value;
