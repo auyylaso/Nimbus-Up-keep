@@ -604,6 +604,7 @@ namespace Settings
 	namespace Resolver
 	{
 		extern bool resolveAll;
+		// extern bool lbycheck;
 		extern bool swap;
 		extern float angle;
 		extern float multiplier;

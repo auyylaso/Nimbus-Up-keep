@@ -13,6 +13,7 @@ std::vector<std::pair<C_BasePlayer *, QAngle>> player_data;
 
 // Resolver debugger
 bool Settings::Resolver::swap = false;
+// bool Settings::Resolver::lbycheck = false;
 float Settings::Resolver::angle = 180.0f;
 float Settings::Resolver::multiplier = 2.0f;
 ResolverType Settings::Resolver::type = ResolverType::DESYNC_MULTIPLY;
@@ -52,6 +53,27 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 			float resolveDelta = Settings::Resolver::type == ResolverType::DESYNC_MULTIPLY
 									 ? AntiAim::GetMaxDelta(player->GetAnimState()) * Settings::Resolver::multiplier
 									 : Settings::Resolver::angle;
+
+			//float baseEyeDelta = *player->GetLowerBodyYawTarget() - (Settings::Resolver::swap ? resolveDelta : -resolveDelta);
+			
+			float lbyDelta = player->GetEyeAngles()->y - player->GetAnimState()->currentFeetYaw;
+
+			std::string lbyDebug;
+
+			cvar->ConsoleColorPrintf(ColorRGBA(64, 0, 255, 255), XORSTR("\n[Apuware] "));
+
+			if (lbyDelta > 35)
+			{
+				Settings::Resolver::swap = false;
+				cvar->ConsoleDPrintf("Detected left side: %f", lbyDelta);
+			}
+			else if (lbyDelta < -35)
+			{
+				Settings::Resolver::swap = true;
+				cvar->ConsoleDPrintf("Detected right side: %f", lbyDelta);
+			}
+			else
+				cvar->ConsoleDPrintf("Detected no LBY changes: %f", lbyDelta);
 
 			player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget() + (Settings::Resolver::swap ? resolveDelta : -resolveDelta);
 		}
