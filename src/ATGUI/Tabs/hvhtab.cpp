@@ -91,12 +91,13 @@ void HvH::RenderTab()
 		{
 			ImGui::Text(XORSTR("Resolver"));
 			ImGui::Checkbox(XORSTR("Resolver (beta)"), &Settings::Resolver::resolveAll);
-			// ImGui::Checkbox(XORSTR("LBY detection (beta)"), &Settings::Resolver::lbycheck);
+			ImGui::Checkbox(XORSTR("LBY detection (beta)"), &Settings::Resolver::lbycheck);
 			ImGui::Checkbox(XORSTR("Swap Resolved Side"), &Settings::Resolver::swap);
 			ImGui::SliderFloat(XORSTR("##DESYNCMULTIPLIER"), &Settings::Resolver::multiplier, 0, 3, "Desync Multiplier: %0.2f");
 			ImGui::SliderFloat(XORSTR("##FORCEDANGLE"), &Settings::Resolver::angle, 0, 360, "Yaw angle: %1.0f");
 			ImGui::Combo(XORSTR("Resolver Type"), (int *)&Settings::Resolver::type, rTypes, IM_ARRAYSIZE(rTypes));
 			ImGui::Separator();
+			ImGui::Text(XORSTR("Misc Anti-Aim options"));
 			ImGui::Checkbox(XORSTR("Anti-Aim States"), &Settings::AntiAim::States::enabled);
 
 			if (Settings::AntiAim::States::enabled)
