@@ -143,7 +143,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
-Version 1.3.3 (March 15)
+Version 1.3.4a (March 15)
+- Added more options to the new resolver for testing
+
+Version 1.3.4 (March 15)
 - Code cleaning
 - Added new resolver (alpha)
 
