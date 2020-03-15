@@ -159,6 +159,12 @@ enum class AntiAimType: int
 	CUSTOM,
 };
 
+enum class ResolverType : int
+{
+	DESYNC_MULTIPLY,
+	CUSTOM_ANGLE,
+};
+
 struct AimbotWeapon_t
 {
 	bool enabled,
@@ -598,6 +604,10 @@ namespace Settings
 	namespace Resolver
 	{
 		extern bool resolveAll;
+		extern bool swap;
+		extern float angle;
+		extern float multiplier;
+		extern ResolverType type;
 	}
 
 	namespace ESP
@@ -1132,41 +1142,12 @@ namespace Settings
 		extern bool enabled;
 	}
 
-	namespace Override
+	/*
+	namespace RapidFire
 	{
 		extern bool enabled;
-
-		namespace Gravity
-		{
-			extern bool enabled;
-			extern int amount;
-		}
-
-		namespace Aspect
-		{
-			extern bool enabled;
-			extern float var;
-		}
-
-		namespace Bright
-		{
-			extern bool enabled;
-		}
-
-		namespace Fog
-		{
-			extern bool enabled;
-		}
-
-		namespace Viewmodel
-		{
-			extern bool enabled;
-			extern float fov;
-			extern float x;
-			extern float y;
-			extern float z;
-		}
 	}
+	*/
 
 	namespace DisablePostProcessing
 	{
@@ -1242,6 +1223,14 @@ namespace Settings
 		{
 			extern bool draw;
 		}
+		/*
+		namespace Resolver
+		{
+			extern bool isJitter;
+			extern bool side;
+			extern bool shot;
+		}
+		*/
     }
 
 	void LoadDefaultsOrSave(std::string path);

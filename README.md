@@ -143,6 +143,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.3.3 (March 15)
+- Code cleaning
+- Added new resolver (alpha)
+
 Version 1.3.3 (March 10)
 - Updated backtrack
 - Added backtrack slider
