@@ -2,8 +2,8 @@
 
 #include "../SDK/IInputSystem.h"
 
-namespace FakeLag
+namespace Airstuck
 {
 	//Hooks
 	void CreateMove(CUserCmd* cmd);
-};
+}

@@ -2,30 +2,20 @@
 
 #include "../Utils/xorstring.h"
 #include "../Utils/entity.h"
-#include "../Utils/math.h"
 #include "../settings.h"
 #include "../interfaces.h"
 #include "antiaim.h"
 
-bool Settings::Resolver::resolveAll = false;
-std::vector<int64_t> Resolver::Players = {};
+std::vector<int64_t> Resolver::Players = { };
 
-std::vector<std::pair<C_BasePlayer *, QAngle>> player_data;
-
-// Resolver debugger
-bool Settings::Resolver::swap = false;
-bool Settings::Resolver::lbycheck = false;
-float Settings::Resolver::lbylimit = 120.0f;
-float Settings::Resolver::angle = 180.0f;
-float Settings::Resolver::multiplier = 2.0f;
-ResolverType Settings::Resolver::type = ResolverType::DESYNC_MULTIPLY;
+std::vector<std::pair<C_BasePlayer*, QAngle>> player_data;
 
 void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 {
 	if (!engine->IsInGame())
 		return;
 
-	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
 
@@ -33,14 +23,14 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 	{
 		for (int i = 1; i < engine->GetMaxClients(); ++i)
 		{
-			C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
+			C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
 
-			if (!player 
-			|| player == localplayer 
-			|| player->GetDormant() 
-			|| !player->GetAlive() 
-			|| player->GetImmune() 
-			|| Entity::IsTeamMate(player, localplayer))
+			if (!player
+				|| player == localplayer
+				|| player->GetDormant()
+				|| !player->GetAlive()
+				|| player->GetImmune()
+				|| Entity::IsTeamMate(player, localplayer))
 				continue;
 
 			IEngineClient::player_info_t entityInformation;
@@ -49,43 +39,19 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 			if (!Settings::Resolver::resolveAll && std::find(Resolver::Players.begin(), Resolver::Players.end(), entityInformation.xuid) == Resolver::Players.end())
 				continue;
 
-			player_data.push_back(std::pair<C_BasePlayer *, QAngle>(player, *player->GetEyeAngles()));
+			player_data.push_back(std::pair<C_BasePlayer*, QAngle>(player, *player->GetEyeAngles()));
 
-			// Zede's resolver
-			float resolveDelta = Settings::Resolver::type == ResolverType::DESYNC_MULTIPLY
-									 ? AntiAim::GetMaxDelta(player->GetAnimState()) * Settings::Resolver::multiplier
-									 : Settings::Resolver::angle;
-
-			//float baseEyeDelta = *player->GetLowerBodyYawTarget() - (Settings::Resolver::swap ? resolveDelta : -resolveDelta);
-
-			if (Settings::Resolver::lbycheck)
-			{
-				float lbyDelta = player->GetEyeAngles()->y - player->GetAnimState()->currentFeetYaw;
-				cvar->ConsoleColorPrintf(ColorRGBA(64, 0, 255, 255), XORSTR("\n[Apuware] "));
-
-				if (lbyDelta > Settings::Resolver::lbylimit)
-				{
-					Settings::Resolver::swap = false;
-					cvar->ConsoleDPrintf("Detected left side: %f", lbyDelta);
-				}
-				else if (lbyDelta < -Settings::Resolver::lbylimit)
-				{
-					Settings::Resolver::swap = true;
-					cvar->ConsoleDPrintf("Detected right side: %f", lbyDelta);
-				}
-				else
-					cvar->ConsoleDPrintf("Detected no LBY changes: %f", lbyDelta);
-			}
-
-			player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget() + (Settings::Resolver::swap ? resolveDelta : -resolveDelta);
-			Math::NormalizeYaw(player->GetEyeAngles()->y);
+			//player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
+			player->GetEyeAngles()->y = (rand() % 2) ?
+                                        player->GetEyeAngles()->y + (AntiAim::GetMaxDelta(player->GetAnimState()) * 0.66f) :
+                                        player->GetEyeAngles()->y - (AntiAim::GetMaxDelta(player->GetAnimState()) * 0.66f);
 		}
 	}
 	else if (stage == ClientFrameStage_t::FRAME_RENDER_END)
 	{
 		for (unsigned long i = 0; i < player_data.size(); i++)
 		{
-			std::pair<C_BasePlayer *, QAngle> player_aa_data = player_data[i];
+			std::pair<C_BasePlayer*, QAngle> player_aa_data = player_data[i];
 			*player_aa_data.first->GetEyeAngles() = player_aa_data.second;
 		}
 
@@ -97,7 +63,7 @@ void Resolver::PostFrameStageNotify(ClientFrameStage_t stage)
 {
 }
 
-void Resolver::FireGameEvent(IGameEvent *event)
+void Resolver::FireGameEvent(IGameEvent* event)
 {
 	if (!event)
 		return;

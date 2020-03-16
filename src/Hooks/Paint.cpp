@@ -13,6 +13,7 @@
 #include "../Hacks/hitmarkers.h"
 #include "../Hacks/eventlog.h"
 #include "../Hacks/snipercrosshair.h"
+#include "../Hacks/angleindicator.h"
 
 #include <mutex>
 
@@ -31,8 +32,7 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
 {
 	engineVGuiVMT->GetOriginalMethod<PaintFn>(15)(thisptr, mode);
 
-    int width, height;
-    engine->GetScreenSize( width, height );
+    engine->GetScreenSize(Paint::engineWidth,Paint::engineHeight );
 
 	if (Settings::ScreenshotCleaner::enabled && engine->IsTakingScreenshot())
 		return;
@@ -49,6 +49,7 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
         Recoilcrosshair::Paint();
         Hitmarkers::Paint();
         Eventlog::Paint();
+        AngleIndicator::Paint();
         GrenadePrediction::Paint();
 
         if( Settings::ESP::backend == DrawingBackend::SURFACE ){
@@ -81,10 +82,6 @@ void Hooks::Paint(void* thisptr, PaintMode_t mode)
             FinishDrawing(surface);
         }
         std::unique_lock<std::mutex> lock( drawMutex );
-        if( Paint::engineWidth != width || Paint::engineHeight != height ){
-            Paint::engineWidth = width;
-            Paint::engineHeight = height;
-        }
         Draw::drawRequests.erase( Draw::drawRequests.begin( ), Draw::drawRequests.begin( ) + prevRecords );
     }
 }

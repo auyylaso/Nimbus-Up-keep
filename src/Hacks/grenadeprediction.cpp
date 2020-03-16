@@ -13,9 +13,6 @@
 
 #include <sstream>
 
-bool Settings::GrenadePrediction::enabled = false;
-ColorVar Settings::GrenadePrediction::color = ImColor( 255, 79, 56, 255 );
-
 std::vector<Vector> grenadePath;
 int grenadeType = 0;
 float GrenadePrediction::cameraHeight = 100.0f;
@@ -344,21 +341,13 @@ void GrenadePrediction::Paint( ) {
 
     if ( ( grenadeType ) && ( grenadePath.size() > 1 ) && ( grenade->GetPinPulled() ) ) {
         ImVec2 nadeStart, nadeEnd;
-        ImVec2 lineStart, lineEnd;
 
         Vector prev = grenadePath[0];
-        Vector Forward, Right, Up;
 
         for ( auto it = grenadePath.begin(), end = grenadePath.end(); it != end; ++it ) {
             if ( ESP::WorldToScreen( prev, &nadeStart ) && ESP::WorldToScreen( *it, &nadeEnd ) ) {
                 Draw::AddLine( ( int ) nadeStart.x, ( int ) nadeStart.y,
                                ( int ) nadeEnd.x, ( int ) nadeEnd.y,
-                               Settings::GrenadePrediction::color.Color() );
-            }
-            Math::AngleVectors(Math::CalcAngle(prev, *it), Forward, Right, Up);// TODO make not ghetto way
-            if ( ESP::WorldToScreen( *it + (Right * 10), &lineStart ) && ESP::WorldToScreen( *it - (Right * 10), &lineEnd ) ) {
-                Draw::AddLine( ( int ) lineStart.x, ( int ) lineStart.y,
-                               ( int ) lineEnd.x, ( int ) lineEnd.y,
                                Settings::GrenadePrediction::color.Color() );
             }
             prev = *it;

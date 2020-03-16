@@ -34,11 +34,11 @@ typedef bool (*LineGoesThroughSmokeFn) (Vector, Vector, int16_t);
 typedef void (*InitKeyValuesFn) (KeyValues*, const char*);
 typedef void (*LoadFromBufferFn) (KeyValues*, const char*, const char*, void*, const char*, void*);
 typedef ICommandLine* (*CommandLineFn) (void);
-typedef void (*RandomSeedFn)(int);
-typedef float (*RandomFloatFn)(float, float);
-typedef float (*RandomFloatExpFn)(float, float, float);
-typedef int (*RandomIntFn)(int, int);
-typedef float (*RandomGaussianFloatFn)(float, float);
+//typedef void (*RandomSeedFn)(int);
+//typedef float (*RandomFloatFn)(float, float);
+//typedef float (*RandomFloatExpFn)(float, float, float);
+//typedef int (*RandomIntFn)(int, int);
+//typedef float (*RandomGaussianFloatFn)(float, float);
 typedef bool (*SetNamedSkyBoxFn)(const char*);
 
 extern Vector lastRayStart;
@@ -1778,12 +1778,6 @@ const std::map<ItemDefinitionIndex, DefItem_t> ItemDefinitionIndexMap = {
 		{ ItemDefinitionIndex::WEAPON_FRAG_GRENADE,         { "#SFUI_WPNHUD_frag_Grenade", "weapon_frag_grenade", "models/weapons/v_eq_fraggrenade.mdl", "hegrenade"} },
 		{ ItemDefinitionIndex::WEAPON_BUMPMINE, 			{ "#SFUI_WPNHUD_BUMPMINE", "weapon_bumpmine", "models/weapons/v_eq_fraggrenade.mdl"} }
 };
-
-#define TICK_INTERVAL			(globalVars->interval_per_tick)
-
-#define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
-#define TICKS_TO_TIME( t )		( TICK_INTERVAL *( t ) )
-#define ROUND_TO_TICKS( t )		( TICK_INTERVAL * TIME_TO_TICKS( t ) )
 
 #define FL_ONGROUND				(1<<0)	// At rest / on the ground
 #define FL_DUCKING				(1<<1)	// Player flag -- Player is fully crouched

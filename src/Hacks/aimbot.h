@@ -12,7 +12,6 @@ namespace Aimbot
     extern int targetAimbot;
 
 	//Hooks
-	void PrePredictionCreateMove(CUserCmd* cmd);
 	void CreateMove(CUserCmd* cmd);
 	void FireGameEvent(IGameEvent* event);
 	void UpdateValues();

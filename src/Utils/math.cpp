@@ -57,27 +57,6 @@ void Math::AngleVectors( const Vector& angles, Vector* forward, Vector* right, V
 	}
 }
 
-void Math::AngleVectors(const QAngle &angles, Vector& forward, Vector& right, Vector& up)
-{
-    float sr, sp, sy, cr, cp, cy;
-
-    SinCos(DEG2RAD(angles[1]), &sy, &cy);
-    SinCos(DEG2RAD(angles[0]), &sp, &cp);
-    SinCos(DEG2RAD(angles[2]), &sr, &cr);
-
-    forward.x = (cp * cy);
-    forward.y = (cp * sy);
-    forward.z = (-sp);
-
-    right.x = (-1 * sr * sp * cy + -1 * cr * -sy);
-    right.y = (-1 * sr * sp * sy + -1 * cr *  cy);
-    right.z = (-1 * sr * cp);
-
-    up.x = (cr * sp * cy + -sr * -sy);
-    up.y = (cr * sp * sy + -sr * cy);
-    up.z = (cr * cp);
-}
-
 void Math::NormalizeAngles(QAngle& angle)
 {
 	while (angle.x > 89.0f)
@@ -174,29 +153,6 @@ void Math::VectorAngles(const Vector& forward, QAngle &angles)
 	angles[2] = 0.0f;
 }
 
-void Math::VectorAngles(const Vector &forward, Vector &up, QAngle &angles)
-{
-	Vector left = CrossProduct(up, forward);
-	left.NormalizeInPlace();
-
-	float forwardDist = forward.Length2D();
-
-	if (forwardDist > 0.001f)
-	{
-		angles.x = atan2f(-forward.z, forwardDist) * 180 / M_PI_F;
-		angles.y = atan2f(forward.y, forward.x) * 180 / M_PI_F;
-
-		float upZ = (left.y * forward.x) - (left.x * forward.y);
-		angles.z = atan2f(left.z, upZ) * 180 / M_PI_F;
-	}
-	else
-	{
-		angles.x = atan2f(-forward.z, forwardDist) * 180 / M_PI_F;
-		angles.y = atan2f(-left.x, left.y) * 180 / M_PI_F;
-		angles.z = 0;
-	}
-}
-
 float Math::DotProduct(const Vector &v1, const float* v2)
 {
 	return v1.x*v2[0] + v1.y*v2[1] + v1.z*v2[2];
@@ -214,6 +170,8 @@ QAngle Math::CalcAngle(const Vector &src, const Vector &dst)
 	Vector delta = src - dst;
 
 	Math::VectorAngles(delta, angles);
+
+	delta.Normalize();
 
 	return angles;
 }
