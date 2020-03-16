@@ -1,17 +1,17 @@
 #include "thirdperson.h"
 #include "antiaim.h"
 
-#include "../settings.h"
 #include "../interfaces.h"
+#include "../settings.h"
 
 void ThirdPerson::OverrideView(CViewSetup *pSetup)
 {
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
-	if(!localplayer)
+	if (!localplayer)
 		return;
 
-	C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*) entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+	C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
 	if (activeWeapon && activeWeapon->GetCSWpnData() && activeWeapon->GetCSWpnData()->GetWeaponType() == CSWeaponType::WEAPONTYPE_GRENADE)
 	{
@@ -19,7 +19,17 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		return;
 	}
 
-	if(localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot())
+	static bool keyRelease = false;
+	static bool toggle = false;
+
+	if (inputSystem->IsButtonDown(Settings::ThirdPerson::key) && !keyRelease)
+	{
+		toggle = !toggle;
+	}
+
+	keyRelease = inputSystem->IsButtonDown(Settings::ThirdPerson::key);
+
+	if (localplayer->GetAlive() && Settings::ThirdPerson::enabled && !engine->IsTakingScreenshot() && toggle)
 	{
 		QAngle viewAngles;
 		engine->GetViewAngles(viewAngles);
@@ -36,34 +46,23 @@ void ThirdPerson::OverrideView(CViewSetup *pSetup)
 		traceFilter.pSkip = localplayer;
 		trace->TraceRay(traceRay, MASK_SOLID, &traceFilter, &tr);
 
-        input->m_fCameraInThirdPerson = true;
-		input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f) );
+		input->m_fCameraInThirdPerson = true;
+		input->m_vecCameraOffset = Vector(viewAngles.x, viewAngles.y, Settings::ThirdPerson::distance * ((tr.fraction < 1.0f) ? tr.fraction : 1.0f));
 	}
-	else if(input->m_fCameraInThirdPerson)
+	else if (input->m_fCameraInThirdPerson)
 	{
 		input->m_fCameraInThirdPerson = false;
 		input->m_vecCameraOffset = Vector(0.f, 0.f, 0.f);
 	}
 }
 
-
 void ThirdPerson::FrameStageNotify(ClientFrameStage_t stage)
 {
 	if (stage == ClientFrameStage_t::FRAME_RENDER_START && engine->IsInGame())
 	{
-		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+		C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 		if (localplayer && localplayer->GetAlive() && Settings::ThirdPerson::enabled && input->m_fCameraInThirdPerson)
-		{
-            switch (Settings::ThirdPerson::type)
-            {
-                case ShowedAngle::REAL:
-                    *localplayer->GetVAngles() = AntiAim::realAngle;
-                    break;
-                case ShowedAngle::FAKE:
-                    *localplayer->GetVAngles() = AntiAim::fakeAngle;
-                    break;
-            }
-		}
+			*localplayer->GetVAngles() = CreateMove::lastTickViewAngles;
 	}
 }

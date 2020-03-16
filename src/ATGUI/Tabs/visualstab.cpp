@@ -22,7 +22,7 @@ void Visuals::RenderTab()
 	const char* ArmsTypes[] = { "Default", "Wireframe", "None" };
 	const char* WeaponTypes[] = { "Default", "Wireframe", "None" };
 	const char* SmokeTypes[] = { "Wireframe", "None" };
-    const char* Sounds[] = { "None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral" };
+    const char* Sounds[] = { "None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral", "Gaysense" };
 	const char* SkyBoxes[] = {
 			"cs_baggage_skybox_", // 0
 			"cs_tibet",
@@ -102,6 +102,7 @@ void Visuals::RenderTab()
 				ImGui::ItemSize(ImVec2(0.0f, 0.0f), 0.0f);
 				ImGui::Checkbox(XORSTR("Bullet Tracers"), &Settings::ESP::BulletTracers::enabled);
 				ImGui::Checkbox(XORSTR("Head Dot"), &Settings::ESP::HeadDot::enabled);
+				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::ESP::Backtrack::enabled);
 			}
 			ImGui::NextColumn();
 			{
@@ -459,6 +460,7 @@ void Visuals::RenderTab()
 				ImGui::Checkbox(XORSTR("Autowall Debug"), &Settings::Debug::AutoWall::debugView);
 				ImGui::Checkbox(XORSTR("AimSpot Debug"), &Settings::Debug::AutoAim::drawTarget);
 				ImGui::Checkbox(XORSTR("BoneMap Debug"), &Settings::Debug::BoneMap::draw);
+				ImGui::Checkbox(XORSTR("AntiAim Debug"), &Settings::Debug::AntiAim::draw);
 				if( Settings::Debug::BoneMap::draw )
 					ImGui::Checkbox(XORSTR("Just Dots"), &Settings::Debug::BoneMap::justDrawDots);
 				ImGui::SliderInt(XORSTR("Test Model ID"), &Settings::Debug::BoneMap::modelID, 1253, 1350, XORSTR("Model ID: %0.f") );

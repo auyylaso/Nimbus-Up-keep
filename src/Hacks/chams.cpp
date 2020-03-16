@@ -1,4 +1,5 @@
 #include "chams.h"
+#include "lagcomp.h"
 
 #include "../Utils/xorstring.h"
 #include "../Utils/entity.h"
@@ -108,6 +109,45 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 	// No need to call DME again, it already gets called in DrawModelExecute.cpp
 }
 
+static void DrawRecord(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
+{
+	if (!Settings::LagComp::enabled)
+		return;
+
+	if (!Settings::ESP::Backtrack::enabled)
+		return;
+
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	if (!localplayer)
+		return;
+
+	IMaterial *material = materialChams;
+	Color color = Color(192, 192, 192, 128);
+
+	material->ColorModulate(color);
+	material->AlphaModulate(0.2f);
+
+	for (auto &frame : LagComp::lagCompFrames)
+	{
+		for (auto &ticks : frame.records)
+		{
+			if (pInfo.entity_index < engine->GetMaxClients() && entityList->GetClientEntity(pInfo.entity_index) == ticks.entity)
+			{
+				auto tick_difference = (globalVars->tickcount - frame.tickCount);
+				if (tick_difference <= 1) continue;
+
+				material->ColorModulate(color);
+				material->AlphaModulate(0.2f);
+
+				modelRender->ForcedMaterialOverride(material);
+				modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, (matrix3x4_t *)ticks.bone_matrix);
+				modelRender->ForcedMaterialOverride(nullptr);
+			}
+		}
+	}
+}
+
 static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 {
 	if (!Settings::ESP::Chams::Weapon::enabled)
@@ -172,7 +212,10 @@ void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const Mo
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);
 
 	if (modelName.find(XORSTR("models/player")) != std::string::npos)
+	{
 		DrawPlayer(thisptr, context, state, pInfo, pCustomBoneToWorld);
+		DrawRecord(thisptr, context, state, pInfo, pCustomBoneToWorld);
+	}
 	else if (modelName.find(XORSTR("arms")) != std::string::npos)
 		DrawArms(pInfo);
 	else if (modelName.find(XORSTR("weapon")) != std::string::npos)

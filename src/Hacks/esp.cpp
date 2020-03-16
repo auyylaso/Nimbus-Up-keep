@@ -37,6 +37,9 @@ struct Footstep {
 std::mutex footstepMutex;
 std::deque<Footstep> playerFootsteps[64]; // entIndex -> Footstep.
 
+QAngle fake;
+QAngle actual;
+
 QAngle viewanglesBackup;
 
 const char* ESP::ranks[] = {
@@ -454,6 +457,7 @@ static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color 
 	Vector2D nameSize = Draw::GetTextSize( string, esp_font );
 	Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
 }
+
 static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
 	if ( !pStudioModel )
@@ -479,6 +483,75 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 		Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Entity::IsTeamMate(player, localplayer) ? Settings::ESP::Skeleton::allyColor.Color() : Settings::ESP::Skeleton::enemyColor.Color());
 	}
 }
+
+static void DrawAATrace(QAngle fake, QAngle actual)
+{
+	if (!Settings::Debug::AntiAim::draw)
+		return;
+
+	C_BasePlayer *localPlayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+	Vector src3D, dst3D, forward;
+	Vector src, dst;
+	char *string;
+	Vector2D nameSize;
+	ImColor color;
+
+	src3D = localPlayer->GetVecOrigin();
+	// LBY
+	Math::AngleVectors(QAngle(0, *localPlayer->GetLowerBodyYawTarget(), 0), forward);
+	dst3D = src3D + (forward * 50);
+
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
+
+	color = ImColor(135, 235, 169);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("LBY");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
+
+	// FAKE
+	Math::AngleVectors(QAngle(0, fake.y, 0), forward);
+	dst3D = src3D + (forward * 50.f);
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
+
+	color = ImColor(5, 200, 5);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("FAKE");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
+
+	// ACTUAL
+	Math::AngleVectors(QAngle(0, actual.y, 0), forward);
+	dst3D = src3D + (forward * 50.f);
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
+
+	color = ImColor(225, 5, 5);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("REAL");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
+
+	// FEET YAW
+	Math::AngleVectors(QAngle(0, localPlayer->GetAnimState()->currentFeetYaw, 0), forward);
+	dst3D = src3D + (forward * 50.f);
+
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
+
+	color = ImColor(225, 225, 80);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("FEET");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
+}
+
 static void DrawBulletTrace( C_BasePlayer* player ) {
 	Vector src3D, dst3D, forward;
 	Vector src, dst;
@@ -1570,6 +1643,8 @@ void ESP::Paint()
 		}
 	}
 
+    if (Settings::ThirdPerson::enabled)
+        DrawAATrace(fake, actual);
 	if (Settings::ESP::FOVCrosshair::enabled)
 		DrawFOVCrosshair();
 	if (Settings::ESP::Spread::enabled || Settings::ESP::Spread::spreadLimit)

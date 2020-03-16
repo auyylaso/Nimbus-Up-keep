@@ -86,7 +86,7 @@ enum class Sound : int {
 	MEME,
 	ERROR,
 	ORCHESTRAL,
-
+	GAYSENSE,
 };
 
 enum class BarType : int
@@ -130,6 +130,12 @@ enum class SmokeType : int
 	NONE,
 };
 
+enum class AimbotType : int
+{
+	LEGIT,
+	RAGE,
+};
+
 enum class AimTargetType : int
 {
 	FOV,
@@ -151,26 +157,12 @@ enum class ShowedAngle : int
     FAKE,
 };
 
-enum class AntiAimType_Y : int
+enum class AntiAimType: int
 {
-	NONE,
-    MAX_DELTA_LEFT,
-	MAX_DELTA_RIGHT,
-    MAX_DELTA_FLIPPER,
-    MAX_DELTA_LBY_AVOID,
-};
-
-enum class AntiAimType_X : int
-{
-    STATIC_UP,
-    STATIC_DOWN,
-    DANCE,
-    FRONT,
-    STATIC_UP_FAKE,
-    STATIC_DOWN_FAKE,
-    LISP_DOWN,
-    ANGEL_DOWN,
-    ANGEL_UP,
+	RAGE,
+	LEGIT,
+	CUSTOM,
+	FREESTAND,
 };
 
 struct AimbotWeapon_t
@@ -322,9 +314,9 @@ namespace Settings
 	namespace UI
 	{
 		inline ColorVar mainColor = ImColor(25, 25, 25, 255 );
-		inline ColorVar bodyColor = ImColor( 5, 5, 5, 255 );
+		inline ColorVar bodyColor = ImColor( 5, 5, 5, 225 );
 		inline ColorVar fontColor = ImColor( 255, 255, 255, 255 );
-		inline ColorVar accentColor = ImColor( 39, 106, 219, 255 );
+		inline ColorVar accentColor = ImColor( 192, 32, 32, 255 );
 
         /* Window Position/Size Defaults */
         namespace Windows
@@ -397,6 +389,7 @@ namespace Settings
 	namespace Aimbot
 	{
 		inline bool enabled = false;
+		inline AimbotType type = AimbotType::LEGIT;
         inline bool silent = false;
         inline bool friendly = false;
         inline Bone bone = BONE_HEAD;
@@ -473,6 +466,11 @@ namespace Settings
 		}
 
 		namespace AutoCrouch
+		{
+			inline bool enabled = false;
+		}
+
+		namespace NoSpread
 		{
 			inline bool enabled = false;
 		}
@@ -558,30 +556,42 @@ namespace Settings
 
     namespace AntiAim
     {
-        namespace AutoDisable
+		inline bool enabled = false;
+		inline AntiAimType type = AntiAimType::RAGE;
+
+		inline float yaw = 180.0f;
+
+		inline ButtonCode_t left = ButtonCode_t::KEY_C;
+		inline ButtonCode_t right = ButtonCode_t::KEY_X;
+
+		namespace AutoDisable
         {
-            inline bool noEnemy = false;
             inline bool knifeHeld = false;
         }
 
-        namespace Yaw
-        {
-            inline bool enabled = false;
-            inline AntiAimType_Y type = AntiAimType_Y::NONE;
-            inline AntiAimType_Y typeFake = AntiAimType_Y::NONE;
-        }
+		namespace States
+		{
+			inline bool enabled = false;
 
-        namespace Pitch
-        {
-            inline bool enabled = false;
-            inline AntiAimType_X type = AntiAimType_X::STATIC_DOWN;
-        }
+			namespace Stand
+			{
+				inline AntiAimType type = AntiAimType::RAGE;
+				inline float angle = 180.0f;
+			}
 
-        namespace HeadEdge
-        {
-            inline bool enabled = false;
-            inline float distance = 25.0f;
-        }
+			namespace Run
+			{
+				inline AntiAimType type = AntiAimType::RAGE;
+				inline float angle = 180.0f;
+			}
+
+			namespace Air
+			{
+				inline AntiAimType type = AntiAimType::RAGE;
+				inline float angle = 180.0f;
+			}
+		}		
+
         namespace LBYBreaker
         {
             inline bool enabled = false;
@@ -592,6 +602,10 @@ namespace Settings
 	namespace Resolver
 	{
 		inline bool resolveAll = false;
+		inline bool lbycheck = false;
+		inline bool swap = false;
+		inline float lbylimit = 35.0f;
+		inline float angle = 80.0f;
 	}
 
 	namespace ESP
@@ -785,6 +799,11 @@ namespace Settings
 			inline float size = 2.0f;
 		}
 
+		namespace Backtrack
+		{
+			inline bool enabled = false;
+		}
+
 		namespace Spread
 		{
 			inline bool enabled = false; // show current spread
@@ -902,6 +921,12 @@ namespace Settings
 	namespace NoDuckCooldown
 	{
 		inline bool enabled = false;
+	}
+
+	namespace LagComp
+	{
+		inline bool enabled = false;
+		inline int value = 12;
 	}
 
 	namespace AutoStrafe
@@ -1082,8 +1107,18 @@ namespace Settings
 	namespace FakeLag
 	{
 		inline bool enabled = false;
-		inline int value = 9;
-		inline bool adaptive = false;
+		inline int value = 12;
+
+		inline bool lagSpike = false;
+
+		namespace States
+		{
+			inline bool enabled = false;
+
+			inline int standValue = 12;
+			inline int moveValue = 12;
+			inline int airValue = 12;
+		}
 	}
 
 	namespace AutoAccept
@@ -1151,8 +1186,8 @@ namespace Settings
 	namespace ThirdPerson
 	{
 		inline bool enabled = false;
-		inline float distance = 30.0f;
-        inline ShowedAngle type = ShowedAngle::REAL;
+		inline float distance = 150.0f;
+        inline ButtonCode_t key = ButtonCode_t::KEY_V;
 	}
 
 	namespace JumpThrow
@@ -1215,10 +1250,7 @@ namespace Settings
  			inline bool allies = false;
  		}
  	}
-	namespace AngleIndicator
-	{
-		inline bool enabled = false;
-	}
+
     namespace Debug
     {
         namespace AutoWall
@@ -1237,6 +1269,10 @@ namespace Settings
 			inline int modelID = 1253; // in econItemMap, not itemdefindex
 		}
 		namespace AnimLayers
+		{
+			inline bool draw = false;
+		}
+		namespace AntiAim
 		{
 			inline bool draw = false;
 		}

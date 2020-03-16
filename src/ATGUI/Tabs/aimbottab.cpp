@@ -1,5 +1,4 @@
 #include "aimbottab.h"
-
 #include "../../SDK/definitions.h"
 #include "../../settings.h"
 #include "../../Utils/xorstring.h"
@@ -13,15 +12,16 @@ static bool enabled = false;
 static bool silent = false;
 static bool friendly = false;
 static bool closestBone = false;
-static bool desiredBones[] = {true, true, true, true, true, true, true, // center mass
-							  false, false, false, false, false, false, false, // left arm
-							  false, false, false, false, false, false, false, // right arm
-							  false, false, false, false, false, // left leg
-							  false, false, false, false, false  // right leg
-							 };
+static bool desiredBones[] = {
+	true, true, true, true, true, true, true,		 // center mass
+	false, false, false, false, false, false, false, // left arm
+	false, false, false, false, false, false, false, // right arm
+	false, false, false, false, false,				 // left leg
+	false, false, false, false, false				 // right leg
+};
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
-static int engageLockTTR = 700; // Time to Target Reacquisition ( in ms )
+static int engageLockTTR = 700;   // Time to Target Reacquisition ( in ms )
 static Bone bone = BONE_HEAD;
 static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
@@ -117,49 +117,49 @@ void UI::UpdateWeaponSettings()
 		Settings::Aimbot::weapons[currentWeapon] = AimbotWeapon_t();
 
 	AimbotWeapon_t settings = {
-			.enabled = enabled,
-			.silent = silent,
-			.friendly = friendly,
-			.closestBone = closestBone,
-			.engageLock = engageLock,
-			.engageLockTR = engageLockTR,
-			.aimkeyOnly = aimkeyOnly,
-			.smoothEnabled = smoothEnabled,
-			.smoothSaltEnabled = smoothSaltEnabled,
-			.errorMarginEnabled = errorMarginEnabled,
-			.autoAimEnabled = autoAimEnabled,
-			.aimStepEnabled = aimStepEnabled,
-			.rcsEnabled = rcsEnabled,
-			.rcsAlwaysOn = rcsAlwaysOn,
-			.spreadLimitEnabled = spreadLimitEnabled,
-			.autoPistolEnabled = autoPistolEnabled,
-			.autoShootEnabled = autoShootEnabled,
-			.autoScopeEnabled = autoScopeEnabled,
-			.noShootEnabled = noShootEnabled,
-			.ignoreJumpEnabled = ignoreJumpEnabled,
-			.ignoreEnemyJumpEnabled = ignoreEnemyJumpEnabled,
-			.smokeCheck = smokeCheck,
-			.flashCheck = flashCheck,
-			.autoWallEnabled = autoWallEnabled,
-			.autoAimRealDistance = autoAimRealDistance,
-			.autoSlow = autoSlow,
-			.predEnabled = predEnabled,
-			.scopeControlEnabled = scopeControlEnabled,
+		.enabled = enabled,
+		.silent = silent,
+		.friendly = friendly,
+		.closestBone = closestBone,
+		.engageLock = engageLock,
+		.engageLockTR = engageLockTR,
+		.aimkeyOnly = aimkeyOnly,
+		.smoothEnabled = smoothEnabled,
+		.smoothSaltEnabled = smoothSaltEnabled,
+		.errorMarginEnabled = errorMarginEnabled,
+		.autoAimEnabled = autoAimEnabled,
+		.aimStepEnabled = aimStepEnabled,
+		.rcsEnabled = rcsEnabled,
+		.rcsAlwaysOn = rcsAlwaysOn,
+		.spreadLimitEnabled = spreadLimitEnabled,
+		.autoPistolEnabled = autoPistolEnabled,
+		.autoShootEnabled = autoShootEnabled,
+		.autoScopeEnabled = autoScopeEnabled,
+		.noShootEnabled = noShootEnabled,
+		.ignoreJumpEnabled = ignoreJumpEnabled,
+		.ignoreEnemyJumpEnabled = ignoreEnemyJumpEnabled,
+		.smokeCheck = smokeCheck,
+		.flashCheck = flashCheck,
+		.autoWallEnabled = autoWallEnabled,
+		.autoAimRealDistance = autoAimRealDistance,
+		.autoSlow = autoSlow,
+		.predEnabled = predEnabled,
+		.scopeControlEnabled = scopeControlEnabled,
 
-			.engageLockTTR = engageLockTTR,
-			.bone = bone,
-			.smoothType = smoothType,
-			.aimkey = aimkey,
-			.smoothAmount = smoothValue,
-			.smoothSaltMultiplier = smoothSaltMultiplier,
-			.errorMarginValue = errorMarginValue,
-			.autoAimFov = autoAimValue,
-			.aimStepMin = aimStepMin,
-			.aimStepMax = aimStepMax,
-			.rcsAmountX = rcsAmountX,
-			.rcsAmountY = rcsAmountY,
-			.autoWallValue = autoWallValue,
-			.spreadLimit = spreadLimit,
+		.engageLockTTR = engageLockTTR,
+		.bone = bone,
+		.smoothType = smoothType,
+		.aimkey = aimkey,
+		.smoothAmount = smoothValue,
+		.smoothSaltMultiplier = smoothSaltMultiplier,
+		.errorMarginValue = errorMarginValue,
+		.autoAimFov = autoAimValue,
+		.aimStepMin = aimStepMin,
+		.aimStepMax = aimStepMax,
+		.rcsAmountX = rcsAmountX,
+		.rcsAmountY = rcsAmountY,
+		.autoWallValue = autoWallValue,
+		.spreadLimit = spreadLimit,
 	};
 
 	for (int bone = BONE_PELVIS; bone <= BONE_RIGHT_SOLE; bone++)
@@ -177,13 +177,57 @@ void UI::UpdateWeaponSettings()
 
 void Aimbot::RenderTab()
 {
-	const char* targets[] = { "PELVIS", "", "", "HIP", "LOWER SPINE", "MIDDLE SPINE", "UPPER SPINE", "NECK", "HEAD" };
-	const char* smoothTypes[] = { "Slow Near End", "Constant Speed", "Fast Near End" };
+	const char *targets[] = {
+		"PELVIS",
+		"",
+		"",
+		"HIP",
+		"LOWER SPINE",
+		"MIDDLE SPINE",
+		"UPPER SPINE",
+		"NECK",
+		"HEAD"};
+	const char *smoothTypes[] = {
+		"Slow Near End",
+		"Constant Speed",
+		"Fast Near End"};
+	const char *aimType[] = {
+		"Legit",
+		"Rage"};
 	static char filterWeapons[32];
 
 	if (ImGui::Checkbox(XORSTR("Enabled"), &enabled))
 		UI::UpdateWeaponSettings();
 	ImGui::Separator();
+
+	static int weaponTypes = 0;
+
+	const char *tabs[] = {
+		"All",
+		"Pistol",
+		"Shotgun",
+		"SMG",
+		"Rifle",
+		"Sniper"};
+
+	for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
+	{
+		int distance = i == weaponTypes ? 0 : i > weaponTypes ? i - weaponTypes : weaponTypes - i;
+
+		ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
+			Settings::UI::mainColor.Color().Value.x - (distance * 0.035f),
+			Settings::UI::mainColor.Color().Value.y - (distance * 0.035f),
+			Settings::UI::mainColor.Color().Value.z - (distance * 0.035f),
+			Settings::UI::mainColor.Color().Value.w);
+
+		if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9, 0)))
+			weaponTypes = i;
+
+		ImGui::GetStyle().Colors[ImGuiCol_Button] = Settings::UI::accentColor.Color();
+
+		if (i < IM_ARRAYSIZE(tabs) - 1)
+			ImGui::SameLine();
+	}
 
 	ImGui::Columns(3, nullptr, true);
 	{
@@ -192,233 +236,543 @@ void Aimbot::RenderTab()
 		ImGui::InputText(XORSTR("##FILTERWEAPONS"), filterWeapons, IM_ARRAYSIZE(filterWeapons));
 		ImGui::PopItemWidth();
 		ImGui::ListBoxHeader(XORSTR("##GUNS"), ImVec2(-1, -1));
-		for (auto it : ItemDefinitionIndexMap)
+		switch (weaponTypes)
 		{
-			bool isDefault = (int) it.first < 0;
-			if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
-				continue;
-
-			if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
-				continue;
-
-			const bool item_selected = ((int) it.first == (int) currentWeapon);
-			ImGui::PushID((int) it.first);
-			std::string formattedName;
-			char changeIndicator = ' ';
-			bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
-			if (!isDefault && isChanged)
-				changeIndicator = '*';
-			formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
-			if (ImGui::Selectable(formattedName.c_str(), item_selected))
+			case 0:
 			{
-				currentWeapon = it.first;
-				UI::ReloadWeaponSettings();
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+					if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+						continue;
+
+					if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+						continue;
+
+					const bool item_selected = ((int)it.first == (int)currentWeapon);
+					ImGui::PushID((int)it.first);
+					std::string formattedName;
+					char changeIndicator = ' ';
+					bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+					if (!isDefault && isChanged)
+						changeIndicator = '*';
+					formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+					if (ImGui::Selectable(formattedName.c_str(), item_selected))
+					{
+						currentWeapon = it.first;
+						UI::ReloadWeaponSettings();
+					}
+					ImGui::PopID();
+				}
 			}
-			ImGui::PopID();
+			break;
+
+			case 1:
+			{
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+
+					if (Util::Items::IsPistol(it.first) || isDefault)
+					{
+						if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+							continue;
+
+						if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+							continue;
+
+						const bool item_selected = ((int)it.first == (int)currentWeapon);
+						ImGui::PushID((int)it.first);
+						std::string formattedName;
+						char changeIndicator = ' ';
+						bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+						if (!isDefault && isChanged)
+							changeIndicator = '*';
+						formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+						if (ImGui::Selectable(formattedName.c_str(), item_selected))
+						{
+							currentWeapon = it.first;
+							UI::ReloadWeaponSettings();
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			break;
+
+			case 2:
+			{
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+
+					if (Util::Items::IsShotgun(it.first) || isDefault)
+					{
+						if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+							continue;
+
+						if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+							continue;
+
+						const bool item_selected = ((int)it.first == (int)currentWeapon);
+						ImGui::PushID((int)it.first);
+						std::string formattedName;
+						char changeIndicator = ' ';
+						bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+						if (!isDefault && isChanged)
+							changeIndicator = '*';
+						formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+						if (ImGui::Selectable(formattedName.c_str(), item_selected))
+						{
+							currentWeapon = it.first;
+							UI::ReloadWeaponSettings();
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			break;
+
+			case 3:
+			{
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+
+					if (Util::Items::IsSMG(it.first) || isDefault)
+					{
+						if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+							continue;
+
+						if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+							continue;
+
+						const bool item_selected = ((int)it.first == (int)currentWeapon);
+						ImGui::PushID((int)it.first);
+						std::string formattedName;
+						char changeIndicator = ' ';
+						bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+						if (!isDefault && isChanged)
+							changeIndicator = '*';
+						formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+						if (ImGui::Selectable(formattedName.c_str(), item_selected))
+						{
+							currentWeapon = it.first;
+							UI::ReloadWeaponSettings();
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			break;
+
+			case 4:
+			{
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+
+					if (Util::Items::IsRifle(it.first) || isDefault)
+					{
+						if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+							continue;
+
+						if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+							continue;
+
+						const bool item_selected = ((int)it.first == (int)currentWeapon);
+						ImGui::PushID((int)it.first);
+						std::string formattedName;
+						char changeIndicator = ' ';
+						bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+						if (!isDefault && isChanged)
+							changeIndicator = '*';
+						formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+						if (ImGui::Selectable(formattedName.c_str(), item_selected))
+						{
+							currentWeapon = it.first;
+							UI::ReloadWeaponSettings();
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			break;
+
+			case 5:
+			{
+				for (auto it : ItemDefinitionIndexMap)
+				{
+					bool isDefault = (int)it.first < 0;
+
+					if (Util::Items::IsScopeable(it.first) || isDefault)
+					{
+						if (!isDefault && !Util::Contains(Util::ToLower(std::string(filterWeapons)), Util::ToLower(Util::Items::GetItemDisplayName(it.first).c_str())))
+							continue;
+
+						if (Util::Items::IsKnife(it.first) || Util::Items::IsGlove(it.first) || Util::Items::IsUtility(it.first))
+							continue;
+
+						const bool item_selected = ((int)it.first == (int)currentWeapon);
+						ImGui::PushID((int)it.first);
+						std::string formattedName;
+						char changeIndicator = ' ';
+						bool isChanged = Settings::Aimbot::weapons.find(it.first) != Settings::Aimbot::weapons.end();
+						if (!isDefault && isChanged)
+							changeIndicator = '*';
+						formattedName = changeIndicator + (isDefault ? Util::Items::GetItemDisplayName(it.first).c_str() : Util::Items::GetItemDisplayName(it.first));
+						if (ImGui::Selectable(formattedName.c_str(), item_selected))
+						{
+							currentWeapon = it.first;
+							UI::ReloadWeaponSettings();
+						}
+						ImGui::PopID();
+					}
+				}
+			}
+			break;
+
+			default:
+				break;
 		}
+
 		ImGui::ListBoxFooter();
 	}
 	ImGui::NextColumn();
 	{
 		ImGui::SetColumnOffset(2, ImGui::GetWindowWidth() / 2 + 75);
+
 		ImGui::BeginChild(XORSTR("COL1"), ImVec2(0, 0), true);
 		{
-			ImGui::Text(XORSTR("Target"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, false);
+			ImGui::Combo(XORSTR("##AIMTYPE"), (int *)&Settings::Aimbot::type, aimType, IM_ARRAYSIZE(aimType));
+			switch (Settings::Aimbot::type)
 			{
-				if (ImGui::Checkbox(XORSTR("FriendlyFire"), &friendly))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				ImGui::Text(XORSTR("Aimbot Target"));
-				if(!closestBone){
-					if (ImGui::Combo(XORSTR("##AIMTARGET"), (int*)&bone, targets, IM_ARRAYSIZE(targets)))
-						UI::UpdateWeaponSettings();
-				}
-				if( closestBone )
+				case AimbotType::LEGIT:
 				{
-					if(ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
-						ImGui::OpenPopup(XORSTR("optionBones"));
-					ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
-					if( ImGui::BeginPopup(XORSTR("optionBones")) )
+					ImGui::Text(XORSTR("Targeting"));
+					ImGui::Separator();
+					ImGui::Columns(2, nullptr, false);
+					{
+						if (ImGui::Checkbox(XORSTR("Multi Bone"), &closestBone))
+							UI::UpdateWeaponSettings();
+					}
+					ImGui::NextColumn();
 					{
 						ImGui::PushItemWidth(-1);
-						ImGui::Text(XORSTR("Center Mass"));
-						if( ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]) )
-							UI::UpdateWeaponSettings();
-						ImGui::Separator();
-
-						ImGui::Columns(2, nullptr, false);
+						ImGui::Text(XORSTR("Aimbot Target"));
+						if (!closestBone)
 						{
-							ImGui::Text(XORSTR("Player's Right Arm"));
-							if( ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]) )
-								UI::UpdateWeaponSettings();
-							ImGui::Text(XORSTR("Player's Right Leg"));
-							if( ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]) )
+							if (ImGui::Combo(XORSTR("##AIMTARGET"), (int *)&bone, targets, IM_ARRAYSIZE(targets)))
 								UI::UpdateWeaponSettings();
 						}
-						ImGui::NextColumn();
-						{   // these spaces are here in the strings because checkboxes can't have duplicate titles.
-							ImGui::Text(XORSTR("Player's Left Arm"));
-							if( ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]) )
-								UI::UpdateWeaponSettings();
+						if (closestBone)
+						{
+							if (ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
+								ImGui::OpenPopup(XORSTR("optionBones"));
+							ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth() / 1.25f), ImGui::GetWindowHeight()), ImGuiSetCond_Always);
+							if (ImGui::BeginPopup(XORSTR("optionBones")))
+							{
+								ImGui::PushItemWidth(-1);
+								ImGui::Text(XORSTR("Center Mass"));
+								if (ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]))
+									UI::UpdateWeaponSettings();
+								ImGui::Separator();
 
-							ImGui::Text(XORSTR("Player's Left Leg"));
-							if( ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]) )
+								ImGui::Columns(2, nullptr, false);
+								{
+									ImGui::Text(XORSTR("Player's Right Arm"));
+									if (ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]))
+										UI::UpdateWeaponSettings();
+									ImGui::Text(XORSTR("Player's Right Leg"));
+									if (ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]))
+										UI::UpdateWeaponSettings();
+								}
+								ImGui::NextColumn();
+								{ // these spaces are here in the strings because checkboxes can't have duplicate titles.
+									ImGui::Text(XORSTR("Player's Left Arm"));
+									if (ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]))
+										UI::UpdateWeaponSettings();
+
+									ImGui::Text(XORSTR("Player's Left Leg"));
+									if (ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]))
+										UI::UpdateWeaponSettings();
+									if (ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]))
+										UI::UpdateWeaponSettings();
+								}
+								ImGui::PopItemWidth();
+								ImGui::EndPopup();
+							}
+						}
+
+						if (ImGui::Checkbox(XORSTR("Ensure Lock"), &engageLock))
+							UI::UpdateWeaponSettings();
+						if (engageLock)
+						{
+							if (ImGui::Checkbox(XORSTR("Targeting Delay ms"), &engageLockTR))
 								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]) )
-								UI::UpdateWeaponSettings();
-							if( ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]) )
-								UI::UpdateWeaponSettings();
+							if (engageLockTR)
+							{
+								if (ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000, "%5.0f"))
+									UI::UpdateWeaponSettings();
+							}
 						}
 						ImGui::PopItemWidth();
-						ImGui::EndPopup();
 					}
-				}
-				if(ImGui::Checkbox(XORSTR("ClosestBone"), &closestBone))
-					UI::UpdateWeaponSettings();
 
-				if(ImGui::Checkbox(XORSTR("EngageLock"), &engageLock))
-					UI::UpdateWeaponSettings();
-				if(engageLock)
-				{
-					if(ImGui::Checkbox(XORSTR("Target Reacquisition"), &engageLockTR))
-						UI::UpdateWeaponSettings();
-					if( engageLockTR )
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("Accuracy"));
+					ImGui::Separator();
+					ImGui::Columns(2, nullptr, true);
 					{
-						if(ImGui::SliderInt(XORSTR("##TTR"), &engageLockTTR, 0, 1000))
+						if (ImGui::Checkbox(XORSTR("FOV"), &autoAimEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
 							UI::UpdateWeaponSettings();
 					}
-				}
-				ImGui::PopItemWidth();
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Accuracy"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Auto Aim"), &autoAimEnabled))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Recoil Control"), &rcsEnabled))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Distance-Based FOV"), &autoAimRealDistance))
-					UI::UpdateWeaponSettings();
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AA"), &autoAimValue, 0, 180))
-					UI::UpdateWeaponSettings();
-				ImGui::PopItemWidth();
-				if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
-					ImGui::OpenPopup(XORSTR("optionRCSAmount"));
-				ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Always);
-				if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
-				{
-					ImGui::PushItemWidth(-1);
-					if (ImGui::Checkbox(XORSTR("RCS Always on"), &rcsAlwaysOn))
-						UI::UpdateWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.3f")))
-						UI::UpdateWeaponSettings();
-					if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.3f")))
-						UI::UpdateWeaponSettings();
-					ImGui::PopItemWidth();
+					ImGui::NextColumn();
+					{
+						ImGui::PushItemWidth(-1);
+						if (ImGui::SliderFloat(XORSTR("##AA"), &autoAimValue, 0, 180, "%0.1f"))
+							UI::UpdateWeaponSettings();
+						ImGui::PopItemWidth();
+						if (ImGui::Button(XORSTR("RCS Settings"), ImVec2(-1, 0)))
+							ImGui::OpenPopup(XORSTR("optionRCSAmount"));
+						ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Always);
+						if (ImGui::BeginPopup(XORSTR("optionRCSAmount")))
+						{
+							ImGui::PushItemWidth(-1);
+							if (ImGui::Checkbox(XORSTR("RCS Always on"), &rcsAlwaysOn))
+								UI::UpdateWeaponSettings();
+							if (ImGui::SliderFloat(XORSTR("##RCSX"), &rcsAmountX, 0, 2, XORSTR("Pitch: %0.5f")))
+								UI::UpdateWeaponSettings();
+							if (ImGui::SliderFloat(XORSTR("##RCSY"), &rcsAmountY, 0, 2, XORSTR("Yaw: %0.5f")))
+								UI::UpdateWeaponSettings();
+							ImGui::PopItemWidth();
 
-					ImGui::EndPopup();
+							ImGui::EndPopup();
+						}
+					}
+
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("Humanizing"));
+					ImGui::Separator();
+					ImGui::Columns(2, nullptr, true);
+					{
+						if (ImGui::Checkbox(XORSTR("Smoothing"), &smoothEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Smooth Salting"), &smoothSaltEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Checkbox(XORSTR("Error Margin"), &errorMarginEnabled))
+							UI::UpdateWeaponSettings();
+						ImGui::PushItemWidth(-1);
+						if (ImGui::Combo(XORSTR("##SMOOTHTYPE"), (int *)&smoothType, smoothTypes, IM_ARRAYSIZE(smoothTypes)))
+							UI::UpdateWeaponSettings();
+						ImGui::PopItemWidth();
+					}
+					ImGui::NextColumn();
+					{
+						ImGui::PushItemWidth(-1);
+						if (ImGui::SliderFloat(XORSTR("##SMOOTH"), &smoothValue, 0, 1))
+							UI::UpdateWeaponSettings();
+						if (ImGui::SliderFloat(XORSTR("##SALT"), &smoothSaltMultiplier, 0, smoothValue))
+							UI::UpdateWeaponSettings();
+						if (ImGui::SliderFloat(XORSTR("##ERROR"), &errorMarginValue, 0, 2))
+							UI::UpdateWeaponSettings();
+						ImGui::PopItemWidth();
+					}
+
+					ImGui::EndChild();
 				}
+				break;
+
+				case AimbotType::RAGE:
+				{
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("Autoshoot"));
+					ImGui::Separator();
+					if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
+						UI::UpdateWeaponSettings();
+					ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Aimbot::AutoShoot::velocityCheck);
+					if (ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled))
+						UI::UpdateWeaponSettings();
+					if (ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1))
+						UI::UpdateWeaponSettings();
+
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("AutoSlow"));
+					ImGui::Separator();
+					if (ImGui::Checkbox(XORSTR("Enabled##AUTOSLOW"), &autoSlow))
+						UI::UpdateWeaponSettings();
+
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("AutoWall"));
+					ImGui::Separator();
+					ImGui::Columns(2, nullptr, true);
+					{
+						if (ImGui::Checkbox(XORSTR("Enabled##AUTOWALL"), &autoWallEnabled))
+							UI::UpdateWeaponSettings();
+						if (ImGui::Button(XORSTR("Autowall Bones"), ImVec2(-1, 0)))
+							ImGui::OpenPopup(XORSTR("optionBones"));
+						ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth() / 1.25f), ImGui::GetWindowHeight()), ImGuiSetCond_Always);
+						if (ImGui::BeginPopup(XORSTR("optionBones")))
+						{
+							ImGui::PushItemWidth(-1);
+							ImGui::Text(XORSTR("Center Mass"));
+							if (ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]))
+								UI::UpdateWeaponSettings();
+							if (ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]))
+								UI::UpdateWeaponSettings();
+							ImGui::Separator();
+
+							ImGui::Columns(2, nullptr, false);
+							{
+								ImGui::Text(XORSTR("Player's Right Arm"));
+								if (ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]))
+									UI::UpdateWeaponSettings();
+								ImGui::Text(XORSTR("Player's Right Leg"));
+								if (ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]))
+									UI::UpdateWeaponSettings();
+							}
+							ImGui::NextColumn();
+							{
+								ImGui::Text(XORSTR("Player's Left Arm"));
+								if (ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]))
+									UI::UpdateWeaponSettings();
+
+								ImGui::Text(XORSTR("Player's Left Leg"));
+								if (ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]))
+									UI::UpdateWeaponSettings();
+								if (ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]))
+									UI::UpdateWeaponSettings();
+							}
+							ImGui::PopItemWidth();
+							ImGui::EndPopup();
+						}
+					}
+					ImGui::NextColumn();
+					{
+						ImGui::PushItemWidth(-1);
+						if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %1.0f")))
+							UI::UpdateWeaponSettings();
+						ImGui::PopItemWidth();
+					}
+					ImGui::Separator();
+					ImGui::Columns(1);
+					ImGui::Separator();
+					ImGui::Text(XORSTR("No spread HvH"));
+					ImGui::Separator();
+					ImGui::Checkbox(XORSTR("No Spread"), &Settings::Aimbot::NoSpread::enabled);
+					ImGui::Separator();
+
+					ImGui::EndChild();
+				}
+				break;
 			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Humanizing"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Smoothing"), &smoothEnabled))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Smooth Salting"), &smoothSaltEnabled))
-					UI::UpdateWeaponSettings();
-				if (ImGui::Checkbox(XORSTR("Error Margin"), &errorMarginEnabled))
-					UI::UpdateWeaponSettings();
-				ImGui::PushItemWidth(-1);
-				if (ImGui::Combo(XORSTR("##SMOOTHTYPE"), (int*)& smoothType, smoothTypes, IM_ARRAYSIZE(smoothTypes)))
-					UI::UpdateWeaponSettings();
-				ImGui::PopItemWidth();
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##SMOOTH"), &smoothValue, 0, 1))
-					UI::UpdateWeaponSettings();
-				if (ImGui::SliderFloat(XORSTR("##SALT"), &smoothSaltMultiplier, 0, smoothValue))
-					UI::UpdateWeaponSettings();
-				if (ImGui::SliderFloat(XORSTR("##ERROR"), &errorMarginValue, 0, 2))
-					UI::UpdateWeaponSettings();
-				ImGui::PopItemWidth();
-			}
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("Autoshoot"));
-			ImGui::Separator();
-			if (ImGui::Checkbox(XORSTR("Auto Shoot"), &autoShootEnabled))
-				UI::UpdateWeaponSettings();
-			ImGui::Checkbox(XORSTR("Velocity Check"), &Settings::Aimbot::AutoShoot::velocityCheck);
-			if( ImGui::Checkbox(XORSTR("Spread Limit"), &spreadLimitEnabled) )
-				UI::UpdateWeaponSettings();
-			if( ImGui::SliderFloat(XORSTR("##SPREADLIMIT"), &spreadLimit, 0, 0.1) )
-				UI::UpdateWeaponSettings();
-			ImGui::EndChild();
 		}
 	}
 	ImGui::NextColumn();
@@ -436,6 +790,7 @@ void Aimbot::RenderTab()
 			{
 				UI::KeyBindButton(&aimkey);
 			}
+
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Casual / DM Only"));
@@ -456,13 +811,13 @@ void Aimbot::RenderTab()
 					UI::UpdateWeaponSettings();
 				ImGui::PopItemWidth();
 			}
+
 			ImGui::Columns(1);
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Other"));
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, true);
 			{
-
 				switch (currentWeapon)
 				{
 					case ItemDefinitionIndex::INVALID:
@@ -488,6 +843,8 @@ void Aimbot::RenderTab()
 				if (ImGui::Checkbox(XORSTR("Smoke Check"), &smokeCheck))
 					UI::UpdateWeaponSettings();
 				if (ImGui::Checkbox(XORSTR("Prediction"), &predEnabled))
+					UI::UpdateWeaponSettings();
+				if (ImGui::Checkbox(XORSTR("Friendly Fire"), &friendly))
 					UI::UpdateWeaponSettings();
 			}
 			ImGui::NextColumn();
@@ -522,117 +879,6 @@ void Aimbot::RenderTab()
 				if (ImGui::Checkbox(XORSTR("Ignore Jump (Enemies)"), &ignoreEnemyJumpEnabled))
 					UI::UpdateWeaponSettings();
 			}
-
-
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("AutoSlow"));
-			ImGui::Separator();
-			if (ImGui::Checkbox(XORSTR("Enabled##AUTOSLOW"), &autoSlow))
-				UI::UpdateWeaponSettings();
-
-			ImGui::Columns(1);
-			ImGui::Separator();
-			ImGui::Text(XORSTR("AutoWall"));
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, true);
-			{
-				if (ImGui::Checkbox(XORSTR("Enabled##AUTOWALL"), &autoWallEnabled))
-					UI::UpdateWeaponSettings();
-				if(ImGui::Button(XORSTR("Autowall Bones"), ImVec2(-1, 0)))
-					ImGui::OpenPopup(XORSTR("optionBones"));
-				ImGui::SetNextWindowSize(ImVec2((ImGui::GetWindowWidth()/1.25f),ImGui::GetWindowHeight()), ImGuiSetCond_Always);
-				if( ImGui::BeginPopup(XORSTR("optionBones")) )
-				{
-					ImGui::PushItemWidth(-1);
-					ImGui::Text(XORSTR("Center Mass"));
-					if( ImGui::Checkbox(XORSTR("Head"), &desiredBones[BONE_HEAD]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Neck"), &desiredBones[BONE_NECK]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Upper Spine"), &desiredBones[BONE_UPPER_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Middle Spine"), &desiredBones[BONE_MIDDLE_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Lower Spine"), &desiredBones[BONE_LOWER_SPINAL_COLUMN]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Pelvis"), &desiredBones[BONE_PELVIS]) )
-						UI::UpdateWeaponSettings();
-					if( ImGui::Checkbox(XORSTR("Hip"), &desiredBones[BONE_HIP]) )
-						UI::UpdateWeaponSettings();
-					ImGui::Separator();
-
-					ImGui::Columns(2, nullptr, false);
-					{
-						ImGui::Text(XORSTR("Player's Right Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone"), &desiredBones[BONE_RIGHT_COLLARBONE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder"), &desiredBones[BONE_RIGHT_SHOULDER]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit"), &desiredBones[BONE_RIGHT_ARMPIT]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep"), &desiredBones[BONE_RIGHT_BICEP]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow"), &desiredBones[BONE_RIGHT_ELBOW]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm"), &desiredBones[BONE_RIGHT_FOREARM]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist"), &desiredBones[BONE_RIGHT_WRIST]) )
-							UI::UpdateWeaponSettings();
-						ImGui::Text(XORSTR("Player's Right Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek"), &desiredBones[BONE_RIGHT_BUTTCHEEK]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh"), &desiredBones[BONE_RIGHT_THIGH]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee"), &desiredBones[BONE_RIGHT_KNEE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle"), &desiredBones[BONE_RIGHT_ANKLE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole"), &desiredBones[BONE_RIGHT_SOLE]) )
-							UI::UpdateWeaponSettings();
-					}
-					ImGui::NextColumn();
-					{
-						ImGui::Text(XORSTR("Player's Left Arm"));
-						if( ImGui::Checkbox(XORSTR("Collarbone "), &desiredBones[BONE_LEFT_COLLARBONE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Shoulder "), &desiredBones[BONE_LEFT_SHOULDER]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Armpit "), &desiredBones[BONE_LEFT_ARMPIT]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Bicep "), &desiredBones[BONE_LEFT_BICEP]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Elbow "), &desiredBones[BONE_LEFT_ELBOW]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Forearm "), &desiredBones[BONE_LEFT_FOREARM]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Wrist "), &desiredBones[BONE_LEFT_WRIST]) )
-							UI::UpdateWeaponSettings();
-
-						ImGui::Text(XORSTR("Player's Left Leg"));
-						if( ImGui::Checkbox(XORSTR("Buttcheek "), &desiredBones[BONE_LEFT_BUTTCHEEK]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Thigh "), &desiredBones[BONE_LEFT_THIGH]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Knee "), &desiredBones[BONE_LEFT_KNEE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Ankle "), &desiredBones[BONE_LEFT_ANKLE]) )
-							UI::UpdateWeaponSettings();
-						if( ImGui::Checkbox(XORSTR("Sole "), &desiredBones[BONE_LEFT_SOLE]) )
-							UI::UpdateWeaponSettings();
-					}
-					ImGui::PopItemWidth();
-					ImGui::EndPopup();
-				}
-			}
-			ImGui::NextColumn();
-			{
-				ImGui::PushItemWidth(-1);
-				if (ImGui::SliderFloat(XORSTR("##AUTOWALLDMG"), &autoWallValue, 0, 100, XORSTR("Min Damage: %f")))
-					UI::UpdateWeaponSettings();
-				ImGui::PopItemWidth();
-			}
-
 
 			ImGui::Columns(1);
 			ImGui::Separator();

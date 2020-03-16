@@ -216,20 +216,25 @@ void Settings::LoadDefaultsOrSave(std::string path)
 		#undef weaponSetting
 	}
 
+	settings[XORSTR("Aimbot")][XORSTR("NoSpread")][XORSTR("enabled")] = Settings::Aimbot::NoSpread::enabled;
 	settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")] = Settings::Aimbot::AutoCrouch::enabled;
 	settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")] = Settings::Aimbot::AutoShoot::velocityCheck;
+	settings[XORSTR("Aimbot")][XORSTR("type")] = (int) Settings::Aimbot::type;
 
-	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")] = Settings::AntiAim::AutoDisable::noEnemy;
-	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")] = Settings::AntiAim::AutoDisable::knifeHeld;
-	settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("enabled")] = Settings::AntiAim::Yaw::enabled;
-	settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")] = (int) Settings::AntiAim::Yaw::type;
-	settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type_fake")] = (int) Settings::AntiAim::Yaw::typeFake;
-	settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("enabled")] = Settings::AntiAim::Pitch::enabled;
-	settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("type")] = (int) Settings::AntiAim::Pitch::type;
-	settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")] = Settings::AntiAim::HeadEdge::enabled;
-	settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")] = Settings::AntiAim::HeadEdge::distance;
+	settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
+	settings[XORSTR("AntiAim")][XORSTR("type")] = (int) Settings::AntiAim::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")] = Settings::AntiAim::States::enabled;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")] = (int) Settings::AntiAim::States::Stand::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")] = Settings::AntiAim::States::Stand::angle;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")] = (int) Settings::AntiAim::States::Run::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")] = Settings::AntiAim::States::Run::angle;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")] = (int) Settings::AntiAim::States::Air::type;
+	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")] = Settings::AntiAim::States::Air::angle;
+	settings[XORSTR("AntiAim")][XORSTR("left")] = Util::GetButtonName(Settings::AntiAim::left);
+	settings[XORSTR("AntiAim")][XORSTR("right")] = Util::GetButtonName(Settings::AntiAim::right);
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")] = Settings::AntiAim::LBYBreaker::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")] = Settings::AntiAim::LBYBreaker::offset;
+	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")] = Settings::AntiAim::AutoDisable::knifeHeld;
 
 	settings[XORSTR("Resolver")][XORSTR("resolve_all")] = Settings::Resolver::resolveAll;
 
@@ -359,6 +364,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")] = (int)Settings::ESP::Hitmarker::Sounds::sound;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")] = Settings::ESP::HeadDot::enabled;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")] = Settings::ESP::HeadDot::size;
+	settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")] = Settings::ESP::Backtrack::enabled;
 	settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("enabled")] = Settings::ESP::Spread::enabled;
 	settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimit")] = Settings::ESP::Spread::spreadLimit;
 	LoadColor(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], Settings::ESP::Spread::color);
@@ -433,6 +439,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
 
+	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
+	settings[XORSTR("LagComp")][XORSTR("value")] = Settings::LagComp::value;
+
 	settings[XORSTR("AutoStrafe")][XORSTR("enabled")] = Settings::AutoStrafe::enabled;
 	settings[XORSTR("AutoStrafe")][XORSTR("type")] = (int) Settings::AutoStrafe::type;
 	settings[XORSTR("AutoStrafe")][XORSTR("silent")] = Settings::AutoStrafe::silent;
@@ -471,9 +480,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("FOVChanger")][XORSTR("viewmodel_enabled")] = Settings::FOVChanger::viewmodelEnabled;
 	settings[XORSTR("FOVChanger")][XORSTR("viewmodel_value")] = Settings::FOVChanger::viewmodelValue;
 	settings[XORSTR("FOVChanger")][XORSTR("ignore_scope")] = Settings::FOVChanger::ignoreScope;
-
-	settings[XORSTR("Airstuck")][XORSTR("enabled")] = Settings::Airstuck::enabled;
-	settings[XORSTR("Airstuck")][XORSTR("key")] = Util::GetButtonName(Settings::Airstuck::key);
 
 	settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("enabled")] = Settings::Skinchanger::Skins::enabled;
 	settings[XORSTR("SkinChanger")][XORSTR("Models")][XORSTR("enabled")] = Settings::Skinchanger::Models::enabled;
@@ -558,7 +564,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
-	settings[XORSTR("FakeLag")][XORSTR("adaptive")] = Settings::FakeLag::adaptive;
+	settings[XORSTR("FakeLag")][XORSTR("lagSpike")] = Settings::FakeLag::lagSpike;
+
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")] = Settings::FakeLag::States::enabled;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")] = Settings::FakeLag::States::standValue;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")] = Settings::FakeLag::States::moveValue;
+	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")] = Settings::FakeLag::States::airValue;
 
 	settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
@@ -601,13 +612,12 @@ void Settings::LoadDefaultsOrSave(std::string path)
 
 	settings[XORSTR("ThirdPerson")][XORSTR("enabled")] = Settings::ThirdPerson::enabled;
 	settings[XORSTR("ThirdPerson")][XORSTR("distance")] = Settings::ThirdPerson::distance;
-	settings[XORSTR("ThirdPerson")][XORSTR("type")] = (int) Settings::ThirdPerson::type;
-
-	settings[XORSTR("JumpThrow")][XORSTR("enabled")] = Settings::JumpThrow::enabled;
-	settings[XORSTR("JumpThrow")][XORSTR("key")] = Util::GetButtonName(Settings::JumpThrow::key);
+	settings[XORSTR("ThirdPerson")][XORSTR("key")] = Util::GetButtonName(Settings::ThirdPerson::key);
 
 	settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")] = Settings::DisablePostProcessing::enabled;
 	settings[XORSTR("NoFall")][XORSTR("enabled")] = Settings::NoFall::enabled;
+
+	// settings[XORSTR("RapidFire")][XORSTR("enabled")] = Settings::RapidFire::enabled;
 
 	settings[XORSTR("GrenadeHelper")][XORSTR("enabled")] = Settings::GrenadeHelper::enabled;
 	settings[XORSTR("GrenadeHelper")][XORSTR("aimAssist")] = Settings::GrenadeHelper::aimAssist;
@@ -733,18 +743,22 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoCrouch")][XORSTR("enabled")], &Settings::Aimbot::AutoCrouch::enabled);
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("AutoShoot")][XORSTR("velocityCheck")], &Settings::Aimbot::AutoShoot::velocityCheck);
+	GetVal(settings[XORSTR("Aimbot")][XORSTR("type")], (int*) &Settings::Aimbot::type);
 
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("no_enemy")], &Settings::AntiAim::AutoDisable::noEnemy);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knife_held")], &Settings::AntiAim::AutoDisable::knifeHeld);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("enabled")], &Settings::AntiAim::Yaw::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type")], (int*)&Settings::AntiAim::Yaw::type);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Yaw")][XORSTR("type_fake")], (int*)&Settings::AntiAim::Yaw::typeFake);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("enabled")], &Settings::AntiAim::Pitch::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Pitch")][XORSTR("type")], (int*)&Settings::AntiAim::Pitch::type);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("enabled")], &Settings::AntiAim::HeadEdge::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("HeadEdge")][XORSTR("distance")], &Settings::AntiAim::HeadEdge::distance);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*) &Settings::AntiAim::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*) &Settings::AntiAim::States::Stand::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("angle")], &Settings::AntiAim::States::Stand::angle);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("type")], (int*) &Settings::AntiAim::States::Run::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Run")][XORSTR("angle")], &Settings::AntiAim::States::Run::angle);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("type")], (int*) &Settings::AntiAim::States::Air::type);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Air")][XORSTR("angle")], &Settings::AntiAim::States::Air::angle);
+	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("left")], &Settings::AntiAim::left);
+	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("right")], &Settings::AntiAim::right);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
+	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")], &Settings::AntiAim::AutoDisable::knifeHeld);
 
 	GetVal(settings[XORSTR("Resolver")][XORSTR("resolve_all")], &Settings::Resolver::resolveAll);
 
@@ -874,6 +888,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")], (int*)&Settings::ESP::Hitmarker::Sounds::sound);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")], &Settings::ESP::HeadDot::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")], &Settings::ESP::HeadDot::size);
+	GetVal(settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")], &Settings::ESP::Backtrack::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("enabled")], &Settings::ESP::Spread::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("spreadLimit")], &Settings::ESP::Spread::spreadLimit);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Spread")][XORSTR("color")], &Settings::ESP::Spread::color);
@@ -948,6 +963,9 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
+	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
+	GetVal(settings[XORSTR("LagComp")][XORSTR("value")], &Settings::LagComp::value);
+
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("enabled")], &Settings::AutoStrafe::enabled);
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("type")], (int*)& Settings::AutoStrafe::type);
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("silent")], &Settings::AutoStrafe::silent);
@@ -986,9 +1004,6 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("FOVChanger")][XORSTR("viewmodel_enabled")], &Settings::FOVChanger::viewmodelEnabled);
 	GetVal(settings[XORSTR("FOVChanger")][XORSTR("viewmodel_value")], &Settings::FOVChanger::viewmodelValue);
 	GetVal(settings[XORSTR("FOVChanger")][XORSTR("ignore_scope")], &Settings::FOVChanger::ignoreScope);
-
-	GetVal(settings[XORSTR("Airstuck")][XORSTR("enabled")], &Settings::Airstuck::enabled);
-	GetButtonCode(settings[XORSTR("Airstuck")][XORSTR("key")], &Settings::Airstuck::key);
 
 	Settings::Skinchanger::Skins::enabled = false;
 	Settings::Skinchanger::skinsCT.clear();
@@ -1132,7 +1147,12 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("adaptive")], &Settings::FakeLag::adaptive);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("lagSpike")], &Settings::FakeLag::lagSpike);
+
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")], &Settings::FakeLag::States::enabled);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")], &Settings::FakeLag::States::standValue);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")], &Settings::FakeLag::States::moveValue);
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")], &Settings::FakeLag::States::airValue);
 
 	GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 
@@ -1175,14 +1195,13 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("enabled")], &Settings::ThirdPerson::enabled);
 	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("distance")], &Settings::ThirdPerson::distance);
-	GetVal(settings[XORSTR("ThirdPerson")][XORSTR("type")], (int*)&Settings::ThirdPerson::type);
-
-	GetVal(settings[XORSTR("JumpThrow")][XORSTR("enabled")], &Settings::JumpThrow::enabled);
-	GetButtonCode(settings[XORSTR("JumpThrow")][XORSTR("key")], &Settings::JumpThrow::key);
+	GetButtonCode(settings[XORSTR("ThirdPerson")][XORSTR("key")], &Settings::ThirdPerson::key);
 
 	GetVal(settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")], &Settings::DisablePostProcessing::enabled);
 
 	GetVal(settings[XORSTR("NoFall")][XORSTR("enabled")], &Settings::NoFall::enabled);
+
+	// GetVal(settings[XORSTR("RapidFire")][XORSTR("enabled")], &Settings::RapidFire::enabled);
 
 	GetVal(settings[XORSTR("GrenadeHelper")][XORSTR("enabled")], &Settings::GrenadeHelper::enabled);
 	GetVal(settings[XORSTR("GrenadeHelper")][XORSTR("aimAssist")], &Settings::GrenadeHelper::aimAssist);

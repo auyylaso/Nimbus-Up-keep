@@ -4,6 +4,8 @@
 #include "../interfaces.h"
 #include "../Hooks/hooks.h"
 
+bool FakeLag::lagSpike = false;
+
 static int ticks = 0;
 int ticksMax = 16;
 
@@ -13,10 +15,17 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		return;
 
 	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if (localplayer->GetFlags() & FL_ONGROUND && Settings::FakeLag::adaptive)
+	if ((!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && localplayer->GetVelocity().Length() <= 0.0f)
+		return;
+
+	if (Settings::FakeLag::States::airValue == 0 && !(localplayer->GetFlags() & FL_ONGROUND))
+		return;
+
+	if (Settings::FakeLag::States::moveValue == 0 && localplayer->GetVelocity().Length() > 0.0f)
 		return;
 
 	if (cmd->buttons & IN_ATTACK)
@@ -30,27 +39,19 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 		CreateMove::sendPacket = true;
 		ticks = 0;
 	}
-	else
+	else if (FakeLag::lagSpike)
+		CreateMove::sendPacket = false;
+	else if (Settings::FakeLag::States::enabled)
 	{
-		if (Settings::FakeLag::adaptive)
-		{
-			int packetsToChoke;
-			if (localplayer->GetVelocity().Length() > 0.f)
-			{
-				packetsToChoke = (int)((64.f / globalVars->interval_per_tick) / localplayer->GetVelocity().Length()) + 1;
-				if (packetsToChoke >= 15)
-					packetsToChoke = 14;
-				if (packetsToChoke < Settings::FakeLag::value)
-					packetsToChoke = Settings::FakeLag::value;
-			}
-			else
-				packetsToChoke = 0;
-
-			CreateMove::sendPacket = ticks < 16 - packetsToChoke;
-		}
+		if (!(localplayer->GetFlags() & FL_ONGROUND))
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::airValue;
+		else if (localplayer->GetVelocity().Length() > 0.0f)
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::moveValue;
 		else
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
+			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::standValue;
 	}
+	else
+		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
 
 	ticks++;
 }

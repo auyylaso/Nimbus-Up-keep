@@ -143,8 +143,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
-Version 1.3.4b (March 16)
+Version 1.3.4b (March 17)
 - Added a slider for maximum LBY checking
+- Changed extern vars to inline
+- Removed zeus radius
 
 Version 1.3.4a (March 15)
 - Added toggle for LBY detection
