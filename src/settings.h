@@ -561,8 +561,8 @@ namespace Settings
 
 		inline float yaw = 180.0f;
 
-		inline ButtonCode_t left = ButtonCode_t::KEY_C;
-		inline ButtonCode_t right = ButtonCode_t::KEY_X;
+		inline ButtonCode_t left = ButtonCode_t::KEY_X;
+		inline ButtonCode_t right = ButtonCode_t::KEY_C;
 
 		namespace AutoDisable
         {
