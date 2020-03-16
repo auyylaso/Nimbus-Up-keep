@@ -606,6 +606,7 @@ namespace Settings
 		extern bool resolveAll;
 		extern bool lbycheck;
 		extern bool swap;
+		extern float lbylimit;
 		extern float angle;
 		extern float multiplier;
 		extern ResolverType type;
