@@ -1669,6 +1669,11 @@ void ESP::CreateMove(CUserCmd* cmd)
 {
 	viewanglesBackup = cmd->viewangles;
 
+	if(CreateMove::sendPacket)
+        fake = CreateMove::lastTickViewAngles;
+    else
+        actual = cmd->viewangles;
+
     if( Settings::ESP::enabled && Settings::ESP::Sounds::enabled && (Settings::ESP::Filters::allies || Settings::ESP::Filters::enemies || Settings::ESP::Filters::localplayer) ){
         CheckActiveSounds();
     }
