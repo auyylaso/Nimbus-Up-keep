@@ -119,8 +119,8 @@ void HvH::RenderTab()
 			}
 
 			ImGui::Separator();
-			ImGui::Checkbox(XORSTR("LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);
-			ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset(from fake): %1.0f");
+			ImGui::Checkbox(XORSTR("Custom LBY Breaker"), &Settings::AntiAim::LBYBreaker::enabled);
+			ImGui::SliderFloat(XORSTR("##LBYOFFSET"), &Settings::AntiAim::LBYBreaker::offset, 0, 360, "LBY Offset: %1.0f");
 			ImGui::EndChild();
 		}
 	}

@@ -458,13 +458,6 @@ void Aimbot::RenderTab()
 					}
 					ImGui::NextColumn();
 					{
-						ImGui::PushItemWidth(-1);
-						ImGui::Text(XORSTR("Aimbot Target"));
-						if (!closestBone)
-						{
-							if (ImGui::Combo(XORSTR("##AIMTARGET"), (int *)&bone, targets, IM_ARRAYSIZE(targets)))
-								UI::UpdateWeaponSettings();
-						}
 						if (closestBone)
 						{
 							if (ImGui::Button(XORSTR("Bones"), ImVec2(-1, 0)))
@@ -789,6 +782,14 @@ void Aimbot::RenderTab()
 			ImGui::NextColumn();
 			{
 				UI::KeyBindButton(&aimkey);
+			}
+
+			ImGui::Columns(1);
+			{
+				ImGui::Separator();
+				ImGui::Text(XORSTR("Highest Target Bone"));
+				if (ImGui::Combo(XORSTR("##AIMTARGET"), (int *)&bone, targets, IM_ARRAYSIZE(targets)))
+					UI::UpdateWeaponSettings();
 			}
 
 			ImGui::Columns(1);

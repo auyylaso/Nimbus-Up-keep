@@ -29,7 +29,7 @@ float AntiAim::GetMaxDelta(CCSGOAnimState *animState)
 }
 
 // Pasted from space!hook, but I tried
-static bool GetBestHeadAngle(QAngle &angle)
+static bool GetBestHeadAngle(QAngle &angle, float maxDelta, bool bSend)
 {
 	float b, r, l;
 
@@ -99,13 +99,13 @@ static bool GetBestHeadAngle(QAngle &angle)
 	if (b > r && b > l) // Back
 		angle.y -= 180;
 	else if (r > l && r > b) // Right
-		angle.y += 90;
+		angle.y += bSend ? 90 - maxDelta : 90;
 	else if (r > l && r == b) // Right = Back
-		angle.y += 135;
+		angle.y += bSend ? 135 - maxDelta : 135;
 	else if (l > r && l > b) // Left
-		angle.y -= 90;
+		angle.y -= bSend ? 90 + maxDelta : 90;
 	else if (l > r && l == b) // Left = Back
-		angle.y -= 135;
+		angle.y -= bSend ? 135 + maxDelta : 135;
 	else
 		return false;
 
@@ -143,9 +143,9 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 			if (!bSend)
 			{
 				if (yFlip)
-					angle.y += directionSwitch ? -maxDelta : maxDelta;
+					angle.y += directionSwitch ? -maxDelta * 2 : maxDelta * 2;
 				else
-					angle.y += directionSwitch ? maxDelta : -maxDelta;
+					angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
 			}
 			else
 				yFlip = !yFlip;
@@ -154,15 +154,13 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 
 		case AntiAimType::LEGIT:
 		{
-
 			if (!bSend)
-				angle.y += directionSwitch ? maxDelta : -maxDelta;
+				angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
 		}
 		break;
 
 		case AntiAimType::CUSTOM:
 		{
-
 			angle.x = 89.0f;
 
 			if (Settings::AntiAim::States::enabled)
@@ -178,14 +176,14 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 				angle.y += Settings::AntiAim::yaw;
 
 			if (!bSend)
-				angle.y += directionSwitch ? maxDelta : -maxDelta;
+				angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
 		}
 		break;
 
 		case AntiAimType::FREESTAND:
 		{
 			QAngle edge_angle = angle;
-            if (GetBestHeadAngle(edge_angle))
+            if (GetBestHeadAngle(edge_angle, maxDelta, bSend))
                 angle.y = edge_angle.y;
 		}
 
