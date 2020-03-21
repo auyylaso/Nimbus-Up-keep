@@ -4,17 +4,17 @@
 #include "../interfaces.h"
 #include "../settings.h"
 
-std::vector<LagComp::LagCompFrameInfo> LagComp::lagCompFrames;
+std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
-void RemoveInvalidTicks()
+static void RemoveInvalidTicks()
 {
-	while (LagComp::lagCompFrames.size() > Settings::LagComp::value)
-		LagComp::lagCompFrames.pop_back();
+	while (LagComp::lagCompTicks.size() > Settings::LagComp::value)
+		LagComp::lagCompTicks.pop_back();
 }
 
-void RegisterTicks()
+static void RegisterTicks()
 {
-	const auto curframe = LagComp::lagCompFrames.insert(LagComp::lagCompFrames.begin(), {globalVars->tickcount, globalVars->curtime});
+	const auto curTick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
 	const auto localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
@@ -36,7 +36,7 @@ void RegisterTicks()
 		record.head = player->GetBonePosition(BONE_HEAD);
 
 		if (player->SetupBones(record.bone_matrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime))
-			curframe->records.push_back(record);
+			curTick->records.push_back(record);
 	}
 }
 
@@ -67,16 +67,16 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		int tickcount = 0;
 		bool has_target = false;
 
-		for (auto &&frame : LagComp::lagCompFrames)
+		for (auto &&Tick : LagComp::lagCompTicks)
 		{
-			for (auto &record : frame.records)
+			for (auto &record : Tick.records)
 			{
 				float tmpFOV = Math::GetFov(my_angle_rcs, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
 				if (tmpFOV < fov)
 				{
 					fov = tmpFOV;
-					tickcount = frame.tickCount;
+					tickcount = Tick.tickCount;
 					has_target = true;
 				}
 			}

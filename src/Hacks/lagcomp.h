@@ -18,7 +18,7 @@ struct LagCompRecord
 };
 
 // stores information about all players for one tick
-struct LagCompFrameInfo
+struct LagCompTickInfo
 {
 	int tickCount;
 	float simulationTime;
@@ -27,7 +27,7 @@ struct LagCompFrameInfo
 
 void CreateMove(CUserCmd *cmd);
 
-extern std::vector<LagComp::LagCompFrameInfo> lagCompFrames;
+extern std::vector<LagComp::LagCompTickInfo> lagCompTicks;
 
 } // namespace LagComp
 
