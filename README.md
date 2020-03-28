@@ -1,9 +1,8 @@
 # Nimbus v1.4 - Free and open-source CS:GO hack
 
-[![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
-
-# This is a public self-maintained Fuzion fork.
-Want to chat or play with other Fuzion users? Join us on Gitter!
+<p align="center">
+<img src="https://i.imgur.com/ESizHuv.jpg">
+</p>
 
 ## What is Fuzion?
 
@@ -11,7 +10,7 @@ A fully featured internal hack for *CounterStrike : Global Offensive* written in
 
 ## What is Nimbus?
 
-It is a fork of Fuzion, keeping the style and mentality. The difference being is the added/optimized features.
+It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
 
 ## Updates - v1.4:
 - Various backtrack optimization
@@ -21,6 +20,10 @@ It is a fork of Fuzion, keeping the style and mentality. The difference being is
 - Crash fixes
 - Code cleaning for developers
 - New visual settings
+
+Want to chat or play with other Fuzion users? Join us on Gitter!
+[![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
+
 
 ## Compiling
 
