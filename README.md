@@ -1,4 +1,4 @@
-# This is a public fork of Fuzion, since this is a public cheat, use it on your own risk!
+# Nimbus v1.4 - Free and open-source CS:GO hack
 
 [![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
 
@@ -9,15 +9,24 @@ Want to chat or play with other Fuzion users? Join us on Gitter!
 
 A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
 
-## What is Zedeware?
+## What is Nimbus?
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added/optimized features.
+
+## Updates - v1.4:
+- Various backtrack optimization
+- Updated desync
+- Updated misc features (third-person, hitmarker)
+- New resolver (!!!)
+- Crash fixes
+- Code cleaning for developers
+- New visual settings
 
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build Fuzion/Zedeware:
+#### Download the dependencies required to build Nimbus:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -40,14 +49,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download Zedeware:
+#### Download Nimbus:
 
 ```bash
-git clone --recursive https://github.com/Zedespook/zedeware
+git clone --recursive https://github.com/Zedespook/Nimbus
 ```
 
 ```bash
-cd zedeware
+cd Nimbus
 ```
 
 ===================
@@ -71,7 +80,7 @@ First of all, make sure CS:GO is open, it does not matter whether you are in gam
 
 Navigate to the directory where Fuzion was built if you have not ready.
 ```bash
-cd zedeware
+cd Nimbus
 ```
 
 Now, you can inject the hack with the `load` script
@@ -143,6 +152,15 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.4.0 (March 22)
+- Various backtrack optimization
+- Updated desync
+- Updated misc features (third-person, hitmarker)
+- New resolver (!!!)
+- Crash fixes
+- Code cleaning for developers
+- New visuals
+
 Version 1.3.6 (March 17)
 - Reverted to pretty grenade-prediction
 - New desync (broken indicators)
@@ -291,5 +309,5 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
-The Zedeware project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
+The Nimbus project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
 Special thanks to [@acuifex](http://www.github.com/acuifex/) for helping with the project a lot.

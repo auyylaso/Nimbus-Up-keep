@@ -1,34 +1,32 @@
 #include "chams.h"
 #include "lagcomp.h"
 
-#include "../Utils/xorstring.h"
-#include "../Utils/entity.h"
-#include "../settings.h"
-#include "../interfaces.h"
 #include "../Hooks/hooks.h"
+#include "../Utils/entity.h"
+#include "../Utils/xorstring.h"
+#include "../interfaces.h"
+#include "../settings.h"
 
-IMaterial* materialChams;
-IMaterial* materialChamsIgnorez;
-IMaterial* materialChamsFlat;
-IMaterial* materialChamsFlatIgnorez;
-IMaterial* materialChamsArms;
-IMaterial* materialChamsWeapons;
+IMaterial *materialChams;
+IMaterial *materialChamsIgnorez;
+IMaterial *materialChamsFlat;
+IMaterial *materialChamsFlatIgnorez;
+IMaterial *materialChamsArms;
+IMaterial *materialChamsWeapons;
 
-typedef void (*DrawModelExecuteFn) (void*, void*, void*, const ModelRenderInfo_t&, matrix3x4_t*);
+typedef void (*DrawModelExecuteFn)(void *, void *, void *, const ModelRenderInfo_t &, matrix3x4_t *);
 
-static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld)
+static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
 	if (!Settings::ESP::Chams::enabled)
 		return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
 
-	C_BasePlayer* entity = (C_BasePlayer*) entityList->GetClientEntity(pInfo.entity_index);
-	if (!entity
-		|| entity->GetDormant()
-		|| !entity->GetAlive())
+	C_BasePlayer *entity = (C_BasePlayer *)entityList->GetClientEntity(pInfo.entity_index);
+	if (!entity || entity->GetDormant() || !entity->GetAlive())
 		return;
 
 	if (entity == localplayer && !Settings::ESP::Filters::localplayer)
@@ -37,11 +35,11 @@ static void DrawPlayer(void* thisptr, void* context, void *state, const ModelRen
 	if (!Entity::IsTeamMate(entity, localplayer) && !Settings::ESP::Filters::enemies)
 		return;
 
-	if (entity != localplayer && Entity::IsTeamMate(entity,localplayer) && !Settings::ESP::Filters::allies)
+	if (entity != localplayer && Entity::IsTeamMate(entity, localplayer) && !Settings::ESP::Filters::allies)
 		return;
 
-	IMaterial* visible_material = nullptr;
-	IMaterial* hidden_material = nullptr;
+	IMaterial *visible_material = nullptr;
+	IMaterial *hidden_material = nullptr;
 
 	switch (Settings::ESP::Chams::type)
 	{
@@ -128,7 +126,7 @@ static void DrawRecord(void *thisptr, void *context, void *state, const ModelRen
 	material->ColorModulate(color);
 	material->AlphaModulate(0.2f);
 
-	for (auto &frame : LagComp::lagCompFrames)
+	for (auto &frame : LagComp::lagCompTicks)
 	{
 		for (auto &ticks : frame.records)
 		{
@@ -148,13 +146,13 @@ static void DrawRecord(void *thisptr, void *context, void *state, const ModelRen
 	}
 }
 
-static void DrawWeapon(const ModelRenderInfo_t& pInfo)
+static void DrawWeapon(const ModelRenderInfo_t &pInfo)
 {
 	if (!Settings::ESP::Chams::Weapon::enabled)
 		return;
 
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);
-	IMaterial* mat = materialChamsWeapons;
+	IMaterial *mat = materialChamsWeapons;
 
 	if (!Settings::ESP::Chams::Weapon::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
@@ -167,13 +165,13 @@ static void DrawWeapon(const ModelRenderInfo_t& pInfo)
 	modelRender->ForcedMaterialOverride(mat);
 }
 
-static void DrawArms(const ModelRenderInfo_t& pInfo)
+static void DrawArms(const ModelRenderInfo_t &pInfo)
 {
 	if (!Settings::ESP::Chams::Arms::enabled)
 		return;
 
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);
-	IMaterial* mat = materialChamsArms;
+	IMaterial *mat = materialChamsArms;
 
 	if (!Settings::ESP::Chams::Arms::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
@@ -186,7 +184,7 @@ static void DrawArms(const ModelRenderInfo_t& pInfo)
 	modelRender->ForcedMaterialOverride(mat);
 }
 
-void Chams::DrawModelExecute(void* thisptr, void* context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t* pCustomBoneToWorld)
+void Chams::DrawModelExecute(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
 	if (!engine->IsInGame())
 		return;

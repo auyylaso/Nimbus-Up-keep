@@ -13,7 +13,7 @@
 void HvH::RenderTab()
 {
 	const char *aTypes[] = {
-		"Rage", "Legit", "Custom", "Freestand" };
+		"Rage", "Legit", "Custom", "Freestand"};
 
 	ImGui::Columns(2, nullptr, true);
 	{
@@ -85,9 +85,8 @@ void HvH::RenderTab()
 		{
 			ImGui::Text(XORSTR("Resolver"));
 			ImGui::Checkbox(XORSTR("Resolver (beta)"), &Settings::Resolver::resolveAll);
-			ImGui::Checkbox(XORSTR("LBY detection (beta)"), &Settings::Resolver::lbycheck);
-			ImGui::SliderFloat(XORSTR("##LBYLIMIT"), &Settings::Resolver::lbylimit, 0, 180, "Yaw angle: %1.0f");
-			ImGui::Checkbox(XORSTR("Swap Resolved Side"), &Settings::Resolver::swap);
+			ImGui::Separator();
+			ImGui::Checkbox(XORSTR("Force Yaw"), &Settings::Resolver::forceYaw);
 			ImGui::SliderFloat(XORSTR("##FORCEDANGLE"), &Settings::Resolver::angle, 0, 360, "Yaw angle: %1.0f");
 			ImGui::Separator();
 			ImGui::Text(XORSTR("Misc Anti-Aim options"));

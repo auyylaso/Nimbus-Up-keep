@@ -602,10 +602,8 @@ namespace Settings
 	namespace Resolver
 	{
 		inline bool resolveAll = false;
-		inline bool lbycheck = false;
-		inline bool swap = false;
-		inline float lbylimit = 35.0f;
-		inline float angle = 80.0f;
+		inline bool forceYaw = false;
+		inline float angle = 180.0f;
 	}
 
 	namespace ESP

@@ -1,14 +1,29 @@
 #include "resolver.h"
 
-#include "../Utils/xorstring.h"
 #include "../Utils/entity.h"
 #include "../Utils/math.h"
-#include "../settings.h"
+#include "../Utils/xorstring.h"
 #include "../interfaces.h"
+#include "../settings.h"
 #include "antiaim.h"
 
 std::vector<int64_t> Resolver::Players = {};
 std::vector<std::pair<C_BasePlayer *, QAngle>> player_data;
+
+static float NormalizeAsYaw(float flAngle)
+{
+	if (flAngle > 180.f || flAngle < -180.f)
+	{
+		auto revolutions = round(abs(flAngle / 360.f));
+
+		if (flAngle < 0.f)
+			flAngle += 360.f * revolutions;
+		else
+			flAngle -= 360.f * revolutions;
+	}
+
+	return flAngle;
+}
 
 void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 {
@@ -41,27 +56,36 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 
 			player_data.push_back(std::pair<C_BasePlayer *, QAngle>(player, *player->GetEyeAngles()));
 
-			if (Settings::Resolver::lbycheck)
-			{
-				float lbyDelta = player->GetEyeAngles()->y - player->GetAnimState()->currentFeetYaw;
-				cvar->ConsoleColorPrintf(ColorRGBA(64, 0, 255, 255), XORSTR("\n[Apuware] "));
+			/*
+			cvar->ConsoleColorPrintf(ColorRGBA(64, 0, 255, 255), XORSTR("\n[Nimbus] "));
+			cvar->ConsoleDPrintf("Debug log here!");
+			*/
 
-				if (lbyDelta > Settings::Resolver::lbylimit)
+			// Tanner is a sex bomb, also thank you Stacker for helping us out!
+			float lbyDelta = fabsf(NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y));
+
+			if (lbyDelta < 35)
+				return;
+
+			if (!Settings::Resolver::forceYaw)
+			{
+				static float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
+
+				if (player->GetVelocity().Length() < 10.0f)
 				{
-					Settings::Resolver::swap = false;
-					cvar->ConsoleDPrintf("Detected left side: %f", lbyDelta);
-				}
-				else if (lbyDelta < -Settings::Resolver::lbylimit)
-				{
-					Settings::Resolver::swap = true;
-					cvar->ConsoleDPrintf("Detected right side: %f", lbyDelta);
+					player->GetAnimState()->goalFeetYaw = trueDelta <= 0
+															  ? player->GetEyeAngles()->y + fabs(AntiAim::GetMaxDelta(player->GetAnimState()) * 0.99f)
+															  : fabs(-AntiAim::GetMaxDelta(player->GetAnimState()) * 0.99f) - player->GetEyeAngles()->y;
 				}
 				else
-					cvar->ConsoleDPrintf("Detected no LBY changes: %f", lbyDelta);
+				{
+					player->GetAnimState()->goalFeetYaw = trueDelta <= 0
+															  ? player->GetEyeAngles()->y + fabs(AntiAim::GetMaxDelta(player->GetAnimState()) * 0.2f)
+															  : fabs(-AntiAim::GetMaxDelta(player->GetAnimState()) * 0.2f) - player->GetEyeAngles()->y;
+				}
 			}
-
-			player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget() + (Settings::Resolver::swap ? Settings::Resolver::angle : -Settings::Resolver::angle);
-			Math::NormalizeYaw(player->GetEyeAngles()->y);
+			else
+				player->GetEyeAngles()->y += *player->GetLowerBodyYawTarget() + Settings::Resolver::angle;
 		}
 	}
 	else if (stage == ClientFrameStage_t::FRAME_RENDER_END)
@@ -74,10 +98,6 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 
 		player_data.clear();
 	}
-}
-
-void Resolver::PostFrameStageNotify(ClientFrameStage_t stage)
-{
 }
 
 void Resolver::FireGameEvent(IGameEvent *event)

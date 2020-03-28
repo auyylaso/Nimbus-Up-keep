@@ -7,6 +7,8 @@
 #include "../Utils/entity.h"
 #include "../interfaces.h"
 
+static float lbyBreak = 180;
+
 float AntiAim::GetMaxDelta(CCSGOAnimState *animState)
 {
 
@@ -97,15 +99,27 @@ static bool GetBestHeadAngle(QAngle &angle, float maxDelta, bool bSend)
 		return true;
 
 	if (b > r && b > l) // Back
-		angle.y -= 180;
+		angle.y -= bSend ? 180 + maxDelta * 2 : 180;
 	else if (r > l && r > b) // Right
-		angle.y += bSend ? 90 - maxDelta : 90;
+	{
+		angle.y += bSend ? 90 + maxDelta * 2 : 90;
+		lbyBreak = 90 + maxDelta;
+	}
 	else if (r > l && r == b) // Right = Back
-		angle.y += bSend ? 135 - maxDelta : 135;
+	{
+		angle.y += bSend ? 135 + maxDelta * 2 : 135;
+		lbyBreak = 135 + maxDelta;
+	}
 	else if (l > r && l > b) // Left
-		angle.y -= bSend ? 90 + maxDelta : 90;
+	{
+		angle.y -= bSend ? 90 + maxDelta * 2 : 90;
+		lbyBreak = 90 - maxDelta;
+	}
 	else if (l > r && l == b) // Left = Back
-		angle.y -= bSend ? 135 + maxDelta : 135;
+	{
+		angle.y -= bSend ? 135 + maxDelta * 2 : 135;
+		lbyBreak = 135 - maxDelta;
+	}
 	else
 		return false;
 
@@ -182,9 +196,13 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 
 		case AntiAimType::FREESTAND:
 		{
+			angle.x = 89.0f;
+
 			QAngle edge_angle = angle;
-            if (GetBestHeadAngle(edge_angle, maxDelta, bSend))
-                angle.y = edge_angle.y;
+			if (GetBestHeadAngle(edge_angle, maxDelta, bSend))
+				angle.y = edge_angle.y;
+			else
+				angle.y += bSend ? 180 + maxDelta * 2 : 180;
 		}
 
 		default:
@@ -272,6 +290,8 @@ void AntiAim::CreateMove(CUserCmd *cmd)
 
 		if (Settings::AntiAim::LBYBreaker::enabled)
 			angle.y += directionSwitch ? -Settings::AntiAim::LBYBreaker::offset : Settings::AntiAim::LBYBreaker::offset;
+		else if (Settings::AntiAim::type == AntiAimType::FREESTAND)
+			angle.y += lbyBreak;
 		else
 			angle.y += directionSwitch ? -AntiAim::GetMaxDelta(animState) : AntiAim::GetMaxDelta(animState);
 	}

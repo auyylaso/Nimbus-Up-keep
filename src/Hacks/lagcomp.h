@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef FUZION_BACKTRACK_H_
 #define FUZION_BACKTRACK_H_
 
