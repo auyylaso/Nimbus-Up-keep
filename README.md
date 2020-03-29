@@ -1,23 +1,35 @@
-# This is a public fork of Fuzion, since this is a public cheat, use it on your own risk!
+# Nimbus v1.4 - Free and open-source CS:GO hack
 
-[![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
-
-# This is a public self-maintained Fuzion fork.
-Want to chat or play with other Fuzion users? Join us on Gitter!
+<p align="center">
+<img src="https://i.imgur.com/ESizHuv.jpg">
+</p>
 
 ## What is Fuzion?
 
 A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
 
-## What is Apuware?
+## What is Nimbus?
 
-It is a fork of Fuzion, keeping the style and mentality. The difference being is the added/optimized features.
+It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
+
+## Updates - v1.4:
+- Various backtrack optimization
+- Updated desync
+- Updated misc features (third-person, hitmarker)
+- New resolver (!!!)
+- Crash fixes
+- Code cleaning for developers
+- New visual settings
+
+Want to chat or play with other Fuzion users? Join us on Gitter!
+[![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
+
 
 ## Compiling
 
 **Note:** _Do NOT download or compile as the root user._
 
-#### Download the dependencies required to build Fuzion/Apuware:
+#### Download the dependencies required to build Nimbus:
 
 If you are having problems compiling make sure you've got the latest version of `g++`.
 
@@ -40,14 +52,14 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 
 ===================
 
-#### Download Apuware:
+#### Download Nimbus:
 
 ```bash
-git clone --recursive https://github.com/Zedespook/Apuware
+git clone --recursive https://github.com/Zedespook/Nimbus
 ```
 
 ```bash
-cd Apuware
+cd Nimbus
 ```
 
 ===================
@@ -71,7 +83,7 @@ First of all, make sure CS:GO is open, it does not matter whether you are in gam
 
 Navigate to the directory where Fuzion was built if you have not ready.
 ```bash
-cd Apuware
+cd Nimbus
 ```
 
 Now, you can inject the hack with the `load` script
@@ -143,6 +155,54 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.4.0 (March 22)
+- Various backtrack optimization
+- Updated desync
+- Updated misc features (third-person, hitmarker)
+- New resolver (!!!)
+- Crash fixes
+- Code cleaning for developers
+- New visuals
+
+Version 1.3.6 (March 17)
+- Reverted to pretty grenade-prediction
+- New desync (broken indicators)
+- Moved highest bone priority to misc/aimbot tab.
+
+Version 1.3.5 (March 17)
+- Added a slider for maximum LBY checking
+- Changed extern vars to inline
+- Removed zeus radius
+
+Version 1.3.4a (March 15)
+- Added toggle for LBY detection
+
+Version 1.3.4 (March 15)
+- Code cleaning
+- Added new resolver (alpha)
+
+Version 1.3.3 (March 10)
+- Updated backtrack
+- Added backtrack slider
+- Removed hit-chance
+- Reverted to the old spread indicator
+- Fixed Gamesense hitmarker
+- Updated LBY breaker
+- New resolver (Simple and very cool, thanks to Skerei!)
+
+Version 1.3.2 (March 3) - !UNDER CONSTRUCTION, NEED HELP!
+- Improved resolver
+- Thirdperson key only works if it's enabled
+- Added hit-chance (crashing, needs testing)
+- Added head multipoint scale
+- Changed the name to Apuware
+
+Version 1.3.1 (Feb 29)
+- New backtrack
+- Added backtrack chams
+- Updated the code formatting in aimbottab.cpp (for devs)
+- Simplified the resolver (thank you Skerei!)
+
 Version 1.3.0 (Feb 27)
 - Resolver updated
 - Various anti-aim changes
@@ -252,5 +312,5 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
-The Apuware project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
+The Nimbus project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
 Special thanks to [@acuifex](http://www.github.com/acuifex/) for helping with the project a lot.

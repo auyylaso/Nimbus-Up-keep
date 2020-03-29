@@ -7,60 +7,61 @@
 
 namespace ClanTagChanger
 {
-	struct Frame
+struct Frame
+{
+	int time;
+	std::wstring text;
+
+	Frame(std::wstring text, int time)
 	{
-		int time;
-		std::wstring text;
+		this->text = text;
+		this->time = time;
+	}
+};
 
-		Frame(std::wstring text, int time)
-		{
-			this->text = text;
-			this->time = time;
-		}
-	};
+enum AnimationLoopType
+{
+	ANIM_LOOP,
+	ANIM_LOOP_BACK
+};
 
-	enum AnimationLoopType
+struct Animation
+{
+	std::string name;
+	unsigned int currentFrame;
+	std::vector<Frame> frames;
+	AnimationLoopType loopType;
+
+	Animation(std::string name, std::vector<Frame> frames, AnimationLoopType loopType)
 	{
-		ANIM_LOOP,
-		ANIM_LOOP_BACK
-	};
+		currentFrame = 0;
+		this->name = name;
+		this->frames = frames;
+		this->loopType = loopType;
+	}
 
-	struct Animation
+	Frame GetCurrentFrame()
 	{
-		std::string name;
-		unsigned int currentFrame;
-		std::vector<Frame> frames;
-		AnimationLoopType loopType;
+		return frames[currentFrame];
+	}
 
-		Animation(std::string name, std::vector<Frame> frames, AnimationLoopType loopType)
-		{
+	void NextFrame()
+	{
+		currentFrame++;
+
+		if (currentFrame >= frames.size())
 			currentFrame = 0;
-			this->name = name;
-			this->frames = frames;
-			this->loopType = loopType;
-		}
+	}
+};
 
-		Frame GetCurrentFrame()
-		{
-			return frames[currentFrame];
-		}
+extern std::vector<Animation> animations;
+extern Animation *animation;
 
-		void NextFrame()
-		{
-			currentFrame++;
+void UpdateClanTagCallback();
 
-			if (currentFrame >= frames.size())
-				currentFrame = 0;
-		}
-	};
+//Hooks
+void CreateMove(); // Use CreateMove, because with BeginFrame, the game would glitch.
 
-	extern std::vector<Animation> animations;
-	extern Animation* animation;
-
-	void UpdateClanTagCallback();
-
-	//Hooks
-	void BeginFrame(float frameTime);
-}
+} // namespace ClanTagChanger
 
 extern SendClanTagFn SendClanTag;

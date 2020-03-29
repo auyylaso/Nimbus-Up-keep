@@ -4,9 +4,6 @@
 #include "../interfaces.h"
 #include "../Utils/math.h"
 
-bool Settings::AutoDefuse::enabled = false;
-bool Settings::AutoDefuse::silent = false;
-
 void AutoDefuse::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::AutoDefuse::enabled && !Settings::AutoDefuse::silent)
@@ -54,10 +51,10 @@ void AutoDefuse::CreateMove(CUserCmd *cmd)
 	else
 	if (Settings::AutoDefuse::enabled)
 	{	
-		if (localplayer->HasDefuser() && bombTimer > 5.039f)
+		if (localplayer->HasDefuser() && bombTimer > 5.5f)
 			return;
 
-		if (!localplayer->HasDefuser() && bombTimer > 10.039f)
+		if (!localplayer->HasDefuser() && bombTimer > 10.5f)
 			return;
 
 		float distance = localplayer->GetVecOrigin().DistTo(bomb->GetVecOrigin());

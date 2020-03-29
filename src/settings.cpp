@@ -222,7 +222,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("Aimbot")][XORSTR("type")] = (int) Settings::Aimbot::type;
 
 	settings[XORSTR("AntiAim")][XORSTR("enabled")] = Settings::AntiAim::enabled;
-	settings[XORSTR("AntiAim")][XORSTR("Freestanding")][XORSTR("enabled")] = Settings::AntiAim::Freestanding::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("type")] = (int) Settings::AntiAim::type;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")] = Settings::AntiAim::States::enabled;
 	settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")] = (int) Settings::AntiAim::States::Stand::type;
@@ -234,7 +233,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("AntiAim")][XORSTR("left")] = Util::GetButtonName(Settings::AntiAim::left);
 	settings[XORSTR("AntiAim")][XORSTR("right")] = Util::GetButtonName(Settings::AntiAim::right);
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")] = Settings::AntiAim::LBYBreaker::enabled;
-	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("custom")] = Settings::AntiAim::LBYBreaker::custom;
 	settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")] = Settings::AntiAim::LBYBreaker::offset;
 	settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")] = Settings::AntiAim::AutoDisable::knifeHeld;
 
@@ -364,8 +362,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Damage")][XORSTR("enabled")] = Settings::ESP::Hitmarker::Damage::enabled;
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("enabled")] = Settings::ESP::Hitmarker::Sounds::enabled;
 	settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")] = (int)Settings::ESP::Hitmarker::Sounds::sound;
-	LoadColor(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("ZeusColor")], Settings::ESP::ZeusRadius::color);
-	settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("enabled")] = Settings::ESP::ZeusRadius::enabled;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")] = Settings::ESP::HeadDot::enabled;
 	settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")] = Settings::ESP::HeadDot::size;
 	settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")] = Settings::ESP::Backtrack::enabled;
@@ -444,6 +440,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
 
 	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
+	settings[XORSTR("LagComp")][XORSTR("value")] = Settings::LagComp::value;
 
 	settings[XORSTR("AutoStrafe")][XORSTR("enabled")] = Settings::AutoStrafe::enabled;
 	settings[XORSTR("AutoStrafe")][XORSTR("type")] = (int) Settings::AutoStrafe::type;
@@ -620,6 +617,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")] = Settings::DisablePostProcessing::enabled;
 	settings[XORSTR("NoFall")][XORSTR("enabled")] = Settings::NoFall::enabled;
 
+	// settings[XORSTR("RapidFire")][XORSTR("enabled")] = Settings::RapidFire::enabled;
+
 	settings[XORSTR("GrenadeHelper")][XORSTR("enabled")] = Settings::GrenadeHelper::enabled;
 	settings[XORSTR("GrenadeHelper")][XORSTR("aimAssist")] = Settings::GrenadeHelper::aimAssist;
 	settings[XORSTR("GrenadeHelper")][XORSTR("OnlyMatching")] = Settings::GrenadeHelper::onlyMatchingInfos;
@@ -747,7 +746,6 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Aimbot")][XORSTR("type")], (int*) &Settings::Aimbot::type);
 
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("enabled")], &Settings::AntiAim::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("Freestanding")][XORSTR("enabled")], &Settings::AntiAim::Freestanding::enabled);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("type")], (int*) &Settings::AntiAim::type);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("enabled")], &Settings::AntiAim::States::enabled);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("States")][XORSTR("Stand")][XORSTR("type")], (int*) &Settings::AntiAim::States::Stand::type);
@@ -759,7 +757,6 @@ void Settings::LoadConfig(std::string path)
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("left")], &Settings::AntiAim::left);
 	GetButtonCode(settings[XORSTR("Antiaim")][XORSTR("right")], &Settings::AntiAim::right);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("enabled")], &Settings::AntiAim::LBYBreaker::enabled);
-	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("custom")], &Settings::AntiAim::LBYBreaker::custom);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("LBYBreaker")][XORSTR("offset")], &Settings::AntiAim::LBYBreaker::offset);
 	GetVal(settings[XORSTR("AntiAim")][XORSTR("AutoDisable")][XORSTR("knifeHeld")], &Settings::AntiAim::AutoDisable::knifeHeld);
 
@@ -889,8 +886,6 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Damage")][XORSTR("enabled")], &Settings::ESP::Hitmarker::Damage::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("enabled")], &Settings::ESP::Hitmarker::Sounds::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Hitmarker")][XORSTR("Sounds")][XORSTR("sound")], (int*)&Settings::ESP::Hitmarker::Sounds::sound);
-	GetVal(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("enabled")], &Settings::ESP::ZeusRadius::enabled);
-	GetVal(settings[XORSTR("ESP")][XORSTR("ZeusRadius")][XORSTR("ZeusColor")], &Settings::ESP::ZeusRadius::color);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("enabled")], &Settings::ESP::HeadDot::enabled);
 	GetVal(settings[XORSTR("ESP")][XORSTR("HeadDot")][XORSTR("size")], &Settings::ESP::HeadDot::size);
 	GetVal(settings[XORSTR("ESP")][XORSTR("Backtrack")][XORSTR("enabled")], &Settings::ESP::Backtrack::enabled);
@@ -969,6 +964,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
 	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
+	GetVal(settings[XORSTR("LagComp")][XORSTR("value")], &Settings::LagComp::value);
 
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("enabled")], &Settings::AutoStrafe::enabled);
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("type")], (int*)& Settings::AutoStrafe::type);
@@ -1204,6 +1200,8 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")], &Settings::DisablePostProcessing::enabled);
 
 	GetVal(settings[XORSTR("NoFall")][XORSTR("enabled")], &Settings::NoFall::enabled);
+
+	// GetVal(settings[XORSTR("RapidFire")][XORSTR("enabled")], &Settings::RapidFire::enabled);
 
 	GetVal(settings[XORSTR("GrenadeHelper")][XORSTR("enabled")], &Settings::GrenadeHelper::enabled);
 	GetVal(settings[XORSTR("GrenadeHelper")][XORSTR("aimAssist")], &Settings::GrenadeHelper::aimAssist);

@@ -1,21 +1,21 @@
 #include "misctab.h"
 
-#include <sys/stat.h>
 #include <sstream>
+#include <sys/stat.h>
 
 #include "../../config.h"
 #include "../../interfaces.h"
 
-#include "../../settings.h"
-#include "../../Utils/xorstring.h"
-#include "../imgui.h"
 #include "../../ImGUI/imgui_internal.h"
+#include "../../Utils/xorstring.h"
+#include "../../settings.h"
 #include "../atgui.h"
+#include "../imgui.h"
 
+#include "../../Hacks/clantagchanger.h"
+#include "../../Hacks/grenadehelper.h"
 #include "../../Hacks/namechanger.h"
 #include "../../Hacks/namestealer.h"
-#include "../../Hacks/grenadehelper.h"
-#include "../../Hacks/clantagchanger.h"
 #include "../../Hacks/valvedscheck.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
@@ -24,13 +24,13 @@ static char nickname[127] = "";
 
 void Misc::RenderTab()
 {
-	const char* strafeTypes[] = { "Forwards", "Backwards", "Left", "Right", "Rage" };
-	const char* animationTypes[] = { "Static", "Marquee", "Words", "Letters" };
-	const char* spammerTypes[] = { "None", "Normal", "Positions" };
-	const char* teams[] = { "Allies", "Enemies", "Both" };
-	const char* grenadeTypes[] = { "FLASH", "SMOKE", "MOLOTOV", "HEGRENADE" };
-	const char* throwTypes[] = { "NORMAL", "RUN", "JUMP", "WALK" };
-	const char* angleTypes[] = { "Real", "Fake" };
+	const char *strafeTypes[] = {"Forwards", "Backwards", "Left", "Right", "Rage"};
+	const char *animationTypes[] = {"Static", "Marquee", "Words", "Letters"};
+	const char *spammerTypes[] = {"None", "Normal", "Positions"};
+	const char *teams[] = {"Allies", "Enemies", "Both"};
+	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
+	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
+	const char *angleTypes[] = {"Real", "Fake"};
 
 	ImGui::Columns(2, nullptr, true);
 	{
@@ -72,7 +72,7 @@ void Misc::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(Settings::AutoStrafe::type == AutostrafeType::AS_RAGE ? ImGui::CalcItemWidth() : -1);
-				ImGui::Combo(XORSTR("##STRAFETYPE"), (int*)& Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
+				ImGui::Combo(XORSTR("##STRAFETYPE"), (int *)&Settings::AutoStrafe::type, strafeTypes, IM_ARRAYSIZE(strafeTypes));
 
 				if (Settings::AutoStrafe::type == AutostrafeType::AS_RAGE)
 				{
@@ -123,7 +123,7 @@ void Misc::RenderTab()
 					ImGui::SameLine();
 
 					if (ImGui::Button(XORSTR("Remove")))
-						if (killSpammerMessageCurrent > -1 && (int) Settings::Spammer::KillSpammer::messages.size() > killSpammerMessageCurrent)
+						if (killSpammerMessageCurrent > -1 && (int)Settings::Spammer::KillSpammer::messages.size() > killSpammerMessageCurrent)
 							Settings::Spammer::KillSpammer::messages.erase(Settings::Spammer::KillSpammer::messages.begin() + killSpammerMessageCurrent);
 
 					ImGui::PushItemWidth(550);
@@ -139,7 +139,7 @@ void Misc::RenderTab()
 
 			ImGui::Columns(3, nullptr, true);
 			{
-				ImGui::Combo(XORSTR("###SPAMMERYPE"), (int*)&Settings::Spammer::type, spammerTypes, IM_ARRAYSIZE(spammerTypes));
+				ImGui::Combo(XORSTR("###SPAMMERYPE"), (int *)&Settings::Spammer::type, spammerTypes, IM_ARRAYSIZE(spammerTypes));
 			}
 			ImGui::NextColumn();
 			{
@@ -177,7 +177,7 @@ void Misc::RenderTab()
 						ImGui::SameLine();
 
 						if (ImGui::Button(XORSTR("Remove")))
-							if (spammerMessageCurrent > -1 && (int) Settings::Spammer::NormalSpammer::messages.size() > spammerMessageCurrent)
+							if (spammerMessageCurrent > -1 && (int)Settings::Spammer::NormalSpammer::messages.size() > spammerMessageCurrent)
 								Settings::Spammer::NormalSpammer::messages.erase(Settings::Spammer::NormalSpammer::messages.begin() + spammerMessageCurrent);
 
 						ImGui::PushItemWidth(550);
@@ -226,14 +226,14 @@ void Misc::RenderTab()
 			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("Enabled"), &Settings::ThirdPerson::enabled);
-			    ImGui::Text(XORSTR("Thirdperson Key"));
+				ImGui::Text(XORSTR("Thirdperson Key"));
 			}
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
 				ImGui::SliderFloat(XORSTR("##TPCAMOFFSET"), &Settings::ThirdPerson::distance, 0.f, 500.f, XORSTR("Camera Offset: %0.f"));
 				ImGui::PopItemWidth();
-                UI::KeyBindButton(&Settings::ThirdPerson::key);
+				UI::KeyBindButton(&Settings::ThirdPerson::key);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
@@ -284,7 +284,7 @@ void Misc::RenderTab()
 					ImGui::SameLine();
 					if (ImGui::Button(XORSTR("Add")) && engine->IsInGame() && Settings::GrenadeHelper::actMapName.length() > 0)
 					{
-						C_BasePlayer* localPlayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+						C_BasePlayer *localPlayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 						if (strlen(inputName) > 0)
 						{
 							GrenadeInfo n = GrenadeInfo((GrenadeType)gType, localPlayer->GetEyePosition(), *localPlayer->GetVAngles(), (ThrowType)tType, inputName);
@@ -305,16 +305,15 @@ void Misc::RenderTab()
 					ImGui::Columns(1);
 					ImGui::Separator();
 					ImGui::PushItemWidth(550);
-					auto lambda =[](void* data, int idx, const char** out_text)
-					{
+					auto lambda = [](void *data, int idx, const char **out_text) {
 						*out_text = Settings::GrenadeHelper::grenadeInfos.at(idx).name.c_str();
 						return *out_text != nullptr;
 					};
 					ImGui::ListBox("", &throwMessageCurrent, lambda, nullptr, Settings::GrenadeHelper::grenadeInfos.size(), 7);
 					ImGui::PopItemWidth();
 					ImGui::Columns(1);
-					if (ImGui::Button(XORSTR("Remove"),  ImVec2(ImGui::GetWindowWidth(), 30)))
-						if (throwMessageCurrent > -1 && (int) Settings::GrenadeHelper::grenadeInfos.size() > throwMessageCurrent)
+					if (ImGui::Button(XORSTR("Remove"), ImVec2(ImGui::GetWindowWidth(), 30)))
+						if (throwMessageCurrent > -1 && (int)Settings::GrenadeHelper::grenadeInfos.size() > throwMessageCurrent)
 						{
 							Settings::GrenadeHelper::grenadeInfos.erase(Settings::GrenadeHelper::grenadeInfos.begin() + throwMessageCurrent);
 							std::ostringstream path;
@@ -365,7 +364,7 @@ void Misc::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				if (ImGui::Combo(XORSTR("##ANIMATIONTYPE"), (int*)& Settings::ClanTagChanger::type, animationTypes, IM_ARRAYSIZE(animationTypes)))
+				if (ImGui::Combo(XORSTR("##ANIMATIONTYPE"), (int *)&Settings::ClanTagChanger::type, animationTypes, IM_ARRAYSIZE(animationTypes)))
 					ClanTagChanger::UpdateClanTagCallback();
 				if (ImGui::SliderInt(XORSTR("##ANIMATIONSPEED"), &Settings::ClanTagChanger::animationSpeed, 500, 2000))
 					ClanTagChanger::UpdateClanTagCallback();
@@ -402,7 +401,7 @@ void Misc::RenderTab()
 			if (ImGui::BeginPopup(XORSTR("optionColorizeName")))
 			{
 				ImGui::PushItemWidth(-1);
-				for (auto& it : NameChanger::colors)
+				for (auto &it : NameChanger::colors)
 				{
 					if (ImGui::Button(it.second, ImVec2(-1, 0)))
 						NameChanger::InitColorChange(NameChanger::NC_Type::NC_SOLID, it.first);
@@ -428,12 +427,13 @@ void Misc::RenderTab()
 			ImGui::Columns(2, nullptr, true);
 			{
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
-				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
 				ImGui::Checkbox(XORSTR("Auto Defuse"), &Settings::AutoDefuse::enabled);
+				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
 				ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
 				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::LagComp::enabled);
+				// ImGui::Checkbox(XORSTR("Rapid Fire"), &Settings::RapidFire::enabled);
 			}
 			ImGui::NextColumn();
 			{
@@ -443,6 +443,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Silent Defuse"), &Settings::AutoDefuse::silent);
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
+				ImGui::SliderInt(XORSTR("##BACKTRACK"), &Settings::LagComp::value, 0, 12, XORSTR("Amount: %0.f"));
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();

@@ -2,7 +2,6 @@
 
 #include "esp.h"
 #include "autowall.h"
-#include "lagcomp.h"
 #include "../fonts.h"
 #include "../settings.h"
 #include "../interfaces.h"
@@ -20,145 +19,9 @@
 #include <deque>
 #include <mutex>
 
-bool Settings::ESP::enabled = false;
-ButtonCode_t Settings::ESP::key = ButtonCode_t::KEY_Z;
-TeamColorType Settings::ESP::teamColorType = TeamColorType::RELATIVE;
-HealthColorVar Settings::ESP::enemyColor = ImColor(255, 128, 0, 128);
-HealthColorVar Settings::ESP::enemyVisibleColor = ImColor(128, 255, 0, 128);
-HealthColorVar Settings::ESP::allyColor = ImColor(0, 128, 255, 128);
-HealthColorVar Settings::ESP::allyVisibleColor = ImColor(0, 255, 128, 128);
-HealthColorVar Settings::ESP::tColor = ImColor(255, 128, 0, 128);
-HealthColorVar Settings::ESP::tVisibleColor = ImColor(128, 255, 0, 128);
-HealthColorVar Settings::ESP::ctColor = ImColor(0, 128, 255, 128);
-HealthColorVar Settings::ESP::ctVisibleColor = ImColor(0, 255, 128, 128);
-HealthColorVar Settings::ESP::localplayerColor = ImColor(128, 128, 128, 128);
-ColorVar Settings::ESP::bombColor = ImColor(156, 39, 176, 255);
-ColorVar Settings::ESP::bombDefusingColor = ImColor(213, 0, 249, 255);
-ColorVar Settings::ESP::hostageColor = ImColor(121, 85, 72, 255);
-ColorVar Settings::ESP::defuserColor = ImColor(49, 27, 146, 255);
-ColorVar Settings::ESP::weaponColor = ImColor(158, 158, 158, 255);
-ColorVar Settings::ESP::chickenColor = ImColor(255, 193, 7, 255);
-ColorVar Settings::ESP::fishColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::smokeColor = ImColor(97, 97, 97, 255);
-ColorVar Settings::ESP::decoyColor = ImColor(2255, 152, 0, 255);
-ColorVar Settings::ESP::flashbangColor = ImColor(255, 235, 59, 255);
-ColorVar Settings::ESP::grenadeColor = ImColor(244, 67, 54, 255);
-ColorVar Settings::ESP::molotovColor = ImColor(205, 32, 31, 255);
-ColorVar Settings::ESP::mineColor = ImColor(205, 32, 31, 255);
-ColorVar Settings::ESP::chargeColor = ImColor(205, 32, 31, 255);
-ColorVar Settings::ESP::allyInfoColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::enemyInfoColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::Skeleton::allyColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::Skeleton::enemyColor = ImColor(255, 255, 255, 255);
-ColorVar Settings::ESP::Spread::color = ImColor(32, 32, 32, 64);
-ColorVar Settings::ESP::Spread::spreadLimitColor = ImColor(64, 64, 64, 64);
-bool Settings::ESP::Glow::enabled = false;
-HealthColorVar Settings::ESP::Glow::allyColor = ImColor(0, 0, 255, 255);
-HealthColorVar Settings::ESP::Glow::enemyColor = ImColor(255, 0, 0, 255);
-HealthColorVar Settings::ESP::Glow::enemyVisibleColor = ImColor(255, 255, 0, 255);
-HealthColorVar Settings::ESP::Glow::localplayerColor = ImColor(0, 255, 255, 255);
-ColorVar Settings::ESP::Glow::weaponColor = ImColor(158, 158, 158, 255);
-ColorVar Settings::ESP::Glow::grenadeColor = ImColor(96, 125, 139, 255);
-ColorVar Settings::ESP::Glow::defuserColor = ImColor(49, 27, 146, 255);
-ColorVar Settings::ESP::Glow::chickenColor = ImColor(255, 193, 7, 255);
-bool Settings::ESP::Filters::legit = false;
-bool Settings::ESP::Filters::visibilityCheck = false;
-bool Settings::ESP::Filters::smokeCheck = false;
-bool Settings::ESP::Filters::enemies = false;
-bool Settings::ESP::Filters::allies = false;
-bool Settings::ESP::Filters::bomb = false;
-bool Settings::ESP::Filters::hostages = false;
-bool Settings::ESP::Filters::defusers = false;
-bool Settings::ESP::Filters::weapons = false;
-bool Settings::ESP::Filters::chickens = false;
-bool Settings::ESP::Filters::fishes = false;
-bool Settings::ESP::Filters::throwables = false;
-bool Settings::ESP::Filters::localplayer = false;
-bool Settings::ESP::Info::name = false;
-bool Settings::ESP::Info::clan = false;
-bool Settings::ESP::Info::steamId = false;
-bool Settings::ESP::Info::rank = false;
-bool Settings::ESP::Info::health = false;
-bool Settings::ESP::Info::armor = false;
-bool Settings::ESP::Info::weapon = false;
-bool Settings::ESP::Info::scoped = false;
-bool Settings::ESP::Info::reloading = false;
-bool Settings::ESP::Info::flashed = false;
-bool Settings::ESP::Info::planting = false;
-bool Settings::ESP::Info::hasDefuser = false;
-bool Settings::ESP::Info::defusing = false;
-bool Settings::ESP::Info::grabbingHostage = false;
-bool Settings::ESP::Info::rescuing = false;
-bool Settings::ESP::Info::location = false;
-bool Settings::ESP::Info::money = false;
-bool Settings::ESP::Boxes::enabled = false;
-BoxType Settings::ESP::Boxes::type = BoxType::FRAME_2D;
-bool Settings::ESP::Sprite::enabled = false;
-SpriteType Settings::ESP::Sprite::type = SpriteType::SPRITE_TUX;
-bool Settings::ESP::Bars::enabled = false;
-BarColorType Settings::ESP::Bars::colorType = BarColorType::HEALTH_BASED;
-BarType Settings::ESP::Bars::type = BarType::HORIZONTAL;
-bool Settings::ESP::Tracers::enabled = false;
-TracerType Settings::ESP::Tracers::type = TracerType::BOTTOM;
-bool Settings::ESP::BulletTracers::enabled = false;
-bool Settings::ESP::FOVCrosshair::enabled = false;
-bool Settings::ESP::FOVCrosshair::filled = false;
-ColorVar Settings::ESP::FOVCrosshair::color = ImColor(255, 0, 0, 255);
-bool Settings::ESP::ZeusRadius::enabled = false;
-ColorVar Settings::ESP::ZeusRadius::color = ImColor(255,0,0,255);
-bool Settings::ESP::Skeleton::enabled = false;
-bool Settings::ESP::Sounds::enabled = false;
-int Settings::ESP::Sounds::time = 1000;
-bool Settings::NoScopeBorder::enabled = false;
-bool Settings::ESP::HeadDot::enabled = false;
-float Settings::ESP::HeadDot::size = 2.f;
-bool Settings::ESP::Backtrack::enabled = false;
-
-bool Settings::ESP::Spread::enabled = false;
-bool Settings::ESP::Spread::spreadLimit = false;
-
-int Settings::ESP::DangerZone::drawDist = 2000;
-bool Settings::ESP::DangerZone::drawDistEnabled = false;
-bool Settings::ESP::DangerZone::upgrade = false;
-bool Settings::ESP::DangerZone::lootcrate = false;
-bool Settings::ESP::DangerZone::radarjammer = false;
-bool Settings::ESP::DangerZone::barrel = false;
-bool Settings::ESP::DangerZone::ammobox = false;
-bool Settings::ESP::DangerZone::safe = false;
-bool Settings::ESP::DangerZone::dronegun = false;
-bool Settings::ESP::DangerZone::drone = false;
-bool Settings::ESP::DangerZone::cash = false;
-bool Settings::ESP::DangerZone::tablet = false;
-bool Settings::ESP::DangerZone::healthshot = false;
-bool Settings::ESP::DangerZone::melee = false;
-ColorVar Settings::ESP::DangerZone::upgradeColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::lootcrateColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::radarjammerColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::barrelColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::ammoboxColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::safeColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::dronegunColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::droneColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::cashColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::tabletColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::healthshotColor = ImColor(255, 0, 0, 255);
-ColorVar Settings::ESP::DangerZone::meleeColor = ImColor(255, 0, 0, 255);
-
-bool Settings::Debug::AutoWall::debugView = false;
-bool Settings::Debug::AutoAim::drawTarget = false;
-Vector Settings::Debug::AutoAim::target = {0, 0, 0};
-bool Settings::Debug::BoneMap::draw = false;
-int Settings::Debug::BoneMap::modelID = 1253;
-bool Settings::Debug::BoneMap::justDrawDots = false;
-bool Settings::Debug::AnimLayers::draw = false;
-bool Settings::Debug::AntiAim::draw = false;
-
 /* The engine->WorldToScreenMatrix() function can't be called at all times
  * So this is Updated in the Paint Hook for us */
-VMatrix vMatrix = {69.0f,69.0f,69.0f,69.0f,
-				   69.0f,69.0f,69.0f,69.0f,
-				   69.0f,69.0f,69.0f,69.0f,
-				   69.0f,69.0f,69.0f,69.0f};
+VMatrix vMatrix;
 
 Vector2D barsSpacing = Vector2D( 0, 0 );
 
@@ -174,9 +37,10 @@ struct Footstep {
 std::mutex footstepMutex;
 std::deque<Footstep> playerFootsteps[64]; // entIndex -> Footstep.
 
-QAngle viewanglesBackup;
 QAngle fake;
 QAngle actual;
+
+QAngle viewanglesBackup;
 
 const char* ESP::ranks[] = {
 		"Unranked",
@@ -593,6 +457,7 @@ static void DrawEntity( C_BaseEntity* entity, const char* string, ImColor color 
 	Vector2D nameSize = Draw::GetTextSize( string, esp_font );
 	Draw::AddText(( int ) ( x + ( w / 2 ) - ( nameSize.x / 2 ) ), y + h + 2, string, color );
 }
+
 static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 	studiohdr_t* pStudioModel = modelInfo->GetStudioModel( player->GetModel() );
 	if ( !pStudioModel )
@@ -618,81 +483,83 @@ static void DrawSkeleton( C_BasePlayer* player, C_BasePlayer* localplayer ) {
 		Draw::AddLine( vBonePos1.x, vBonePos1.y, vBonePos2.x, vBonePos2.y, Entity::IsTeamMate(player, localplayer) ? Settings::ESP::Skeleton::allyColor.Color() : Settings::ESP::Skeleton::enemyColor.Color());
 	}
 }
-static void DrawAATrace( QAngle fake, QAngle actual ) {
 
+static void DrawAATrace(QAngle fake, QAngle actual)
+{
 	if (!Settings::Debug::AntiAim::draw)
 		return;
 
-    C_BasePlayer* localPlayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
-    Vector src3D, dst3D, forward;
-    Vector src, dst;
-    char* string;
-    Vector2D nameSize;
-    ImColor color;
+	C_BasePlayer *localPlayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+	Vector src3D, dst3D, forward;
+	Vector src, dst;
+	char *string;
+	Vector2D nameSize;
+	ImColor color;
 
-    src3D = localPlayer->GetVecOrigin();
-// LBY
-    Math::AngleVectors( QAngle(0, *localPlayer->GetLowerBodyYawTarget(), 0), forward );
-    dst3D = src3D + ( forward * 50 );
+	src3D = localPlayer->GetVecOrigin();
+	// LBY
+	Math::AngleVectors(QAngle(0, *localPlayer->GetLowerBodyYawTarget(), 0), forward);
+	dst3D = src3D + (forward * 50);
 
-    if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( dst3D, dst ) )
-        return;
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
 
-    color = ImColor( 135, 235, 169 );
-    Draw::AddLine( src.x, src.y, dst.x, dst.y, color );
-    string = XORSTR("LBY");
-    nameSize = Draw::GetTextSize( string, esp_font );
-    Draw::AddText(dst.x, dst.y, string, color );
-//////////////////////////////////
+	color = ImColor(135, 235, 169);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("LBY");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
 
-// FAKE
-    Math::AngleVectors( QAngle(0, fake.y, 0), forward );
-    dst3D = src3D + ( forward * 50.f );
-    if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( dst3D, dst ) )
-        return;
+	// FAKE
+	Math::AngleVectors(QAngle(0, fake.y, 0), forward);
+	dst3D = src3D + (forward * 50.f);
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
 
-    color = ImColor( 5, 200, 5 );
-    Draw::AddLine( src.x, src.y, dst.x, dst.y, color );
-    string = XORSTR("FAKE");
-    nameSize = Draw::GetTextSize( string, esp_font );
-    Draw::AddText(dst.x, dst.y, string, color );
-//////////////////////////////////
+	color = ImColor(5, 200, 5);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("FAKE");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
 
-// ACTUAL
-    Math::AngleVectors( QAngle(0, actual.y, 0), forward );
-    dst3D = src3D + ( forward * 50.f );
-    if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( dst3D, dst ) )
-        return;
+	// ACTUAL
+	Math::AngleVectors(QAngle(0, actual.y, 0), forward);
+	dst3D = src3D + (forward * 50.f);
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
 
-    color = ImColor( 225, 5, 5 );
-    Draw::AddLine( src.x, src.y, dst.x, dst.y, color );
-    string = XORSTR("REAL");
-    nameSize = Draw::GetTextSize( string, esp_font );
-    Draw::AddText(dst.x, dst.y, string, color );
-//////////////////////////////////
+	color = ImColor(225, 5, 5);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("REAL");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
 
-// FEET YAW
-    Math::AngleVectors( QAngle(0, localPlayer->GetAnimState()->currentFeetYaw, 0), forward );
-    dst3D = src3D + ( forward * 50.f );
+	// FEET YAW
+	Math::AngleVectors(QAngle(0, localPlayer->GetAnimState()->currentFeetYaw, 0), forward);
+	dst3D = src3D + (forward * 50.f);
 
-    if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( dst3D, dst ) )
-        return;
+	if (debugOverlay->ScreenPosition(src3D, src) || debugOverlay->ScreenPosition(dst3D, dst))
+		return;
 
-    color = ImColor( 225, 225, 80 );
-    Draw::AddLine( src.x, src.y, dst.x, dst.y, color );
-    string = XORSTR("FEET");
-    nameSize = Draw::GetTextSize( string, esp_font );
-    Draw::AddText(dst.x, dst.y, string, color );
-//////////////////////////////////
+	color = ImColor(225, 225, 80);
+	Draw::AddLine(src.x, src.y, dst.x, dst.y, color);
+	string = XORSTR("FEET");
+	nameSize = Draw::GetTextSize(string, esp_font);
+	Draw::AddText(dst.x, dst.y, string, color);
+	//////////////////////////////////
 }
+
 static void DrawBulletTrace( C_BasePlayer* player ) {
-    Vector src3D, dst3D, forward, right, up;
-    Vector src, dst, src2, dst2;
+	Vector src3D, dst3D, forward;
+	Vector src, dst;
 	trace_t tr;
 	Ray_t ray;
 	CTraceFilter filter;
 
-    Math::AngleVectors( *player->GetEyeAngles(), forward, right, up );
+	Math::AngleVectors( *player->GetEyeAngles(), forward );
 	filter.pSkip = player;
 	src3D = player->GetEyePosition();
 	dst3D = src3D + ( forward * 8192 );
@@ -701,20 +568,11 @@ static void DrawBulletTrace( C_BasePlayer* player ) {
 
 	trace->TraceRay( ray, MASK_SHOT, &filter, &tr );
 
-    if ( debugOverlay->ScreenPosition( src3D - (right * 3), src ) || debugOverlay->ScreenPosition( tr.endpos - (right * 3), dst ) ||
-        debugOverlay->ScreenPosition( src3D + (right * 3), src2 ) || debugOverlay->ScreenPosition( tr.endpos + (right * 3), dst2 ) )
-        return;
+	if ( debugOverlay->ScreenPosition( src3D, src ) || debugOverlay->ScreenPosition( tr.endpos, dst ) )
+		return;
 
-    Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
-    Draw::AddLine( src2.x, src2.y, dst2.x, dst2.y, ESP::GetESPPlayerColor( player, true ) );
-
-    for(Vector test = src3D; test.DistTo(src3D) < tr.endpos.DistTo(src3D); test += (forward * 20)){
-        if ( debugOverlay->ScreenPosition( test - (right * 3), src ) || debugOverlay->ScreenPosition( test + (right * 3), dst ) )
-            continue;
-
-        Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
-    }
-//	Draw::AddRectFilled( ( int ) ( dst.x - 3 ), ( int ) ( dst.y - 3 ), 6, 6, ESP::GetESPPlayerColor( player, false ) );
+	Draw::AddLine( src.x, src.y, dst.x, dst.y, ESP::GetESPPlayerColor( player, true ) );
+	Draw::AddRectFilled( ( int ) ( dst.x - 3 ), ( int ) ( dst.y - 3 ), 6, 6, ESP::GetESPPlayerColor( player, false ) );
 }
 static void DrawTracer( C_BasePlayer* player ) {
 	Vector src3D;
@@ -875,47 +733,6 @@ static void DrawHeaddot( C_BasePlayer* player ) {
 		bIsVisible = Entity::IsVisible( player, BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck );
 
 	Draw::AddCircleFilled( head2D.x, head2D.y, Settings::ESP::HeadDot::size, ESP::GetESPPlayerColor( player, bIsVisible ), 10 );
-}
-
-static void DrawBacktrack( C_BasePlayer* player ) 
-{
-	Vector head2D;
-
-    for (auto& tick : LagComp::ticks)
-    {
-        for (auto& record : tick.records)
-        {
-        	if ( debugOverlay->ScreenPosition( record.head, head2D ) )
-				continue;
-			Draw::AddCircleFilled( head2D.x, head2D.y, Settings::ESP::HeadDot::size, ESP::GetESPPlayerColor( player, false ), 3 );
-        }
-    }
-}
-
-static void DrawZeusBot(ImColor playerColor)
-{
-    C_BasePlayer* localPlayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
-
-    if (!engine->IsInGame())
-		return;
-
-    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localPlayer->GetActiveWeapon());
-    ItemDefinitionIndex itemDefinitionIndex = *activeWeapon->GetItemDefinitionIndex();
-
-    float percent = (float)1 / (float)100;
-    Color drawColor = Color::FromImColor(playerColor);
-
-    float circleRadius = fabs(percent - 1.0f) * 180.0f;
-    float points = std::max(12.0f, circleRadius * 0.75f);
-
-    float circleRadiusKnife = fabs(percent - 1.0f) * 64.0f;
-    float points2 = std::max(12.0f, circleRadius * 0.75f);
-
-    if (Settings::ESP::ZeusRadius::enabled && !Util::Items::IsKnife(itemDefinitionIndex) && itemDefinitionIndex == ItemDefinitionIndex::WEAPON_TASER)
-		Draw::AddCircle3D(localPlayer->GetVecOrigin(), circleRadius, ImColor(Settings::ESP::ZeusRadius::color.Color()), (int)points);
-
-    if (Settings::ESP::ZeusRadius::enabled && Util::Items::IsKnife(itemDefinitionIndex) && itemDefinitionIndex != ItemDefinitionIndex::WEAPON_TASER)
-		Draw::AddCircle3D(localPlayer->GetVecOrigin(), circleRadiusKnife, ImColor(Settings::ESP::ZeusRadius::color.Color()), (int)points2);
 }
 
 static void DrawSounds( C_BasePlayer *player, ImColor playerColor ) {
@@ -1181,9 +998,6 @@ static void DrawPlayer(C_BasePlayer* player)
 	if (Settings::ESP::HeadDot::enabled)
 		DrawHeaddot(player);
 
-	if (Settings::ESP::Backtrack::enabled)
-		DrawBacktrack(player);
-
 	if (Settings::Debug::AutoWall::debugView)
 		DrawAutoWall(player);
 
@@ -1192,9 +1006,6 @@ static void DrawPlayer(C_BasePlayer* player)
 
 	if (Settings::Debug::AutoAim::drawTarget)
 		DrawAimbotSpot();
-
-	if (Settings::ESP::ZeusRadius::enabled)
-		DrawZeusBot(playerColor);
 
     if (Settings::ESP::Sounds::enabled) {
 		DrawSounds( player, playerColor );
@@ -1672,40 +1483,34 @@ static void DrawFOVCrosshair()
 
 static void DrawSpread()
 {
-    if (!Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit)
+    if ( !Settings::ESP::Spread::enabled && !Settings::ESP::Spread::spreadLimit )
         return;
 
-    C_BasePlayer* localplayer = (C_BasePlayer*)entityList->GetClientEntity(engine->GetLocalPlayer());
-    if (!localplayer)
+    C_BasePlayer* localplayer = ( C_BasePlayer* ) entityList->GetClientEntity( engine->GetLocalPlayer() );
+    if ( !localplayer )
         return;
 
-    C_BaseCombatWeapon* activeWeapon = (C_BaseCombatWeapon*)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
-    if (!activeWeapon)
+    C_BaseCombatWeapon* activeWeapon = ( C_BaseCombatWeapon* ) entityList->GetClientEntityFromHandle(
+            localplayer->GetActiveWeapon() );
+    if ( !activeWeapon )
         return;
 
-    if (Settings::ESP::Spread::enabled)
-    {
-		int width, height;
-		engine->GetScreenSize(width, height);
-
+    if ( Settings::ESP::Spread::enabled ) {
         float cone = activeWeapon->GetSpread() + activeWeapon->GetInaccuracy();
-		if (cone > 0.0f)
-		{
-			float radius = (cone * height) / 1.5f;
-			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
+        if ( cone > 0.0f ) {
+            float radius = ( cone * Paint::engineHeight ) / 1.5f;
+            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
+                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2,
+                               Settings::ESP::Spread::color.Color() );
         }
     }
-	
-    if (Settings::ESP::Spread::spreadLimit)
-    {
-		int width, height;
-		engine->GetScreenSize(width, height);
-
+    if ( Settings::ESP::Spread::spreadLimit ) {
         float cone = Settings::Aimbot::SpreadLimit::value;
-		if (cone > 0.0f)
-		{
-			float radius = (cone * height) / 1.5f;
-			Draw::FilledCircle(Vector2D(((width / 2) - 0), (height / 2) - 0), radius, radius, Color::FromImColor(Settings::ESP::Spread::color.Color()));
+        if ( cone > 0.0f ) {
+            float radius = ( cone * Paint::engineHeight ) / 1.5f;
+            Draw::AddRect( ( ( Paint::engineWidth / 2 ) - radius ), ( Paint::engineHeight / 2 ) - radius + 1,
+                               ( Paint::engineWidth / 2 ) + radius + 1, ( Paint::engineHeight / 2 ) + radius + 2 ,
+                               Settings::ESP::Spread::spreadLimitColor.Color() );
         }
     }
 }
@@ -1864,7 +1669,7 @@ void ESP::CreateMove(CUserCmd* cmd)
 {
 	viewanglesBackup = cmd->viewangles;
 
-    if(CreateMove::sendPacket)
+	if(CreateMove::sendPacket)
         fake = CreateMove::lastTickViewAngles;
     else
         actual = cmd->viewangles;

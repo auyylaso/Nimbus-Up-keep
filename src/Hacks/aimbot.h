@@ -1,19 +1,20 @@
 #pragma once
 
-#include <vector>
-#include <cstdint>
-#include "../SDK/IInputSystem.h"
 #include "../SDK/IGameEvent.h"
+#include "../SDK/IInputSystem.h"
+#include <cstdint>
+#include <vector>
 
 namespace Aimbot
 {
-	extern bool aimStepInProgress;
-	extern std::vector<int64_t> friends;
-    extern int targetAimbot;
 
-	//Hooks
-	void PrePredictionCreateMove(CUserCmd* cmd);
-	void CreateMove(CUserCmd* cmd);
-	void FireGameEvent(IGameEvent* event);
-	void UpdateValues();
-}
+extern bool aimStepInProgress;		 // This is extern, for other parts. (like auto-wall)
+extern std::vector<int64_t> friends; // A list of "friends", which the aimbot wouldn't track as target
+extern int targetAimbot;			 // The entity number, for the aimbot to lock on.
+
+//Hooks
+void CreateMove(CUserCmd *cmd);
+void FireGameEvent(IGameEvent *event);
+void UpdateValues();
+
+} // namespace Aimbot

@@ -1,30 +1,36 @@
 #pragma once
 
-#include "../SDK/IInputSystem.h"
-#include "../SDK/CBaseClientState.h"
-#include "../Utils/entity.h"
-#include <vector>
+#ifndef FUZION_BACKTRACK_H_
+#define FUZION_BACKTRACK_H_
 
+#include "../SDK/CBaseClientState.h"
+#include "../SDK/IInputSystem.h"
+#include "../Utils/entity.h"
+
+#include <vector>
 
 namespace LagComp
 {
 
-	struct BacktrackRecord
-	{
-		C_BasePlayer* entity;
-		Vector head;
-		Vector origin;
-		matrix3x4_t boneMatrix[128];
-	};
-	 
-	struct BacktrackTick
-	{
-		int tickcount;
-		float SimulationTime;
-		std::vector<BacktrackRecord> records;
-	};
- 
-	void FrameStageNotify(ClientFrameStage_t stage);
-	void CreateMove(CUserCmd* cmd);
-	extern std::vector<LagComp::BacktrackTick> ticks;
+struct LagCompRecord
+{
+	C_BasePlayer *entity;
+	Vector head, origin;
+	matrix3x4_t bone_matrix[128];
 };
+
+// stores information about all players for one tick
+struct LagCompTickInfo
+{
+	int tickCount;
+	float simulationTime;
+	std::vector<LagCompRecord> records;
+};
+
+void CreateMove(CUserCmd *cmd);
+
+extern std::vector<LagComp::LagCompTickInfo> lagCompTicks;
+
+} // namespace LagComp
+
+#endif // FUZION_BACKTRACK_H_

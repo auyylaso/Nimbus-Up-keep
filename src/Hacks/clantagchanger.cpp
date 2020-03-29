@@ -1,15 +1,8 @@
 #include "clantagchanger.h"
 
-#include <sstream>
-#include "../settings.h"
 #include "../interfaces.h"
-
-
-char Settings::ClanTagChanger::value[30] = "";
-bool Settings::ClanTagChanger::animation = false;
-int Settings::ClanTagChanger::animationSpeed = 650;
-bool Settings::ClanTagChanger::enabled = false; // TODO find a way to go back to the "official" clan tag for the player? -- Save the current clan tag, before editing, then restore it later
-ClanTagType Settings::ClanTagChanger::type = ClanTagType::STATIC;
+#include "../settings.h"
+#include <sstream>
 
 static std::vector<std::wstring> splitWords(std::wstring text)
 {
@@ -57,11 +50,10 @@ static ClanTagChanger::Animation Words(std::string name, std::wstring text)
 }
 
 std::vector<ClanTagChanger::Animation> ClanTagChanger::animations = {
-		Marquee("--", L"--"),
-		Words("--", L"--"),
-		Letters("--", L"--")
-};
-ClanTagChanger::Animation* ClanTagChanger::animation = &ClanTagChanger::animations[0];
+	Marquee("--", L"--"),
+	Words("--", L"--"),
+	Letters("--", L"--")};
+ClanTagChanger::Animation *ClanTagChanger::animation = &ClanTagChanger::animations[0];
 void ClanTagChanger::UpdateClanTagCallback()
 {
 	if (strlen(Settings::ClanTagChanger::value) > 0 && Settings::ClanTagChanger::type > ClanTagType::STATIC)
@@ -87,16 +79,15 @@ void ClanTagChanger::UpdateClanTagCallback()
 	}
 
 	ClanTagChanger::animations = {
-			Marquee("--", L"--"),
-			Words("--", L"--"),
-			Letters("--", L"--")
-	};
+		Marquee("--", L"--"),
+		Words("--", L"--"),
+		Letters("--", L"--")};
 
-	int current_animation = (int) Settings::ClanTagChanger::type - 1;
+	int current_animation = (int)Settings::ClanTagChanger::type - 1;
 	if (current_animation >= 0)
 		ClanTagChanger::animation = &ClanTagChanger::animations[current_animation];
 }
-void ClanTagChanger::BeginFrame(float frameTime)
+void ClanTagChanger::CreateMove() // Fixed the clan-tag changer, I guess?
 {
 	if (!Settings::ClanTagChanger::enabled)
 		return;

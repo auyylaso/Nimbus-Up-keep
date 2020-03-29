@@ -1,53 +1,28 @@
 #include "resolver.h"
 
-#include "../Utils/xorstring.h"
 #include "../Utils/entity.h"
 #include "../Utils/math.h"
-#include "../settings.h"
+#include "../Utils/xorstring.h"
 #include "../interfaces.h"
+#include "../settings.h"
 #include "antiaim.h"
 
-bool Settings::Resolver::resolveAll = false;
-std::vector<int64_t> Resolver::Players = { };
+std::vector<int64_t> Resolver::Players = {};
+std::vector<std::pair<C_BasePlayer *, QAngle>> player_data;
 
-std::vector<std::pair<C_BasePlayer*, QAngle>> player_data;
-
-// New resolver (by Skerei, updated by Zede)
-static void Resolve(C_BasePlayer* player, float feetYaw, float angleYaw, float maxDelta)
+static float NormalizeAsYaw(float flAngle)
 {
-	if (player->GetVelocity().Length() > 75.77f)
-    {
-        player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
-        player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
-        Math::NormalizeYaw(player->GetEyeAngles()->y);
+	if (flAngle > 180.f || flAngle < -180.f)
+	{
+		auto revolutions = round(abs(flAngle / 360.f));
 
-        angleYaw = (rand() % 2) ? angleYaw + (maxDelta / 2.2f) : angleYaw - (maxDelta / 2.2f);
-    }
-    else if (player->GetVelocity().Length() < 75.77f)
-    {
-        player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
-        player->GetAnimState()->goalFeetYaw = (180.f + (angleYaw - feetYaw)) / 360.f;
+		if (flAngle < 0.f)
+			flAngle += 360.f * revolutions;
+		else
+			flAngle -= 360.f * revolutions;
+	}
 
-        Math::NormalizeYaw(player->GetEyeAngles()->y);
-
-        if (feetYaw >= -maxDelta & feetYaw < 0)
-            player->GetAnimState()->goalFeetYaw -= maxDelta * 0.66f;
-        else
-            player->GetAnimState()->goalFeetYaw += maxDelta * 0.66f;
-
-		CUtlVector<AnimationLayer>* layers = player->GetAnimOverlay();
-
-		for (int i = 0; i <= layers->Count(); i++)
-		{
-			float m_flPlaybackRate = layers->operator[](i).m_flPlaybackRate;
-
-			if (m_flPlaybackRate > 0.1f)
-			{
-				for (float resolveDelta = 0.0f; resolveDelta < -maxDelta || resolveDelta > maxDelta; resolveDelta = resolveDelta / 2.2f)
-					player->GetEyeAngles()->y = resolveDelta;
-			}
-		}
-    }
+	return flAngle;
 }
 
 void Resolver::FrameStageNotify(ClientFrameStage_t stage)
@@ -55,7 +30,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 	if (!engine->IsInGame())
 		return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
 
@@ -63,14 +38,14 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 	{
 		for (int i = 1; i < engine->GetMaxClients(); ++i)
 		{
-			C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
+			C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
-			if (!player
-				|| player == localplayer
-				|| player->GetDormant()
-				|| !player->GetAlive()
-				|| player->GetImmune()
-				|| Entity::IsTeamMate(player, localplayer))
+			if (!player 
+			|| player == localplayer 
+			|| player->GetDormant() 
+			|| !player->GetAlive() 
+			|| player->GetImmune() 
+			|| Entity::IsTeamMate(player, localplayer))
 				continue;
 
 			IEngineClient::player_info_t entityInformation;
@@ -79,24 +54,45 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 			if (!Settings::Resolver::resolveAll && std::find(Resolver::Players.begin(), Resolver::Players.end(), entityInformation.xuid) == Resolver::Players.end())
 				continue;
 
-			player_data.push_back(std::pair<C_BasePlayer*, QAngle>(player, *player->GetEyeAngles()));
+			player_data.push_back(std::pair<C_BasePlayer *, QAngle>(player, *player->GetEyeAngles()));
 
-			//player->GetEyeAngles()->y = *player->GetLowerBodyYawTarget();
-
-			/* Old Fuzion resolver
-			player->GetEyeAngles()->y = (rand() % 2) ?
-                                        player->GetEyeAngles()->y + (AntiAim::GetMaxDelta(player->GetAnimState()) * 0.66f) :
-                                        player->GetEyeAngles()->y - (AntiAim::GetMaxDelta(player->GetAnimState()) * 0.66f);
+			/*
+			cvar->ConsoleColorPrintf(ColorRGBA(64, 0, 255, 255), XORSTR("\n[Nimbus] "));
+			cvar->ConsoleDPrintf("Debug log here!");
 			*/
 
-			Resolve(player, player->GetAnimState()->currentFeetYaw, player->GetEyeAngles()->y, AntiAim::GetMaxDelta(player->GetAnimState()));
+			// Tanner is a sex bomb, also thank you Stacker for helping us out!
+			float lbyDelta = fabsf(NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y));
+
+			if (lbyDelta < 35)
+				return;
+
+			if (!Settings::Resolver::forceYaw)
+			{
+				static float trueDelta = NormalizeAsYaw(*player->GetLowerBodyYawTarget() - player->GetEyeAngles()->y);
+
+				if (player->GetVelocity().Length() < 10.0f)
+				{
+					player->GetAnimState()->goalFeetYaw = trueDelta <= 0
+															  ? player->GetEyeAngles()->y + fabs(AntiAim::GetMaxDelta(player->GetAnimState()) * 0.99f)
+															  : fabs(-AntiAim::GetMaxDelta(player->GetAnimState()) * 0.99f) - player->GetEyeAngles()->y;
+				}
+				else
+				{
+					player->GetAnimState()->goalFeetYaw = trueDelta <= 0
+															  ? player->GetEyeAngles()->y + fabs(AntiAim::GetMaxDelta(player->GetAnimState()) * 0.2f)
+															  : fabs(-AntiAim::GetMaxDelta(player->GetAnimState()) * 0.2f) - player->GetEyeAngles()->y;
+				}
+			}
+			else
+				player->GetEyeAngles()->y += *player->GetLowerBodyYawTarget() + Settings::Resolver::angle;
 		}
 	}
 	else if (stage == ClientFrameStage_t::FRAME_RENDER_END)
 	{
 		for (unsigned long i = 0; i < player_data.size(); i++)
 		{
-			std::pair<C_BasePlayer*, QAngle> player_aa_data = player_data[i];
+			std::pair<C_BasePlayer *, QAngle> player_aa_data = player_data[i];
 			*player_aa_data.first->GetEyeAngles() = player_aa_data.second;
 		}
 
@@ -104,11 +100,7 @@ void Resolver::FrameStageNotify(ClientFrameStage_t stage)
 	}
 }
 
-void Resolver::PostFrameStageNotify(ClientFrameStage_t stage)
-{
-}
-
-void Resolver::FireGameEvent(IGameEvent* event)
+void Resolver::FireGameEvent(IGameEvent *event)
 {
 	if (!event)
 		return;

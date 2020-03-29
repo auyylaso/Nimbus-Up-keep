@@ -4,17 +4,16 @@
 #include "../interfaces.h"
 
 #include "../Hacks/clantagchanger.h"
+#include "../Hacks/disablepostprocessing.h"
 #include "../Hacks/namechanger.h"
 #include "../Hacks/namestealer.h"
-#include "../Hacks/spammer.h"
 #include "../Hacks/radar.h"
-#include "../Hacks/disablepostprocessing.h"
+#include "../Hacks/spammer.h"
 
-typedef void (*BeginFrameFn) (void*, float);
+typedef void (*BeginFrameFn)(void *, float);
 
-void Hooks::BeginFrame(void* thisptr, float frameTime)
+void Hooks::BeginFrame(void *thisptr, float frameTime)
 {
-	ClanTagChanger::BeginFrame(frameTime);
 	NameChanger::BeginFrame(frameTime);
 	NameStealer::BeginFrame(frameTime);
 	Spammer::BeginFrame(frameTime);

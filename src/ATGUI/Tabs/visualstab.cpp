@@ -22,7 +22,7 @@ void Visuals::RenderTab()
 	const char* ArmsTypes[] = { "Default", "Wireframe", "None" };
 	const char* WeaponTypes[] = { "Default", "Wireframe", "None" };
 	const char* SmokeTypes[] = { "Wireframe", "None" };
-    const char* Sounds[] = { "None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral", "GameSense" };
+    const char* Sounds[] = { "None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral", "Gaysense" };
 	const char* SkyBoxes[] = {
 			"cs_baggage_skybox_", // 0
 			"cs_tibet",
@@ -272,7 +272,6 @@ void Visuals::RenderTab()
 				ImGui::Checkbox(XORSTR("No Flash"), &Settings::Noflash::enabled);
 				ImGui::Checkbox(XORSTR("No Smoke"), &Settings::NoSmoke::enabled);
 				ImGui::Checkbox(XORSTR("Show Footsteps"), &Settings::ESP::Sounds::enabled);
-				ImGui::Checkbox(XORSTR("Show Zeus/Knife Radius"), &Settings::ESP::ZeusRadius::enabled);
 				ImGui::Checkbox(XORSTR("No View Punch"), &Settings::View::NoViewPunch::enabled);
 				ImGui::Checkbox(XORSTR("No Sky"), &Settings::NoSky::enabled);
 

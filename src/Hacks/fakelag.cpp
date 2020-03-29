@@ -1,34 +1,25 @@
 #include "fakelag.h"
 
-#include "../settings.h"
-#include "../interfaces.h"
 #include "../Hooks/hooks.h"
+#include "../interfaces.h"
+#include "../settings.h"
 
-bool Settings::FakeLag::enabled = false;
-int Settings::FakeLag::value = 9;
-
-bool Settings::FakeLag::lagSpike = false;
 bool FakeLag::lagSpike = false;
-
-bool Settings::FakeLag::States::enabled = false;
-int Settings::FakeLag::States::standValue = 5;
-int Settings::FakeLag::States::moveValue = 5;
-int Settings::FakeLag::States::airValue = 5;
 
 static int ticks = 0;
 int ticksMax = 16;
 
-void FakeLag::CreateMove(CUserCmd* cmd)
+void FakeLag::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::FakeLag::enabled)
 		return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if ((!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && localplayer->GetVelocity().Length() <= 0.0f)
+	if ((!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && localplayer->GetVelocity().Length() < 0.1f)
 		return;
 
 	if (Settings::FakeLag::States::airValue == 0 && !(localplayer->GetFlags() & FL_ONGROUND))
@@ -54,7 +45,7 @@ void FakeLag::CreateMove(CUserCmd* cmd)
 	{
 		if (!(localplayer->GetFlags() & FL_ONGROUND))
 			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::airValue;
-		else if (localplayer->GetVelocity().Length() > 0.0f)
+		else if (localplayer->GetVelocity().Length() > 0.1f)
 			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::moveValue;
 		else
 			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::standValue;
