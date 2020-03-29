@@ -4,10 +4,6 @@
 <img src="https://i.imgur.com/ESizHuv.jpg">
 </p>
 
-## What is Fuzion?
-
-A fully featured internal hack for *CounterStrike : Global Offensive* written in C++.
-
 ## What is Nimbus?
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
@@ -99,7 +95,7 @@ If the injection was successful you will see a message at the bottom saying `Suc
 
 Now, go back into CS:GO, if you are in the main menu of the game you should see a banner in the top left like so:
 
-![this](http://i.imgur.com/Gb0SV1u.png)
+![this](https://i.imgur.com/cR1iZkz.png)
 
 *Note:* if you are getting crashes ( that are unrelated to game updates ) Try disabling shader precaching in your Steam Client -> Steam -> Settings -> Shader Pre-Caching. 
 
@@ -151,7 +147,7 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ## Screenshots
 
 ![aimbot](http://i.imgur.com/NhSEO9W.png)
-![menu](http://i.imgur.com/59TGPfw.png)
+![antiaim](https://i.imgur.com/NehdNTU.png)
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
@@ -313,4 +309,8 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
 The Nimbus project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
-Special thanks to [@acuifex](http://www.github.com/acuifex/) for helping with the project a lot.
+
+The cheat is created by:
+[@Zedespook](http://www.github.com/zedespook/)
+[@Acuifex](http://www.github.com/acuifex/)
+[@Skerei](http://www.github.com/skerei/)
