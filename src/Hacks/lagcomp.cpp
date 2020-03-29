@@ -59,7 +59,6 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		return;
 
 	float serverTime = localplayer->GetTickBase() * globalVars->interval_per_tick;
-	const auto weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
 	QAngle my_angle;
 	engine->GetViewAngles(my_angle);
