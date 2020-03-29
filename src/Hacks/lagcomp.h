@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef FUZION_BACKTRACK_H_
-#define FUZION_BACKTRACK_H_
-
 #include "../SDK/CBaseClientState.h"
 #include "../SDK/IInputSystem.h"
 #include "../Utils/entity.h"
@@ -32,5 +29,3 @@ void CreateMove(CUserCmd *cmd);
 extern std::vector<LagComp::LagCompTickInfo> lagCompTicks;
 
 } // namespace LagComp
-
-#endif // FUZION_BACKTRACK_H_

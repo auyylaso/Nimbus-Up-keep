@@ -53,6 +53,11 @@ void LagComp::CreateMove(CUserCmd *cmd)
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
+	C_BaseCombatWeapon *weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
+
+	if (!weapon)
+		return;
+
 	float serverTime = localplayer->GetTickBase() * globalVars->interval_per_tick;
 	const auto weapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
