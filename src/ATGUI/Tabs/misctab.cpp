@@ -432,6 +432,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Sniper Crosshair"), &Settings::SniperCrosshair::enabled);
 				ImGui::Checkbox(XORSTR("Disable post-processing"), &Settings::DisablePostProcessing::enabled);
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
+				ImGui::Checkbox(XORSTR("Fake Duck"), &Settings::FakeDuck::enabled);
 				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::LagComp::enabled);
 				// ImGui::Checkbox(XORSTR("Rapid Fire"), &Settings::RapidFire::enabled);
 			}
@@ -443,7 +444,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Silent Defuse"), &Settings::AutoDefuse::silent);
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
-				ImGui::Checkbox(XORSTR("Fake Duck"), &Settings::FakeDuck::enabled);
+				UI::KeyBindButton(&Settings::FakeDuck::key);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
