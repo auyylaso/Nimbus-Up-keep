@@ -151,6 +151,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.4.1 (March 31)
+- Backtrack updated (more proper tick validation)
+- Fake-duck added
+
 Version 1.4.0 (March 22)
 - Various backtrack optimization
 - Updated desync
