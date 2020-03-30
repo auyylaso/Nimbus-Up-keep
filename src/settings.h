@@ -1122,6 +1122,7 @@ namespace Settings
 	namespace FakeDuck
 	{
 		inline bool enabled = false;
+		inline ButtonCode_t key = ButtonCode_t::KEY_C;
 	}
 
 	namespace AutoAccept

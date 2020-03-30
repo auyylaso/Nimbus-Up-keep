@@ -9,7 +9,7 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 	if (!Settings::FakeDuck::enabled)
 		return;
 
-	if (!(cmd->buttons & IN_DUCK))
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
 		return;
 
 	CreateMove::sendPacket = false;
@@ -32,4 +32,20 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 	}
 	else
 		cmd->buttons &= ~IN_DUCK;
+}
+
+void FakeDuck::OverrideView(CViewSetup *pSetup)
+{
+	if (!Settings::FakeDuck::enabled)
+		return;
+
+	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
+		return;
+
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+
+	if (!localplayer || !localplayer->GetAlive())
+		return;
+
+	pSetup->origin.z = localplayer->GetAbsOrigin().z + 64.0f;
 }

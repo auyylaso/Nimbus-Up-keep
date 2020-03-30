@@ -571,6 +571,9 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")] = Settings::FakeLag::States::moveValue;
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")] = Settings::FakeLag::States::airValue;
 
+	settings[XORSTR("FakeDuck")][XORSTR("enabled")] = Settings::FakeDuck::enabled;
+	settings[XORSTR("FakeDuck")][XORSTR("key")] = Settings::FakeDuck::key;
+
 	settings[XORSTR("AutoAccept")][XORSTR("enabled")] = Settings::AutoAccept::enabled;
 
 	settings[XORSTR("NoSky")][XORSTR("enabled")] = Settings::NoSky::enabled;
@@ -1153,6 +1156,9 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")], &Settings::FakeLag::States::standValue);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")], &Settings::FakeLag::States::moveValue);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")], &Settings::FakeLag::States::airValue);
+
+	GetVal(settings[XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::FakeDuck::enabled);
+	GetButtonCode(settings[XORSTR("FakeDuck")][XORSTR("key")], &Settings::FakeDuck::key);
 
 	GetVal(settings[XORSTR("AutoAccept")][XORSTR("enabled")], &Settings::AutoAccept::enabled);
 
