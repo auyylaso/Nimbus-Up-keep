@@ -1119,6 +1119,11 @@ namespace Settings
 		}
 	}
 
+	namespace FakeDuck
+	{
+		inline bool enabled = false;
+	}
+
 	namespace AutoAccept
 	{
 		inline bool enabled = false;

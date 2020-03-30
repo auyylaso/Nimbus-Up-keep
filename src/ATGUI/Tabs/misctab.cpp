@@ -443,7 +443,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Silent Defuse"), &Settings::AutoDefuse::silent);
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
-				ImGui::SliderInt(XORSTR("##BACKTRACK"), &Settings::LagComp::value, 0, 12, XORSTR("Amount: %0.f"));
+				ImGui::Checkbox(XORSTR("Fake Duck"), &Settings::FakeDuck::enabled);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();

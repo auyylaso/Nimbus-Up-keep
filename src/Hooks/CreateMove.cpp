@@ -13,6 +13,7 @@
 #include "../Hacks/clantagchanger.h"
 #include "../Hacks/edgejump.h"
 #include "../Hacks/esp.h"
+#include "../Hacks/fakeduck.h"
 #include "../Hacks/fakelag.h"
 #include "../Hacks/grenadehelper.h"
 #include "../Hacks/grenadeprediction.h"
@@ -61,6 +62,7 @@ bool Hooks::CreateMove(void *thisptr, float flInputSampleTime, CUserCmd *cmd)
 		LagComp::CreateMove(cmd);
 		AutoKnife::CreateMove(cmd);
 		AntiAim::CreateMove(cmd);
+		FakeDuck::CreateMove(cmd);
 		FakeLag::CreateMove(cmd);
 		ESP::CreateMove(cmd);
 		TracerEffect::CreateMove(cmd);
