@@ -151,12 +151,6 @@ enum class SpammerType : int
 	SPAMMER_POSITIONS,
 };
 
-enum class ShowedAngle : int
-{
-    REAL,
-    FAKE,
-};
-
 enum class AntiAimType: int
 {
 	RAGE,

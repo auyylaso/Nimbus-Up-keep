@@ -386,7 +386,7 @@ static C_BasePlayer *GetClosestPlayerAndSpot(CUserCmd *cmd, bool visibleCheck, V
 
 static void RCS(QAngle &angle, C_BasePlayer *player, CUserCmd *cmd)
 {
-	if (!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE || Settings::Aimbot::NoSpread::enabled)
+	if ((!Settings::Aimbot::RCS::enabled && Settings::Aimbot::type != AimbotType::RAGE) || Settings::Aimbot::NoSpread::enabled)
 		return;
 
 	if (!(cmd->buttons & IN_ATTACK))
