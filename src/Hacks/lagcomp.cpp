@@ -84,7 +84,7 @@ static void RegisterTicks()
 
 		record.entity = player;
 		record.origin = player->GetVecOrigin();
-		record.head = player->GetBonePosition(BONE_HEAD);
+		record.head = player->GetEyePosition();
 
 		if (player->SetupBones(record.bone_matrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime))
 			curTick->records.push_back(record);
