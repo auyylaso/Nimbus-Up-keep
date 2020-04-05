@@ -60,11 +60,12 @@ void HvH::RenderTab()
 			{
 				ImGui::SliderInt(XORSTR("Default Fake-Lag"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
 				ImGui::Checkbox(XORSTR("Fake Lag on Peek"), &Settings::FakeLag::lagSpike);
-				ImGui::Checkbox(XORSTR("Fake Lag on Move States"), &Settings::FakeLag::States::enabled);
+				// ImGui::Checkbox(XORSTR("Fake Lag on Move States"), &Settings::FakeLag::States::enabled);
 			}
 
 			ImGui::Separator();
-
+			
+			/*
 			if (Settings::FakeLag::States::enabled && Settings::FakeLag::enabled)
 			{
 
@@ -75,6 +76,7 @@ void HvH::RenderTab()
 				ImGui::SliderInt(XORSTR("Fake-Lag on Move"), &Settings::FakeLag::States::moveValue, 0, 16, XORSTR("Amount: %0.f"));
 				ImGui::SliderInt(XORSTR("Fake-Lag in Air"), &Settings::FakeLag::States::airValue, 0, 16, XORSTR("Amount: %0.f"));
 			}
+			*/
 
 			ImGui::EndChild();
 		}
