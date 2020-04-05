@@ -14,19 +14,24 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 	if (!Settings::FakeLag::enabled)
 		return;
 
+	if (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key))
+		return;
+
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if ((!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && localplayer->GetVelocity().Length() < 0.1f)
+	if ((!Settings::FakeLag::States::enabled /* || Settings::FakeLag::States::standValue == 0 */ ) && localplayer->GetVelocity().Length() < 0.1f)
 		return;
 
+	/*
 	if (Settings::FakeLag::States::airValue == 0 && !(localplayer->GetFlags() & FL_ONGROUND))
 		return;
 
 	if (Settings::FakeLag::States::moveValue == 0 && localplayer->GetVelocity().Length() > 0.0f)
 		return;
+	*/
 
 	if (cmd->buttons & IN_ATTACK)
 	{
@@ -41,6 +46,7 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 	}
 	else if (FakeLag::lagSpike)
 		CreateMove::sendPacket = false;
+	/*
 	else if (Settings::FakeLag::States::enabled)
 	{
 		if (!(localplayer->GetFlags() & FL_ONGROUND))
@@ -50,6 +56,7 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 		else
 			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::standValue;
 	}
+	*/
 	else
 		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
 

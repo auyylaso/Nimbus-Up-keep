@@ -250,7 +250,7 @@ void AntiAim::CreateMove(CUserCmd *cmd)
 		return;
 
 	static bool bSend = true;
-	bSend = !bSend;
+	bSend = (inputSystem->IsButtonDown(Settings::FakeDuck::key) && Settings::FakeDuck::enabled) || Settings::FakeLag::enabled ? CreateMove::sendPacket : !bSend;
 
 	static bool directionSwitch = false;
 

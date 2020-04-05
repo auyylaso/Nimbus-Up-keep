@@ -1,6 +1,7 @@
 #include "aimbot.h"
 #include "autowall.h"
 #include "fakelag.h"
+// #include "lagcomp.h"
 
 #include "../Utils/bonemaps.h"
 #include "../Utils/entity.h"
@@ -788,7 +789,19 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
 					bestSpot = VelocityExtrapolate(player, bestSpot);	   // get target pos next tick
 				}
-				
+				/*
+				if (Settings::LagComp::enabled)
+				{
+					for (auto &&Tick : LagComp::lagCompTicks)
+					{
+						for (auto &record : Tick.records)
+						{
+							if (record.entity == player)
+								bestSpot = record.head;
+						}
+					}
+				}
+				*/
 				angle = Math::CalcAngle(localEye, bestSpot);
 
 				if (Settings::Aimbot::ErrorMargin::enabled)
