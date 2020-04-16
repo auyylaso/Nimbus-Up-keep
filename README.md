@@ -20,6 +20,9 @@ It is a fork of Fuzion, keeping the style and mentality. The difference being is
 Want to chat or play with other Fuzion users? Join us on Gitter!
 [![Join the chat at https://gitter.im/Aimtux-Fuzion/Lobby](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/Aimtux-Fuzion/Lobby#)
 
+Want to talk with the developers of Nimbus, and interact with the community? Join the Nimbus Discord!
+[[Nimbus Discord](https://img.shields.io/discord/700106330098237512?label=Discord&style=for-the-badge)](https://discord.gg/beD59v)
+
 
 ## Compiling
 
@@ -151,6 +154,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.4.3 (April 16)
+- Added meme-chance
+- We now have a Discord server
+
 Version 1.4.2 (April 5)
 - Fake-duck optimized
 - Desync now works with fake-duck and fake-lag

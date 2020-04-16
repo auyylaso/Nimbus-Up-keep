@@ -1,7 +1,7 @@
 #include "aimbot.h"
 #include "autowall.h"
 #include "fakelag.h"
-// #include "lagcomp.h"
+#include "lagcomp.h"
 
 #include "../Utils/bonemaps.h"
 #include "../Utils/entity.h"
@@ -516,6 +516,25 @@ static void Smooth(C_BasePlayer *player, QAngle &angle)
 	angle = viewAngles + toChange;
 }
 
+// Meme-chance, who says a bad word about this is just as big of a joke as the code is.
+static bool HitChance(C_BaseCombatWeapon *weapon)
+{
+	/*
+	if (!Settings::Aimbot::HitChance::enabled)
+		return true;
+	*/
+
+	if (Settings::Aimbot::HitChance::value == 0)
+		return true;
+
+	if (!weapon)
+		return true;
+
+	weapon->UpdateAccuracyPenalty();
+	float chance = 1.0f / std::max(0.0000001f, weapon->GetInaccuracy());
+	return (chance >= (static_cast<float>(Settings::Aimbot::HitChance::value) * 1.5f));
+}
+
 static void AutoCrouch(C_BasePlayer *player, CUserCmd *cmd)
 {
 	if (!Settings::Aimbot::AutoCrouch::enabled)
@@ -541,7 +560,7 @@ static void LagSpike(C_BasePlayer *player)
 	FakeLag::lagSpike = true;
 }
 
-static void AutoSlow(C_BasePlayer *player, float &forward, float &sideMove, float &bestDamage, C_BaseCombatWeapon *active_weapon, CUserCmd *cmd)
+static void AutoSlow(C_BasePlayer *player, float &forward, float &sideMove, float &bestDamage, C_BaseCombatWeapon *activeWeapon, CUserCmd *cmd)
 {
 
 	if (!Settings::Aimbot::AutoSlow::enabled)
@@ -550,20 +569,19 @@ static void AutoSlow(C_BasePlayer *player, float &forward, float &sideMove, floa
 	if (!player)
 		return;
 
-	float nextPrimaryAttack = active_weapon->GetNextPrimaryAttack();
+	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
 
 	if (nextPrimaryAttack > globalVars->curtime)
 		return;
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
-	C_BaseCombatWeapon *activeWeapon = (C_BaseCombatWeapon *)entityList->GetClientEntityFromHandle(localplayer->GetActiveWeapon());
 
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if (Settings::Aimbot::SpreadLimit::enabled)
+	if (Settings::Aimbot::SpreadLimit::enabled || Settings::Aimbot::HitChance::enabled)
 	{
-		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value)
+		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value || HitChance(activeWeapon))
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -657,6 +675,9 @@ static void AutoShoot(C_BasePlayer *player, C_BaseCombatWeapon *activeWeapon, CU
 		return;
 
 	if (Settings::Aimbot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
+		return;
+
+	if (Settings::Aimbot::HitChance::enabled && HitChance(activeWeapon))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
@@ -789,19 +810,21 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 					localEye = VelocityExtrapolate(localplayer, localEye); // get eye pos next tick
 					bestSpot = VelocityExtrapolate(player, bestSpot);	   // get target pos next tick
 				}
+
 				/*
 				if (Settings::LagComp::enabled)
 				{
-					for (auto &&Tick : LagComp::lagCompTicks)
+					for (auto &tick : LagComp::lagCompTicks[0].records)
 					{
-						for (auto &record : Tick.records)
+						if (tick.entity == player)
 						{
-							if (record.entity == player)
-								bestSpot = record.head;
+							// cmd->tick_count = LagComp::lagCompTicks[12].tickCount;
+							bestSpot = tick.head;
 						}
 					}
 				}
 				*/
+
 				angle = Math::CalcAngle(localEye, bestSpot);
 
 				if (Settings::Aimbot::ErrorMargin::enabled)

@@ -1,5 +1,6 @@
 #include "lagcomp.h"
 
+#include "../Utils/bonemaps.h"
 #include "../Utils/math.h"
 #include "../interfaces.h"
 #include "../settings.h"
@@ -72,19 +73,16 @@ static void RegisterTicks()
 	{
 		const auto player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
-		if (!player
-		|| player == localplayer
-		|| player->GetDormant()
-		|| !player->GetAlive()
-		|| Entity::IsTeamMate(player, localplayer)
-		|| player->GetImmune())
+		if (!player || player == localplayer || player->GetDormant() || !player->GetAlive() || Entity::IsTeamMate(player, localplayer) || player->GetImmune())
 			continue;
 
 		LagComp::LagCompRecord record;
 
+		const std::unordered_map<int, int> *modelType = BoneMaps::GetModelTypeBoneMap(player);
+
 		record.entity = player;
 		record.origin = player->GetVecOrigin();
-		record.head = player->GetEyePosition();
+		record.head = player->GetBonePosition((*modelType).at(BONE_HEAD));
 
 		if (player->SetupBones(record.bone_matrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime))
 			curTick->records.push_back(record);
@@ -122,16 +120,16 @@ void LagComp::CreateMove(CUserCmd *cmd)
 		int tickcount = 0;
 		bool has_target = false;
 
-		for (auto &&Tick : LagComp::lagCompTicks)
+		for (auto &tick : LagComp::lagCompTicks)
 		{
-			for (auto &record : Tick.records)
+			for (auto &record : tick.records)
 			{
 				float tmpFOV = Math::GetFov(rcsAngle, Math::CalcAngle(localplayer->GetEyePosition(), record.head));
 
 				if (tmpFOV < fov)
 				{
 					fov = tmpFOV;
-					tickcount = Tick.tickCount;
+					tickcount = tick.tickCount;
 					has_target = true;
 				}
 			}

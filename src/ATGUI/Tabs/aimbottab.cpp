@@ -1,7 +1,10 @@
 #include "aimbottab.h"
+
 #include "../../SDK/definitions.h"
 #include "../../settings.h"
+
 #include "../../Utils/xorstring.h"
+
 #include "../../ImGUI/imgui_internal.h"
 #include "../atgui.h"
 
@@ -21,7 +24,7 @@ static bool desiredBones[] = {
 };
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
-static int engageLockTTR = 700;   // Time to Target Reacquisition ( in ms )
+static int engageLockTTR = 700;	  // Time to Target Reacquisition ( in ms )
 static Bone bone = BONE_HEAD;
 static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
@@ -882,6 +885,10 @@ void Aimbot::RenderTab()
 			}
 
 			ImGui::Columns(1);
+			ImGui::Separator();
+			ImGui::Text(XORSTR("Beta feature"));
+			ImGui::Checkbox(XORSTR("Hit Chance"), &Settings::Aimbot::HitChance::enabled);
+			ImGui::SliderFloat(XORSTR("##HITCHANCE"), &Settings::Aimbot::HitChance::value, 0, 100);
 			ImGui::Separator();
 			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Aimbot::weapons.find(currentWeapon) != Settings::Aimbot::weapons.end())
 			{
