@@ -152,6 +152,11 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.4.4 (April 18)
+- New SDL hook from Fuzion (might be more optimized)
+- Crash fixes with backtrack and aimbot
+- Formatting changes (for those who look at code)
+
 Version 1.4.3 (April 16)
 - Added meme-chance
 - We now have a Discord server
