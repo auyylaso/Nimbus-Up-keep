@@ -31,7 +31,7 @@ float AntiAim::GetMaxDelta(CCSGOAnimState *animState)
 }
 
 // Pasted from space!hook, but I tried
-static bool GetBestHeadAngle(QAngle &angle, float maxDelta, bool bSend)
+static bool GetBestHeadAngle(QAngle &angle, float delta, bool bSend)
 {
 	float b, r, l;
 
@@ -99,26 +99,26 @@ static bool GetBestHeadAngle(QAngle &angle, float maxDelta, bool bSend)
 		return true;
 
 	if (b > r && b > l) // Back
-		angle.y -= bSend ? 180 + maxDelta * 2 : 180;
+		angle.y -= bSend ? 180 + delta : 180;
 	else if (r > l && r > b) // Right
 	{
-		angle.y += bSend ? 90 + maxDelta * 2 : 90;
-		lbyBreak = 90 + maxDelta;
+		angle.y += bSend ? 90 + delta : 90;
+		lbyBreak = 90 + delta;
 	}
 	else if (r > l && r == b) // Right = Back
 	{
-		angle.y += bSend ? 135 + maxDelta * 2 : 135;
-		lbyBreak = 135 + maxDelta;
+		angle.y += bSend ? 135 + delta : 135;
+		lbyBreak = 135 + delta;
 	}
 	else if (l > r && l > b) // Left
 	{
-		angle.y -= bSend ? 90 + maxDelta * 2 : 90;
-		lbyBreak = 90 - maxDelta;
+		angle.y -= bSend ? 90 + delta : 90;
+		lbyBreak = 90 - delta;
 	}
 	else if (l > r && l == b) // Left = Back
 	{
-		angle.y -= bSend ? 135 + maxDelta * 2 : 135;
-		lbyBreak = 135 - maxDelta;
+		angle.y -= bSend ? 135 + delta : 135;
+		lbyBreak = 135 - delta;
 	}
 	else
 		return false;
@@ -126,7 +126,7 @@ static bool GetBestHeadAngle(QAngle &angle, float maxDelta, bool bSend)
 	return true;
 }
 
-static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimState *animState, bool directionSwitch, C_BasePlayer *localplayer)
+static void DoAntiAim(AntiAimType type, float delta, QAngle &angle, bool bSend, CCSGOAnimState *animState, bool directionSwitch, C_BasePlayer *localplayer)
 {
 	if (Settings::AntiAim::States::enabled)
 	{
@@ -140,8 +140,6 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 	else
 		type = Settings::AntiAim::type;
 
-	float maxDelta = AntiAim::GetMaxDelta(animState);
-
 	switch (type)
 	{
 		case AntiAimType::RAGE:
@@ -150,16 +148,16 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 
 			angle.x = 89.0f;
 			if (yFlip)
-				angle.y += directionSwitch ? maxDelta / 2 : -maxDelta / 2;
+				angle.y += directionSwitch ? delta / 4 : -delta / 4;
 			else
-				angle.y += directionSwitch ? -maxDelta / 2 + 180.0f : maxDelta / 2 + 180.0f;
+				angle.y += directionSwitch ? -delta / 4 + 180.0f : delta / 4 + 180.0f;
 
 			if (!bSend)
 			{
 				if (yFlip)
-					angle.y += directionSwitch ? -maxDelta * 2 : maxDelta * 2;
+					angle.y += directionSwitch ? -delta : delta;
 				else
-					angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
+					angle.y += directionSwitch ? delta : -delta;
 			}
 			else
 				yFlip = !yFlip;
@@ -169,7 +167,7 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 		case AntiAimType::LEGIT:
 		{
 			if (!bSend)
-				angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
+				angle.y += directionSwitch ? delta : -delta;
 		}
 		break;
 
@@ -190,7 +188,7 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 				angle.y += Settings::AntiAim::yaw;
 
 			if (!bSend)
-				angle.y += directionSwitch ? maxDelta * 2 : -maxDelta * 2;
+				angle.y += directionSwitch ? delta : -delta;
 		}
 		break;
 
@@ -199,10 +197,10 @@ static void DoAntiAim(AntiAimType type, QAngle &angle, bool bSend, CCSGOAnimStat
 			angle.x = 89.0f;
 
 			QAngle edge_angle = angle;
-			if (GetBestHeadAngle(edge_angle, maxDelta, bSend))
+			if (GetBestHeadAngle(edge_angle, delta, bSend))
 				angle.y = edge_angle.y;
 			else
-				angle.y += bSend ? 180 + maxDelta * 2 : 180;
+				angle.y += bSend ? 180 + delta : 180;
 		}
 
 		default:
@@ -300,7 +298,9 @@ void AntiAim::CreateMove(CUserCmd *cmd)
 		CreateMove::sendPacket = bSend;
 		static AntiAimType type;
 
-		DoAntiAim(type, angle, bSend, animState, directionSwitch, localplayer);
+		float doubleDelta = AntiAim::GetMaxDelta(animState) * 2;
+
+		DoAntiAim(type, doubleDelta, angle, bSend, animState, directionSwitch, localplayer);
 	}
 
 	Math::NormalizeAngles(angle);
