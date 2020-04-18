@@ -130,12 +130,6 @@ enum class SmokeType : int
 	NONE,
 };
 
-enum class AimbotType : int
-{
-	LEGIT,
-	RAGE,
-};
-
 enum class AimTargetType : int
 {
 	FOV,
@@ -149,6 +143,12 @@ enum class SpammerType : int
 	SPAMMER_NONE,
 	SPAMMER_NORMAL,
 	SPAMMER_POSITIONS,
+};
+
+enum class AimbotType : int
+{
+	LEGIT,
+	RAGE,
 };
 
 enum class AntiAimType: int
@@ -190,7 +190,7 @@ struct AimbotWeapon_t
 		 predEnabled,
 		 scopeControlEnabled;
 	int engageLockTTR = 700;
-	Bone bone = BONE_HEAD;
+	Bone bone = CONST_BONE_HEAD;
 	SmoothType smoothType = SmoothType::SLOW_END;
 	ButtonCode_t aimkey = ButtonCode_t ::MOUSE_MIDDLE;
 	float smoothAmount = 1.0f,
@@ -307,10 +307,12 @@ namespace Settings
 {
 	namespace UI
 	{
-		inline ColorVar mainColor = ImColor(25, 25, 25, 255 );
-		inline ColorVar bodyColor = ImColor( 5, 5, 5, 225 );
+		inline ColorVar mainColor = ImColor(25, 25, 25, 224 );
+		inline ColorVar bodyColor = ImColor( 5, 5, 5, 224 );
 		inline ColorVar fontColor = ImColor( 255, 255, 255, 255 );
 		inline ColorVar accentColor = ImColor( 192, 32, 32, 255 );
+		inline bool imGuiAliasedLines = false;
+		inline bool imGuiAliasedFill = false;
 
         /* Window Position/Size Defaults */
         namespace Windows
@@ -386,7 +388,7 @@ namespace Settings
 		inline AimbotType type = AimbotType::LEGIT;
         inline bool silent = false;
         inline bool friendly = false;
-        inline Bone bone = BONE_HEAD;
+        inline Bone bone = CONST_BONE_HEAD;
         inline ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
         inline bool aimkeyOnly = false;
 
@@ -598,6 +600,17 @@ namespace Settings
             inline float offset = 180.0f;
         }
     }
+
+	namespace FakeDuck
+	{
+		inline bool enabled = false;
+		inline ButtonCode_t key = ButtonCode_t::KEY_C;
+	}
+
+	namespace LagComp
+	{
+		inline bool enabled = false;
+	}
 
 	namespace Resolver
 	{
@@ -921,12 +934,6 @@ namespace Settings
 		inline bool enabled = false;
 	}
 
-	namespace LagComp
-	{
-		inline bool enabled = false;
-		inline int value = 12;
-	}
-
 	namespace AutoStrafe
 	{
 		inline bool enabled = false;
@@ -1109,6 +1116,7 @@ namespace Settings
 
 		inline bool lagSpike = false;
 
+		/*
 		namespace States
 		{
 			inline bool enabled = false;
@@ -1117,12 +1125,7 @@ namespace Settings
 			inline int moveValue = 12;
 			inline int airValue = 12;
 		}
-	}
-
-	namespace FakeDuck
-	{
-		inline bool enabled = false;
-		inline ButtonCode_t key = ButtonCode_t::KEY_C;
+		*/
 	}
 
 	namespace AutoAccept
@@ -1254,7 +1257,10 @@ namespace Settings
  			inline bool allies = false;
  		}
  	}
-
+	namespace AngleIndicator
+	{
+		inline bool enabled = false;
+	}
     namespace Debug
     {
         namespace AutoWall

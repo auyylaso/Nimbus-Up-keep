@@ -3,9 +3,9 @@
 #include <set>
 
 #include "../ATGUI/atgui.h"
-#include "../interfaces.h"
-#include "../Utils/math.h"
 #include "../Utils/entity.h"
+#include "../Utils/math.h"
+#include "../interfaces.h"
 #include "../settings.h"
 
 std::set<int> visible_players;
@@ -41,8 +41,8 @@ static Vector2D WorldToRadar(const Vector location, const Vector origin, const Q
 	xnew_diff /= scale;
 	ynew_diff /= scale;
 
-	xnew_diff = (iRadarRadius / 2) + (int) xnew_diff;
-	ynew_diff = (iRadarRadius / 2) + (int) ynew_diff;
+	xnew_diff = (iRadarRadius / 2) + (int)xnew_diff;
+	ynew_diff = (iRadarRadius / 2) + (int)ynew_diff;
 
 	// clamp x & y
 	// FIXME: instead of using hardcoded "4" we should fix cliprect of the radar window
@@ -51,20 +51,20 @@ static Vector2D WorldToRadar(const Vector location, const Vector origin, const Q
 	else if (xnew_diff < 4)
 		xnew_diff = 4;
 
-	if (ynew_diff> iRadarRadius)
+	if (ynew_diff > iRadarRadius)
 		ynew_diff = iRadarRadius;
 	else if (ynew_diff < 4)
 		ynew_diff = 0;
 
 	return Vector2D(xnew_diff, ynew_diff);
 }
-static void SquareConstraint(ImGuiSizeConstraintCallbackData *data)
+static void SquareConstraint(ImGuiSizeCallbackData *data)
 {
 	data->DesiredSize = ImVec2(std::max(data->DesiredSize.x, data->DesiredSize.y), std::max(data->DesiredSize.x, data->DesiredSize.y));
 }
-static ImColor GetRadarPlayerColor(C_BasePlayer* player, bool visible)
+static ImColor GetRadarPlayerColor(C_BasePlayer *player, bool visible)
 {
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return ImColor(255, 255, 255, 255);
 
@@ -123,21 +123,21 @@ void Radar::RenderWindow()
 	ImGui::SetNextWindowSizeConstraints(ImVec2(0, 0), ImVec2(FLT_MAX, FLT_MAX), SquareConstraint);
 	ImGui::SetNextWindowPos(Settings::Radar::pos, ImGuiSetCond_FirstUseEver);
 
-	if (ImGui::Begin("Radar", &Settings::Radar::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoTitleBar))
+	if (ImGui::Begin("Radar", &Settings::Radar::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar))
 	{
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
+		ImDrawList *draw_list = ImGui::GetWindowDrawList();
 
 		ImVec2 winpos = ImGui::GetWindowPos();
 		Settings::Radar::pos = winpos;
 		ImVec2 winsize = ImGui::GetWindowSize();
 
-		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y), ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y), ImColor(70,70,70, 255), 1.f);
-		draw_list->AddLine(ImVec2(winpos.x, winpos.y + winsize.y * 0.5f ), ImVec2(winpos.x + winsize.x, winpos.y + winsize.y * 0.5f), ImColor(70,70,70, 255), 1.f);
+		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y), ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y), ImColor(70, 70, 70, 255), 1.f);
+		draw_list->AddLine(ImVec2(winpos.x, winpos.y + winsize.y * 0.5f), ImVec2(winpos.x + winsize.x, winpos.y + winsize.y * 0.5f), ImColor(70, 70, 70, 255), 1.f);
 
-		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y * 0.5f), ImVec2(winpos.x, winpos.y), ImColor(90,90,90, 255), 1.f);
-		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y * 0.5f), ImVec2(winpos.x + winsize.x, winpos.y), ImColor(90,90,90, 255), 1.f);
+		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y * 0.5f), ImVec2(winpos.x, winpos.y), ImColor(90, 90, 90, 255), 1.f);
+		draw_list->AddLine(ImVec2(winpos.x + winsize.x * 0.5f, winpos.y + winsize.y * 0.5f), ImVec2(winpos.x + winsize.x, winpos.y), ImColor(90, 90, 90, 255), 1.f);
 
-		C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+		C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 		if (!localplayer)
 		{
 			ImGui::End();
@@ -154,7 +154,7 @@ void Radar::RenderWindow()
 
 		for (int i = 1; i < entityList->GetHighestEntityIndex(); i++)
 		{
-			C_BaseEntity* entity = entityList->GetClientEntity(i);
+			C_BaseEntity *entity = entityList->GetClientEntity(i);
 			if (!entity)
 				continue;
 
@@ -166,7 +166,7 @@ void Radar::RenderWindow()
 
 			if (classId == EClassIds::CCSPlayer)
 			{
-				C_BasePlayer* player = (C_BasePlayer*) entity;
+				C_BasePlayer *player = (C_BasePlayer *)entity;
 
 				if (player == localplayer)
 					continue;
@@ -184,7 +184,7 @@ void Radar::RenderWindow()
 				if (!bIsVisible && Settings::Radar::legit)
 					continue;
 
-				C_BasePlayer* observer_target = (C_BasePlayer*) entityList->GetClientEntityFromHandle(localplayer->GetObserverTarget());
+				C_BasePlayer *observer_target = (C_BasePlayer *)entityList->GetClientEntityFromHandle(localplayer->GetObserverTarget());
 				if (observer_target && player == observer_target && (*localplayer->GetObserverMode() == ObserverMode_t::OBS_MODE_IN_EYE || *localplayer->GetObserverMode() == ObserverMode_t::OBS_MODE_CHASE))
 					continue;
 
@@ -219,9 +219,9 @@ void Radar::RenderWindow()
 				Vector2D right = arrowBase + -arrowWidth / (2 * length) * normal;
 
 				draw_list->AddTriangleFilled(ImVec2(winpos.x + left.x, winpos.y + left.y),
-				                             ImVec2(winpos.x + right.x, winpos.y + right.y),
-				                             ImVec2(winpos.x + dirArrowPos.x, winpos.y + dirArrowPos.y),
-				                             ImColor(230, 230, 230));
+											 ImVec2(winpos.x + right.x, winpos.y + right.y),
+											 ImVec2(winpos.x + dirArrowPos.x, winpos.y + dirArrowPos.y),
+											 ImColor(230, 230, 230));
 			}
 			else if (classId == EClassIds::CC4)
 			{
@@ -242,7 +242,7 @@ void Radar::RenderWindow()
 				if (!(*csGameRules) || !(*csGameRules)->IsBombPlanted())
 					continue;
 
-				C_PlantedC4* bomb = (C_PlantedC4*) entity;
+				C_PlantedC4 *bomb = (C_PlantedC4 *)entity;
 
 				color = bomb->GetBombDefuser() != -1 || bomb->IsBombDefused() ? Settings::Radar::bombDefusingColor.Color() : Settings::Radar::bombColor.Color();
 				shape = EntityShape_t::SHAPE_SQUARE;
@@ -277,25 +277,23 @@ void Radar::RenderWindow()
 					break;
 				case EntityShape_t::SHAPE_TRIANGLE_UPSIDEDOWN:
 					draw_list->AddTriangleFilled(ImVec2(winpos.x + screenpos.x - scale, winpos.y + screenpos.y - scale),
-					                             ImVec2(winpos.x + screenpos.x + scale, winpos.y + screenpos.y - scale),
-					                             ImVec2(winpos.x + screenpos.x, winpos.y + screenpos.y + scale),
-					                             color);
+												 ImVec2(winpos.x + screenpos.x + scale, winpos.y + screenpos.y - scale),
+												 ImVec2(winpos.x + screenpos.x, winpos.y + screenpos.y + scale),
+												 color);
 					break;
 			}
-
 		}
 
 		ImGui::End();
 	}
 }
-static void InGameRadar(C_BasePlayer* player)
+static void InGameRadar(C_BasePlayer *player)
 {
 	if (!player->GetAlive() || player->GetDormant())
 		return;
 
 	*player->GetSpotted() = true;
 }
-
 
 void Radar::BeginFrame()
 {
@@ -308,17 +306,17 @@ void Radar::BeginFrame()
 	if (!engine->IsInGame())
 		return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
 
 	for (int i = 1; i < engine->GetMaxClients(); i++)
 	{
-		C_BaseEntity* entity = entityList->GetClientEntity(i);
+		C_BaseEntity *entity = entityList->GetClientEntity(i);
 		if (!entity)
 			continue;
 
-		C_BasePlayer* player = (C_BasePlayer*) entity;
+		C_BasePlayer *player = (C_BasePlayer *)entity;
 
 		if (Settings::Radar::InGame::enabled)
 			InGameRadar(player);
@@ -327,7 +325,7 @@ void Radar::BeginFrame()
 			continue;
 
 		// we shouldn't see people behind us
-		if (Entity::IsVisible(player, BONE_HEAD, 55.f, Settings::Radar::smokeCheck))
+		if (Entity::IsVisible(player, CONST_BONE_HEAD, 55.f, Settings::Radar::smokeCheck))
 			visible_players.insert(i);
 		else
 			visible_players.erase(i);

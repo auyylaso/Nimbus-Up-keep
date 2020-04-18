@@ -2,8 +2,8 @@
 
 #include "../../ImGUI/imgui.h"
 #include "../../ImGUI/imgui_internal.h"
-#include "../../settings.h"
 #include "../../Utils/xorstring.h"
+#include "../../settings.h"
 
 #include "../Tabs/modelstab.h"
 #include "../Tabs/skinstab.h"
@@ -14,9 +14,9 @@ static int page = 0;
 
 void TabButtons()
 {
-	const char* tabs[] = {
-			"Models",
-			"Skins",
+	const char *tabs[] = {
+		"Models",
+		"Skins",
 	};
 
 	for (int i = 0; i < IM_ARRAYSIZE(tabs); i++)
@@ -24,11 +24,10 @@ void TabButtons()
 		int distance = i == page ? 0 : i > page ? i - page : page - i;
 
 		ImGui::GetStyle().Colors[ImGuiCol_Button] = ImVec4(
-				Settings::UI::mainColor.Color().Value.x - (distance * 0.06f),
-				Settings::UI::mainColor.Color().Value.y - (distance * 0.06f),
-				Settings::UI::mainColor.Color().Value.z - (distance * 0.06f),
-				Settings::UI::mainColor.Color().Value.w
-		);
+			Settings::UI::mainColor.Color().Value.x - (distance * 0.06f),
+			Settings::UI::mainColor.Color().Value.y - (distance * 0.06f),
+			Settings::UI::mainColor.Color().Value.z - (distance * 0.06f),
+			Settings::UI::mainColor.Color().Value.w);
 
 		if (ImGui::Button(tabs[i], ImVec2(ImGui::GetWindowSize().x / IM_ARRAYSIZE(tabs) - 9, 0)))
 			page = i;
@@ -42,7 +41,7 @@ void TabButtons()
 
 void SkinModelChanger::RenderWindow()
 {
-	if( Settings::UI::Windows::Skinmodel::reload )
+	if (Settings::UI::Windows::Skinmodel::reload)
 	{
 		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Skinmodel::posX, Settings::UI::Windows::Skinmodel::posY), ImGuiSetCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Skinmodel::sizeX, Settings::UI::Windows::Skinmodel::sizeY), ImGuiSetCond_Always);
@@ -60,7 +59,7 @@ void SkinModelChanger::RenderWindow()
 		return;
 	}
 
-	if (ImGui::Begin(XORSTR("Skin & Model Changer"), &SkinModelChanger::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("Skin & Model Changer"), &SkinModelChanger::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar))
 	{
 		Settings::UI::Windows::Skinmodel::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();

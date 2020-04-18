@@ -1,9 +1,9 @@
 #include "showspectators.h"
 
-#include "../Utils/xorstring.h"
-#include "../settings.h"
-#include "../interfaces.h"
 #include "../ATGUI/atgui.h"
+#include "../Utils/xorstring.h"
+#include "../interfaces.h"
+#include "../settings.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -14,13 +14,13 @@ std::list<int> ShowSpectators::GetObservervators(int playerId)
 	if (!engine->IsInGame())
 		return list;
 
-	C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(playerId);
+	C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(playerId);
 	if (!player)
 		return list;
 
 	if (!player->GetAlive())
 	{
-		C_BasePlayer* observerTarget = (C_BasePlayer*) entityList->GetClientEntityFromHandle(player->GetObserverTarget());
+		C_BasePlayer *observerTarget = (C_BasePlayer *)entityList->GetClientEntityFromHandle(player->GetObserverTarget());
 		if (!observerTarget)
 			return list;
 
@@ -29,14 +29,14 @@ std::list<int> ShowSpectators::GetObservervators(int playerId)
 
 	for (int i = 1; i < engine->GetMaxClients(); i++)
 	{
-		C_BasePlayer* pPlayer = (C_BasePlayer*) entityList->GetClientEntity(i);
+		C_BasePlayer *pPlayer = (C_BasePlayer *)entityList->GetClientEntity(i);
 		if (!pPlayer)
 			continue;
 
 		if (pPlayer->GetDormant() || pPlayer->GetAlive())
 			continue;
 
-		C_BasePlayer* target = (C_BasePlayer*) entityList->GetClientEntityFromHandle(pPlayer->GetObserverTarget());
+		C_BasePlayer *target = (C_BasePlayer *)entityList->GetClientEntityFromHandle(pPlayer->GetObserverTarget());
 		if (player != target)
 			continue;
 
@@ -53,7 +53,7 @@ void ShowSpectators::RenderWindow()
 
 	if (!UI::isVisible && !engine->IsInGame())
 		return;
-	if( Settings::UI::Windows::Spectators::reload )
+	if (Settings::UI::Windows::Spectators::reload)
 	{
 		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_Always);
@@ -64,7 +64,7 @@ void ShowSpectators::RenderWindow()
 		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Spectators::posX, Settings::UI::Windows::Spectators::posY), ImGuiSetCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Spectators::sizeX, Settings::UI::Windows::Spectators::sizeY), ImGuiSetCond_FirstUseEver);
 	}
-	if (ImGui::Begin(XORSTR("Spectators"), &Settings::ShowSpectators::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("Spectators"), &Settings::ShowSpectators::enabled, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar))
 	{
 		ImVec2 temp = ImGui::GetWindowSize();
 		Settings::UI::Windows::Spectators::sizeX = (int)temp.x;
@@ -87,7 +87,7 @@ void ShowSpectators::RenderWindow()
 			if (playerId == engine->GetLocalPlayer())
 				continue;
 
-			C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(playerId);
+			C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(playerId);
 
 			IEngineClient::player_info_t entityInformation;
 			engine->GetPlayerInfo(playerId, &entityInformation);

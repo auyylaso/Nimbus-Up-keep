@@ -1,20 +1,21 @@
 #include "configs.h"
 
-#include <sys/stat.h>
 #include <sstream>
+#include <sys/stat.h>
 
+#include "../../Utils/xorstring.h"
 #include "../../config.h"
 #include "../../settings.h"
-#include "../../Utils/xorstring.h"
+
 #include "../../ImGUI/imgui_internal.h"
-#include "../imgui.h"
 #include "../atgui.h"
+#include "../imgui.h"
 
 bool Configs::showWindow = false;
 
 void Configs::RenderWindow()
 {
-	if( Settings::UI::Windows::Config::reload )
+	if (Settings::UI::Windows::Config::reload)
 	{
 		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Config::posX, Settings::UI::Windows::Config::posY), ImGuiSetCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Config::sizeX, Settings::UI::Windows::Config::sizeY), ImGuiSetCond_Always);
@@ -32,7 +33,7 @@ void Configs::RenderWindow()
 		return;
 	}
 
-	if (ImGui::Begin(XORSTR("Configs"), &Configs::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders | ImGuiWindowFlags_NoResize))
+	if (ImGui::Begin(XORSTR("Configs"), &Configs::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize))
 	{
 		Settings::UI::Windows::Config::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
@@ -51,7 +52,7 @@ void Configs::RenderWindow()
 		ImGui::SameLine();
 		if (ImGui::Button(XORSTR("Save")))
 		{
-			if (configItems.size() > 0 && (configItemCurrent >= 0 && configItemCurrent < (int) configItems.size()))
+			if (configItems.size() > 0 && (configItemCurrent >= 0 && configItemCurrent < (int)configItems.size()))
 			{
 				std::ostringstream path;
 				path << GetConfigDirectory() << configItems[configItemCurrent] << XORSTR("/config.json");
@@ -63,7 +64,7 @@ void Configs::RenderWindow()
 		ImGui::SameLine();
 		if (ImGui::Button(XORSTR("Remove")))
 		{
-			if (configItems.size() > 0 && (configItemCurrent >= 0 && configItemCurrent < (int) configItems.size()))
+			if (configItems.size() > 0 && (configItemCurrent >= 0 && configItemCurrent < (int)configItems.size()))
 			{
 				std::ostringstream path;
 				path << GetConfigDirectory() << configItems[configItemCurrent];

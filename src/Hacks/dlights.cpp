@@ -1,8 +1,8 @@
 #include "dlights.h"
 
-#include "../settings.h"
-#include "../interfaces.h"
 #include "../Utils/entity.h"
+#include "../interfaces.h"
+#include "../settings.h"
 
 #include "esp.h"
 
@@ -17,13 +17,13 @@ void Dlights::Paint()
 	if (!engine->IsInGame())
 		return;
 
-	C_BasePlayer* localplayer = (C_BasePlayer*) entityList->GetClientEntity(engine->GetLocalPlayer());
+	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 	if (!localplayer)
 		return;
 
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
 	{
-		C_BasePlayer* player = (C_BasePlayer*) entityList->GetClientEntity(i);
+		C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 		if (!player)
 			continue;
 
@@ -39,18 +39,18 @@ void Dlights::Paint()
 		bool bIsVisible = false;
 		if (Settings::ESP::Filters::visibilityCheck || Settings::ESP::Filters::legit)
 		{
-			bIsVisible = Entity::IsVisible(player, BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck);
+			bIsVisible = Entity::IsVisible(player, CONST_BONE_HEAD, 180.f, Settings::ESP::Filters::smokeCheck);
 			if (!bIsVisible && Settings::ESP::Filters::legit)
 				continue;
 		}
 
 		Color color = Color::FromImColor(ESP::GetESPPlayerColor(player, bIsVisible));
 
-		dlight_t* dLight = effects->CL_AllocDlight(i);
+		dlight_t *dLight = effects->CL_AllocDlight(i);
 		dLight->key = i;
-		dLight->color.r = (unsigned char) color.r;
-		dLight->color.g = (unsigned char) color.g;
-		dLight->color.b = (unsigned char) color.b;
+		dLight->color.r = (unsigned char)color.r;
+		dLight->color.g = (unsigned char)color.g;
+		dLight->color.b = (unsigned char)color.b;
 		dLight->color.exponent = true;
 		dLight->flags = DLIGHT_NO_MODEL_ILLUMINATION;
 		dLight->m_Direction = player->GetVecOrigin();

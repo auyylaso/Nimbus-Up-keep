@@ -25,7 +25,7 @@ static bool desiredBones[] = {
 static bool engageLock = false;
 static bool engageLockTR = false; // Target Reacquisition
 static int engageLockTTR = 700;	  // Time to Target Reacquisition ( in ms )
-static Bone bone = BONE_HEAD;
+static Bone bone = CONST_BONE_HEAD;
 static ButtonCode_t aimkey = ButtonCode_t::MOUSE_MIDDLE;
 static bool aimkeyOnly = false;
 static bool smoothEnabled = false;
@@ -562,7 +562,6 @@ void Aimbot::RenderTab()
 									UI::UpdateWeaponSettings();
 							}
 						}
-						ImGui::PopItemWidth();
 					}
 
 					ImGui::Columns(1);

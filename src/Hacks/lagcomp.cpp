@@ -64,14 +64,13 @@ static void RemoveInvalidTicks()
 	}
 }
 
-static void RegisterTicks()
+static void RegisterTicks(C_BasePlayer *localplayer)
 {
-	const auto curTick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
-	const auto localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
+	const auto curtick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
 
 	for (int i = 1; i < engine->GetMaxClients(); ++i)
 	{
-		const auto player = (C_BasePlayer *)entityList->GetClientEntity(i);
+		C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
 		if (!player || player == localplayer || player->GetDormant() || !player->GetAlive() || Entity::IsTeamMate(player, localplayer) || player->GetImmune())
 			continue;
@@ -85,7 +84,7 @@ static void RegisterTicks()
 		record.head = player->GetBonePosition((*modelType).at(BONE_HEAD));
 
 		if (player->SetupBones(record.bone_matrix, 128, BONE_USED_BY_HITBOX, globalVars->curtime))
-			curTick->records.push_back(record);
+			curtick->records.push_back(record);
 	}
 }
 
@@ -93,9 +92,6 @@ void LagComp::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::LagComp::enabled)
 		return;
-
-	RemoveInvalidTicks();
-	RegisterTicks();
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 
@@ -106,6 +102,9 @@ void LagComp::CreateMove(CUserCmd *cmd)
 
 	if (!weapon)
 		return;
+
+	RemoveInvalidTicks();
+	RegisterTicks(localplayer);
 
 	float serverTime = localplayer->GetTickBase() * globalVars->interval_per_tick;
 

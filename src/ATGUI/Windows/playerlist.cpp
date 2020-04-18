@@ -1,15 +1,15 @@
 #include "playerlist.h"
 #include <sstream>
 
+#include "../../Utils/xorstring.h"
 #include "../../interfaces.h"
 #include "../../settings.h"
-#include "../../Utils/xorstring.h"
 
 #include "../../Hacks/aimbot.h"
-#include "../../Hacks/esp.h"
-#include "../../Hacks/resolver.h"
 #include "../../Hacks/clantagchanger.h"
+#include "../../Hacks/esp.h"
 #include "../../Hacks/namechanger.h"
+#include "../../Hacks/resolver.h"
 
 #pragma GCC diagnostic ignored "-Wformat-security"
 
@@ -19,12 +19,15 @@ static char nickname[127] = "";
 
 void PlayerList::RenderWindow()
 {
-	if( Settings::UI::Windows::Playerlist::reload )
+	static int currentPlayer = -1;
+
+	if (Settings::UI::Windows::Playerlist::reload)
 	{
 		ImGui::SetNextWindowPos(ImVec2(Settings::UI::Windows::Playerlist::posX, Settings::UI::Windows::Playerlist::posY), ImGuiSetCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(Settings::UI::Windows::Playerlist::sizeX, Settings::UI::Windows::Playerlist::sizeY), ImGuiSetCond_Always);
 		Settings::UI::Windows::Playerlist::reload = false;
 		PlayerList::showWindow = Settings::UI::Windows::Playerlist::open;
+		currentPlayer = -1;
 	}
 	else
 	{
@@ -37,7 +40,7 @@ void PlayerList::RenderWindow()
 		return;
 	}
 
-	if (ImGui::Begin(XORSTR("Player list"), &PlayerList::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_ShowBorders))
+	if (ImGui::Begin(XORSTR("Player list"), &PlayerList::showWindow, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar))
 	{
 		Settings::UI::Windows::Playerlist::open = true;
 		ImVec2 temp = ImGui::GetWindowSize();
@@ -46,8 +49,6 @@ void PlayerList::RenderWindow()
 		temp = ImGui::GetWindowPos();
 		Settings::UI::Windows::Playerlist::posX = (int)temp.x;
 		Settings::UI::Windows::Playerlist::posY = (int)temp.y;
-
-		static int currentPlayer = -1;
 
 		if (!engine->IsInGame() || (*csPlayerResource && !(*csPlayerResource)->GetConnected(currentPlayer)))
 			currentPlayer = -1;
@@ -82,10 +83,10 @@ void PlayerList::RenderWindow()
 			ImGui::NextColumn();
 
 			std::unordered_map<TeamID, std::vector<int>, Util::IntHash<TeamID>> players = {
-					{ TeamID::TEAM_UNASSIGNED, { } },
-					{ TeamID::TEAM_SPECTATOR, { } },
-					{ TeamID::TEAM_TERRORIST, { } },
-					{ TeamID::TEAM_COUNTER_TERRORIST, { } },
+				{TeamID::TEAM_UNASSIGNED, {}},
+				{TeamID::TEAM_SPECTATOR, {}},
+				{TeamID::TEAM_TERRORIST, {}},
+				{TeamID::TEAM_COUNTER_TERRORIST, {}},
 			};
 
 			for (int i = 1; i < engine->GetMaxClients(); i++)
@@ -99,10 +100,10 @@ void PlayerList::RenderWindow()
 				players[(*csPlayerResource)->GetTeam(i)].push_back(i);
 			}
 
-			for (int team = (int) TeamID::TEAM_UNASSIGNED; team <= (int) TeamID::TEAM_COUNTER_TERRORIST ; team++)
+			for (int team = (int)TeamID::TEAM_UNASSIGNED; team <= (int)TeamID::TEAM_COUNTER_TERRORIST; team++)
 			{
-				char* teamName;
-				switch ((TeamID) team)
+				char *teamName;
+				switch ((TeamID)team)
 				{
 					case TeamID::TEAM_UNASSIGNED:
 						teamName = strdup(XORSTR("Unassigned"));
@@ -117,10 +118,10 @@ void PlayerList::RenderWindow()
 						teamName = strdup(XORSTR("Counter Terrorist"));
 						break;
 					default:
-			        	teamName = strdup("");
+						teamName = strdup("");
 				}
 
-				for (auto it : players[(TeamID) team])
+				for (auto it : players[(TeamID)team])
 				{
 					std::string id = std::to_string(it);
 
@@ -148,7 +149,7 @@ void PlayerList::RenderWindow()
 					ImGui::Text("%s", (*csPlayerResource)->GetClan(it));
 					ImGui::NextColumn();
 
-					ImGui::Text("%d/%d/%d", (*csPlayerResource)->GetKills(it),(*csPlayerResource)->GetAssists(it), (*csPlayerResource)->GetDeaths(it));
+					ImGui::Text("%d/%d/%d", (*csPlayerResource)->GetKills(it), (*csPlayerResource)->GetAssists(it), (*csPlayerResource)->GetDeaths(it));
 					ImGui::NextColumn();
 
 					ImGui::Text("%s", ESP::ranks[*(*csPlayerResource)->GetCompetitiveRanking(it)]);
@@ -207,7 +208,7 @@ void PlayerList::RenderWindow()
 					engine->ClientCmd_Unrestricted(cmd.c_str());
 				}
 
-				const char* clanTag = (*csPlayerResource)->GetClan(currentPlayer);
+				const char *clanTag = (*csPlayerResource)->GetClan(currentPlayer);
 				if (clanTag && clanTag[0] && ImGui::Button(XORSTR("Steal clan tag")))
 				{
 					Settings::ClanTagChanger::enabled = true;
@@ -221,7 +222,7 @@ void PlayerList::RenderWindow()
 			{
 				if (ImGui::Button(XORSTR("Print information")))
 				{
-					cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 255), XORSTR("\n=====\nPlayer informations:\n[%s] %s \nSteamID: %s\n=====\n"),(*csPlayerResource)->GetClan(currentPlayer), entityInformation.name, entityInformation.guid);
+					cvar->ConsoleColorPrintf(ColorRGBA(255, 255, 255), XORSTR("\n=====\nPlayer informations:\n[%s] %s \nSteamID: %s\n=====\n"), (*csPlayerResource)->GetClan(currentPlayer), entityInformation.name, entityInformation.guid);
 				}
 			}
 		}

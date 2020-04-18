@@ -22,7 +22,7 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if ((!Settings::FakeLag::States::enabled /* || Settings::FakeLag::States::standValue == 0 */ ) && localplayer->GetVelocity().Length() < 0.1f)
+	if (/* (!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && */ localplayer->GetVelocity().Length() < 0.1f)
 		return;
 
 	/*

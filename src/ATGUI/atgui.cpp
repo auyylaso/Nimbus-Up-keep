@@ -1,21 +1,21 @@
 #include "atgui.h"
 
 #include "../Utils/draw.h"
+#include "../Utils/xorstring.h"
 #include "../interfaces.h"
 #include "../settings.h"
-#include "../Utils/xorstring.h"
 
+#include "../Hacks/radar.h"
+#include "../Hacks/showspectators.h"
 #include "Windows/colors.h"
 #include "Windows/configs.h"
 #include "Windows/main.h"
 #include "Windows/playerlist.h"
 #include "Windows/skinmodelchanger.h"
-#include "../Hacks/radar.h"
-#include "../Hacks/showspectators.h"
 
 bool UI::isVisible = false;
 
-#define IM_ARRAYSIZE(_ARR)  ((int)(sizeof(_ARR)/sizeof(*_ARR)))
+#define IM_ARRAYSIZE(_ARR) ((int)(sizeof(_ARR) / sizeof(*_ARR)))
 
 void SetupMainMenuBar()
 {
@@ -46,7 +46,7 @@ void SetupMainMenuBar()
 	}
 }
 
-void UI::SwapWindow()
+void UI::DrawImWatermark()
 {
 	if (UI::isVisible)
 		return;
@@ -54,8 +54,8 @@ void UI::SwapWindow()
 	if (engine->IsInGame())
 		return;
 
-    Draw::ImText( ImVec2( 4.f, 4.f ), ImColor( 255, 255, 255, 255 ), XORSTR( "Nimbus" ), nullptr, 0.0f, nullptr,
-                  ImFontFlags_Shadow );
+	Draw::ImText(ImVec2(4.f, 4.f), ImColor(255, 255, 255, 255), XORSTR("Nimbus"), nullptr, 0.0f, nullptr,
+				 ImFontFlags_Shadow);
 }
 
 void UI::SetVisible(bool visible)
@@ -71,11 +71,11 @@ void UI::SetupWindows()
 		SetupMainMenuBar();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(960, 645));
-			Main::RenderWindow();
+		Main::RenderWindow();
 		ImGui::PopStyleVar();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(1050, 645));
-			SkinModelChanger::RenderWindow();
+		SkinModelChanger::RenderWindow();
 		ImGui::PopStyleVar();
 
 		Configs::RenderWindow();
