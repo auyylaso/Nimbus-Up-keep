@@ -8,14 +8,11 @@
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
 
-## Updates - v1.4:
-- Various backtrack optimization
-- Updated desync
-- Updated misc features (third-person, hitmarker)
-- New resolver (!!!)
-- Crash fixes
-- Code cleaning for developers
-- New visual settings
+## Updates - v1.5:
+- New menu
+- Major visual optimizations
+- Added fake-duck
+- Optimizations and crash fixes
 
 
 Want to chat or play with other Fuzion users? Join us on the [Fuzion Gitter](https://gitter.im/Aimtux-Fuzion/Lobby#)!
@@ -152,6 +149,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.0 (April 24)
+- Very minor change, removed some redefinitions
+- Removed meme-chance
+
 Version 1.4.4 (April 18)
 - New SDL hook from Fuzion (might be more optimized)
 - Crash fixes with backtrack and aimbot

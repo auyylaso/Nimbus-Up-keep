@@ -885,10 +885,6 @@ void Aimbot::RenderTab()
 
 			ImGui::Columns(1);
 			ImGui::Separator();
-			ImGui::Text(XORSTR("Beta feature"));
-			ImGui::Checkbox(XORSTR("Hit Chance"), &Settings::Aimbot::HitChance::enabled);
-			ImGui::SliderFloat(XORSTR("##HITCHANCE"), &Settings::Aimbot::HitChance::value, 0, 100);
-			ImGui::Separator();
 			if (currentWeapon > ItemDefinitionIndex::INVALID && Settings::Aimbot::weapons.find(currentWeapon) != Settings::Aimbot::weapons.end())
 			{
 				if (ImGui::Button(XORSTR("Clear Weapon Settings"), ImVec2(-1, 0)))

@@ -514,25 +514,6 @@ static void Smooth(C_BasePlayer *player, QAngle &angle)
 	angle = viewAngles + toChange;
 }
 
-// Meme-chance, who says a bad word about this is just as big of a joke as the code is.
-static bool HitChance(C_BaseCombatWeapon *weapon)
-{
-	/*
-	if (!Settings::Aimbot::HitChance::enabled)
-		return true;
-	*/
-
-	if (Settings::Aimbot::HitChance::value == 0)
-		return true;
-
-	if (!weapon)
-		return true;
-
-	weapon->UpdateAccuracyPenalty();
-	float chance = 1.0f / std::max(0.0000001f, weapon->GetInaccuracy());
-	return (chance >= (static_cast<float>(Settings::Aimbot::HitChance::value) * 1.5f));
-}
-
 static void AutoCrouch(C_BasePlayer *player, CUserCmd *cmd)
 {
 	if (!Settings::Aimbot::AutoCrouch::enabled)
@@ -574,9 +555,9 @@ static void AutoSlow(C_BasePlayer *player, C_BasePlayer *localplayer, float &for
 	if (!activeWeapon || activeWeapon->GetAmmo() == 0)
 		return;
 
-	if (Settings::Aimbot::SpreadLimit::enabled || Settings::Aimbot::HitChance::enabled)
+	if (Settings::Aimbot::SpreadLimit::enabled)
 	{
-		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value || HitChance(activeWeapon))
+		if ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value)
 		{
 			cmd->buttons |= IN_WALK;
 			forward = -forward;
@@ -668,9 +649,6 @@ static void AutoShoot(C_BasePlayer *player, C_BasePlayer *localplayer, C_BaseCom
 		return;
 
 	if (Settings::Aimbot::SpreadLimit::enabled && ((activeWeapon->GetSpread() + activeWeapon->GetInaccuracy()) > Settings::Aimbot::SpreadLimit::value))
-		return;
-
-	if (Settings::Aimbot::HitChance::enabled && HitChance(activeWeapon))
 		return;
 
 	float nextPrimaryAttack = activeWeapon->GetNextPrimaryAttack();
@@ -811,7 +789,7 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 					{
 						if (tick.entity == player)
 						{
-							// cmd->tick_count = LagComp::lagCompTicks[12].tickCount;
+							// cmd->tick_count = LagComp::lagCompTicks[0].tickCount;
 							bestSpot = tick.head;
 						}
 					}

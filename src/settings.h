@@ -507,12 +507,6 @@ namespace Settings
 			inline float value = 0.1f;
 		}
 
-		namespace HitChance
-		{
-			inline bool enabled = false;
-			inline float value = 80.0f;
-		}
-
 		namespace Prediction
 		{
 			inline bool enabled = false;
