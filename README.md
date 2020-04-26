@@ -17,7 +17,7 @@ It is a fork of Fuzion, keeping the style and mentality. The difference being is
 
 Want to chat or play with other Fuzion users? Join us on the [Fuzion Gitter](https://gitter.im/Aimtux-Fuzion/Lobby#)!
 
-Want to talk with the developers of Nimbus, and interact with the community? Join the [Nimbus Discord](https://discord.gg/beD59v)!
+Want to talk with the developers of Nimbus, and interact with the community? Join the [Nimbus Discord](https://discord.gg/wGgUBdA)!
 
 ## Compiling
 
