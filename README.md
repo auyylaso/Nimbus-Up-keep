@@ -149,6 +149,9 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.2 (May 22)
+- Added new chams
+
 Version 1.5.1 (May 22)
 - Removed lag-comp correction (seems to be more accurate)
 - Added maximum backtrack time
