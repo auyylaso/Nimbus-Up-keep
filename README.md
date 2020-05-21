@@ -1,4 +1,4 @@
-# Nimbus v1.4 - Free and open-source CS:GO hack
+# Nimbus v1.5 - Free and open-source CS:GO hack
 
 <p align="center">
 <img src="https://i.imgur.com/ESizHuv.jpg">
