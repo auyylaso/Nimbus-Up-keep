@@ -7,6 +7,7 @@
 
 std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
+/*
 static float GetLerpTime()
 {
 	int updateRate = cvar->FindVar("cl_updaterate")->GetInt();
@@ -30,17 +31,20 @@ static float GetLerpTime()
 
 	return std::max(lerp, (ratio / updateRate));
 }
+*/
 
 static bool IsTickValid(float time) // pasted from polak getting some invalid ticks need some fix
 {
+	/*
 	float correct = 0;
 
 	correct += GetLerpTime();
 	correct = std::clamp(correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
+	*/
 
-	float deltaTime = correct - (globalVars->curtime - time);
+	float deltaTime = globalVars->curtime - time;
 
-	if (fabsf(deltaTime) < 0.2f)
+	if (fabsf(deltaTime) < Settings::LagComp::time)
 		return true;
 
 	return false;

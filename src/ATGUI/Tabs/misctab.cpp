@@ -30,7 +30,6 @@ void Misc::RenderTab()
 	const char *teams[] = {"Allies", "Enemies", "Both"};
 	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
 	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
-	const char *angleTypes[] = {"Real", "Fake"};
 
 	ImGui::Columns(2, nullptr, true);
 	{
@@ -445,6 +444,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Attempt NoFall"), &Settings::NoFall::enabled);
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
 				UI::KeyBindButton(&Settings::FakeDuck::key);
+				ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::LagComp::time, 0.0f, 0.2f);
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
