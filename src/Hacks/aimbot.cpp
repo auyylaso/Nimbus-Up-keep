@@ -782,15 +782,17 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 					bestSpot = VelocityExtrapolate(player, bestSpot);	   // get target pos next tick
 				}
 
-				/*
+				/* 
+				// Tried this out, so the tick of the shot = the tick before the shot
+				// Worked better in my head.
 				if (Settings::LagComp::enabled)
 				{
 					for (auto &tick : LagComp::lagCompTicks[0].records)
 					{
 						if (tick.entity == player)
 						{
-							// cmd->tick_count = LagComp::lagCompTicks[0].tickCount;
 							bestSpot = tick.head;
+							cmd->tick_count = LagComp::lagCompTicks[0].tickCount;
 						}
 					}
 				}

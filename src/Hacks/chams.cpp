@@ -11,10 +11,26 @@ IMaterial *materialChams;
 IMaterial *materialChamsIgnorez;
 IMaterial *materialChamsFlat;
 IMaterial *materialChamsFlatIgnorez;
+IMaterial *materialPasteChams;
+IMaterial *materialPasteChamsIgnorez;
 IMaterial *materialChamsArms;
 IMaterial *materialChamsWeapons;
 
+// Main material variables
+IMaterial *visible_material = nullptr;
+IMaterial *hidden_material = nullptr;
+
 typedef void (*DrawModelExecuteFn)(void *, void *, void *, const ModelRenderInfo_t &, matrix3x4_t *);
+
+/*
+// This is for setting the new chams's properties in a cleaner way.
+// Allows more modular ways to edit properties of the new chams.
+// - !Doesn't work! -
+static std::string GetEnvMat(float a, float b, float c)
+{
+	return "[" + std::to_string(a) + " " + std::to_string(b) + " " + std::to_string(c) + "]";
+}
+*/
 
 static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
@@ -37,23 +53,6 @@ static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRen
 
 	if (entity != localplayer && Entity::IsTeamMate(entity, localplayer) && !Settings::ESP::Filters::allies)
 		return;
-
-	IMaterial *visible_material = nullptr;
-	IMaterial *hidden_material = nullptr;
-
-	switch (Settings::ESP::Chams::type)
-	{
-		case ChamsType::CHAMS:
-		case ChamsType::CHAMS_XQZ:
-			visible_material = materialChams;
-			hidden_material = materialChamsIgnorez;
-			break;
-		case ChamsType::CHAMS_FLAT:
-		case ChamsType::CHAMS_FLAT_XQZ:
-			visible_material = materialChamsFlat;
-			hidden_material = materialChamsFlatIgnorez;
-			break;
-	}
 
 	visible_material->AlphaModulate(1.0f);
 	hidden_material->AlphaModulate(1.0f);
@@ -97,10 +96,29 @@ static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRen
 		hidden_material->AlphaModulate(0.5f);
 	}
 
-	if (!Settings::ESP::Filters::legit && (Settings::ESP::Chams::type == ChamsType::CHAMS_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_FLAT_XQZ))
+	/*
+	// I figured that it's easier to read more shorter lines, than one long line. Sorry, if this upsets you. Chad "case" gang > Virgin "if" gang.
+	if (!Settings::ESP::Filters::legit && (Settings::ESP::Chams::type == ChamsType::CHAMS_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_FLAT_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_PASTE_XQZ))
 	{
 		modelRender->ForcedMaterialOverride(hidden_material);
 		modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+	}
+	*/
+
+	if (!Settings::ESP::Filters::legit)
+	{
+		switch (Settings::ESP::Chams::type)
+		{
+			case ChamsType::CHAMS_XQZ:
+			case ChamsType::CHAMS_FLAT_XQZ:
+			case ChamsType::CHAMS_PASTE_XQZ:
+				modelRender->ForcedMaterialOverride(hidden_material);
+				modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	modelRender->ForcedMaterialOverride(visible_material);
@@ -204,7 +222,29 @@ void Chams::DrawModelExecute(void *thisptr, void *context, void *state, const Mo
 		materialChamsFlatIgnorez = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, true, true);
 		materialChamsArms = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
 		materialChamsWeapons = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
+		materialPasteChams = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, false, true, false, XORSTR("models/effects/cube_white"), true, XORSTR("[0 0.26 1]"), true, XORSTR("[0 1 2]"), 0.8, true, true, false, true);
+		materialPasteChamsIgnorez = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, false, true, false, XORSTR("models/effects/cube_white"), true, XORSTR("[0 0.26 1]"), true, XORSTR("[0 1 2]"), 0.8, true, true, false, true);
 		materialsCreated = true;
+	}
+
+	// Moved this switch, because now I don't have to make checks in every function.
+	switch (Settings::ESP::Chams::type)
+	{
+		case ChamsType::CHAMS:
+		case ChamsType::CHAMS_XQZ:
+			visible_material = materialChams;
+			hidden_material = materialChamsIgnorez;
+			break;
+		case ChamsType::CHAMS_FLAT:
+		case ChamsType::CHAMS_FLAT_XQZ:
+			visible_material = materialChamsFlat;
+			hidden_material = materialChamsFlatIgnorez;
+			break;
+		case ChamsType::CHAMS_PASTE:
+		case ChamsType::CHAMS_PASTE_XQZ:
+			visible_material = materialPasteChams;
+			hidden_material = materialPasteChamsIgnorez;
+			break;
 	}
 
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);

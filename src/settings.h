@@ -56,6 +56,8 @@ enum class ChamsType : int
 	CHAMS_XQZ,
 	CHAMS_FLAT,
 	CHAMS_FLAT_XQZ,
+	CHAMS_PASTE,
+    CHAMS_PASTE_XQZ,
 };
 
 enum class BoxType : int
@@ -604,6 +606,7 @@ namespace Settings
 	namespace LagComp
 	{
 		inline bool enabled = false;
+		inline float time = 0.2f;
 	}
 
 	namespace Resolver
