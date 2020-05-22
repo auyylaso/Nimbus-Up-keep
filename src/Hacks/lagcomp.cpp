@@ -7,7 +7,8 @@
 
 std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
-static bool IsTickValid(float time) // pasted from polak getting some invalid ticks need some fix
+// Checks the validity of a recorded tick in the specified time.
+static bool IsTickValid(float time)
 {
 	float deltaTime = globalVars->curtime - time;
 
@@ -17,6 +18,7 @@ static bool IsTickValid(float time) // pasted from polak getting some invalid ti
 	return false;
 }
 
+// Removes the ticks which were found invalid.
 static void RemoveInvalidTicks()
 {
 	auto &records = LagComp::lagCompTicks;
@@ -35,6 +37,7 @@ static void RemoveInvalidTicks()
 	}
 }
 
+// Adds the valid tick to the tick record vector.
 static void RegisterTicks(C_BasePlayer *localplayer)
 {
 	const auto curtick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
@@ -59,6 +62,7 @@ static void RegisterTicks(C_BasePlayer *localplayer)
 	}
 }
 
+// Runs the lag compensation/backtrack process every tick.
 void LagComp::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::LagComp::enabled)
@@ -85,7 +89,7 @@ void LagComp::CreateMove(CUserCmd *cmd)
 
 	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
 	{
-		float fov = 180.0f;
+		float fov = FLT_MAX;
 
 		int tickcount = 0;
 		bool has_target = false;
