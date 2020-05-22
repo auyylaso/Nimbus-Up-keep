@@ -12,7 +12,7 @@ int ticksMax = 16;
 // Runs the fakelag process every tick.
 void FakeLag::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::FakeLag::enabled)
+	if (!Settings::FakeLag::enabled || Settings::FakeLag::value == 0)
 		return;
 
 	if (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key))
