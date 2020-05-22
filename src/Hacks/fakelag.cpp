@@ -39,7 +39,7 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 	}
 	else if (Settings::FakeLag::onPeek)
 	{
-		for (int i = 1; i < globalVars->GetMaxClients(); ++i)
+		for (int i = 1; i < engine->GetMaxClients(); ++i)
 		{
 			C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
