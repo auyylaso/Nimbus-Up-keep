@@ -1111,18 +1111,7 @@ namespace Settings
 		inline bool enabled = false;
 		inline int value = 12;
 
-		inline bool lagSpike = false;
-
-		/*
-		namespace States
-		{
-			inline bool enabled = false;
-
-			inline int standValue = 12;
-			inline int moveValue = 12;
-			inline int airValue = 12;
-		}
-		*/
+		inline bool onPeek = false;
 	}
 
 	namespace AutoAccept

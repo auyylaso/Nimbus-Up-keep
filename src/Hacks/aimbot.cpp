@@ -1,7 +1,6 @@
 #include "aimbot.h"
 #include "autowall.h"
-#include "fakelag.h"
-#include "lagcomp.h"
+//// #include "lagcomp.h"
 
 #include "../Utils/bonemaps.h"
 #include "../Utils/entity.h"
@@ -525,20 +524,6 @@ static void AutoCrouch(C_BasePlayer *player, CUserCmd *cmd)
 	cmd->buttons |= IN_BULLRUSH | IN_DUCK;
 }
 
-static void LagSpike(C_BasePlayer *player)
-{
-	if (!Settings::FakeLag::lagSpike)
-		return;
-
-	if (!player)
-	{
-		FakeLag::lagSpike = false;
-		return;
-	}
-
-	FakeLag::lagSpike = true;
-}
-
 static void AutoSlow(C_BasePlayer *player, C_BasePlayer *localplayer, float &forward, float &sideMove, float &bestDamage, C_BaseCombatWeapon *activeWeapon, CUserCmd *cmd)
 {
 	if (!Settings::Aimbot::AutoSlow::enabled)
@@ -782,9 +767,8 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 					bestSpot = VelocityExtrapolate(player, bestSpot);	   // get target pos next tick
 				}
 
-				/* 
-				// Tried this out, so the tick of the shot = the tick before the shot
-				// Worked better in my head.
+				/* Worked better in my head.
+				// Uses the tick before the current one, so it aims for the last recorded tick.
 				if (Settings::LagComp::enabled)
 				{
 					for (auto &tick : LagComp::lagCompTicks[0].records)
@@ -825,7 +809,6 @@ void Aimbot::CreateMove(CUserCmd *cmd)
 	AutoCrouch(player, cmd);
 	AutoSlow(player, localplayer, oldForward, oldSideMove, bestDamage, activeWeapon, cmd);
 	AutoPistol(activeWeapon, cmd);
-	LagSpike(player);
 	AutoShoot(player, localplayer, activeWeapon, cmd);
 	AutoCock(player, activeWeapon, cmd);
 	RCS(angle, player, localplayer, cmd);
