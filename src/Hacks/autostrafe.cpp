@@ -34,7 +34,7 @@ static void LegitStrafe(C_BasePlayer* localplayer, CUserCmd* cmd)
 	}
 }
 
-static void RageStrafe(C_BasePlayer* localplayer, CUserCmd* cmd)
+static void RageStrafe(C_BasePlayer* localplayer, CUserCmd* cmd) // TODO: Add multi-directional autostrafer
 {
 	static bool leftRight;
 	bool inMove = cmd->buttons & IN_FORWARD || cmd->buttons & IN_BACK || cmd->buttons & IN_MOVELEFT || cmd->buttons & IN_MOVERIGHT;

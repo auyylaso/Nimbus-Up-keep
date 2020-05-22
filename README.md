@@ -149,6 +149,10 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.3 (May 22)
+- Updated fake-lag on peek
+- Maximum backtrack now saves in config
+
 Version 1.5.2 (May 22)
 - Added new chams
 
