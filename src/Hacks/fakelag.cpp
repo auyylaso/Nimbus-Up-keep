@@ -49,8 +49,7 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 			CreateMove::sendPacket = !Entity::IsSpotVisible(player, player->GetVecOrigin());
 		}
 	}
-	else
-		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
 
+	CreateMove::sendPacket = ticks < ticksMax - Settings::FakeLag::value;
 	ticks++;
 }

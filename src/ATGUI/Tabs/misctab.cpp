@@ -30,6 +30,7 @@ void Misc::RenderTab()
 	const char *teams[] = {"Allies", "Enemies", "Both"};
 	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
 	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
+	const char *fakeDuckTypes[] = {"HOLD", "TOGGLE"};
 
 	ImGui::Columns(2, nullptr, true);
 	{
@@ -433,7 +434,6 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
 				ImGui::Checkbox(XORSTR("Fake Duck"), &Settings::FakeDuck::enabled);
 				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::LagComp::enabled);
-				// ImGui::Checkbox(XORSTR("Rapid Fire"), &Settings::RapidFire::enabled);
 			}
 			ImGui::NextColumn();
 			{
@@ -445,6 +445,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
 				UI::KeyBindButton(&Settings::FakeDuck::key);
 				ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::LagComp::time, 0.0f, 0.2f);
+				ImGui::Combo(XORSTR("##FAKEDUCKTYPE"), (int *)&Settings::FakeDuck::type, fakeDuckTypes, IM_ARRAYSIZE(fakeDuckTypes));
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();

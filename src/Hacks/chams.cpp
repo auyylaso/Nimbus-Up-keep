@@ -22,16 +22,6 @@ IMaterial *hidden_material = nullptr;
 
 typedef void (*DrawModelExecuteFn)(void *, void *, void *, const ModelRenderInfo_t &, matrix3x4_t *);
 
-/*
-// This is for setting the new chams's properties in a cleaner way.
-// Allows more modular ways to edit properties of the new chams.
-// - !Doesn't work! -
-static std::string GetEnvMat(float a, float b, float c)
-{
-	return "[" + std::to_string(a) + " " + std::to_string(b) + " " + std::to_string(c) + "]";
-}
-*/
-
 static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRenderInfo_t &pInfo, matrix3x4_t *pCustomBoneToWorld)
 {
 	if (!Settings::ESP::Chams::enabled)
@@ -175,11 +165,47 @@ static void DrawWeapon(const ModelRenderInfo_t &pInfo)
 	if (!Settings::ESP::Chams::Weapon::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
 
+	switch (Settings::ESP::Chams::Weapon::type)
+	{
+		case ViewChamsType::DEFAULT:
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::CHROME:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/crystal_clear", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::GOLD:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/gold", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PLASTIC:
+			mat = material->FindMaterial("models/extras/speech_info", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PULSE:
+			mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::THREESIXTY:
+			mat = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+
+		default:
+			break;
+	}
+
 	mat->ColorModulate(Settings::ESP::Chams::Weapon::color.Color());
 	mat->AlphaModulate(Settings::ESP::Chams::Weapon::color.Color().Value.w);
 
-	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Weapon::type == WeaponType::WIREFRAME);
-	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == WeaponType::NONE);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Weapon::type == ViewChamsType::WIREFRAME);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ViewChamsType::NONE);
 	modelRender->ForcedMaterialOverride(mat);
 }
 
@@ -194,11 +220,44 @@ static void DrawArms(const ModelRenderInfo_t &pInfo)
 	if (!Settings::ESP::Chams::Arms::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
 
-	mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
-	mat->AlphaModulate(Settings::ESP::Chams::Arms::color.Color().Value.w);
+	switch (Settings::ESP::Chams::Arms::type)
+	{
+		case ViewChamsType::DEFAULT:
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::CHROME:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/crystal_clear", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::GOLD:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/gold", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PLASTIC:
+			mat = material->FindMaterial("models/extras/speech_info", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PULSE:
+			mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::THREESIXTY:
+			mat = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
 
-	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ArmsType::WIREFRAME);
-	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ArmsType::NONE);
+		default:
+			break;
+	}
+
+	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ViewChamsType::WIREFRAME);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ViewChamsType::NONE);
 	modelRender->ForcedMaterialOverride(mat);
 }
 

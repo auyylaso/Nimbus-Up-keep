@@ -149,6 +149,13 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.4 (May 24)
+- Updated for GCC 10
+- Added new weapon + arm chams (Gold, Chrome, Plastic, Pulse, 360Spin)
+- Added new Hitsound (Cum)
+- Fixed fake-lag.
+- Added toggle fake-duck.
+
 Version 1.5.3 (May 22)
 - Updated fake-lag on peek
 - Maximum backtrack now saves in config

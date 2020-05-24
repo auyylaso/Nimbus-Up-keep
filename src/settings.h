@@ -89,6 +89,7 @@ enum class Sound : int {
 	ERROR,
 	ORCHESTRAL,
 	GAYSENSE,
+	CUM,
 };
 
 enum class BarType : int
@@ -112,18 +113,16 @@ enum class TeamColorType : int
 	RELATIVE,
 };
 
-enum class ArmsType : int
+enum class ViewChamsType : int
 {
-	DEFAULT,
-	WIREFRAME,
-	NONE,
-};
-
-enum class WeaponType : int
-{
-	DEFAULT,
-	WIREFRAME,
-	NONE,
+    DEFAULT,
+    WIREFRAME,
+    GOLD,
+    CHROME,
+    PLASTIC,
+    PULSE,
+    THREESIXTY,
+    NONE,
 };
 
 enum class SmokeType : int
@@ -159,6 +158,12 @@ enum class AntiAimType: int
 	LEGIT,
 	CUSTOM,
 	FREESTAND,
+};
+
+enum class FakeDuckType : int 
+{
+	HOLD,
+	TOGGLE,
 };
 
 struct AimbotWeapon_t
@@ -601,6 +606,7 @@ namespace Settings
 	{
 		inline bool enabled = false;
 		inline ButtonCode_t key = ButtonCode_t::KEY_C;
+		inline FakeDuckType type = FakeDuckType::HOLD;
 	}
 
 	namespace LagComp
@@ -763,14 +769,14 @@ namespace Settings
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor(255, 255, 255, 255);
-				inline ArmsType type = ArmsType::DEFAULT;
+				inline ViewChamsType type = ViewChamsType::DEFAULT;
 			}
 
 			namespace Weapon
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor( 255, 255, 255, 255 );
-				inline WeaponType type = WeaponType::DEFAULT;
+				inline ViewChamsType type = ViewChamsType::DEFAULT;
 			}
 		}
 

@@ -5,6 +5,7 @@
 
 #include "vector.h"
 #include <map>
+#include <string>
 #include <unordered_map>
 
 /* generic constants */
