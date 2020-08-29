@@ -24,6 +24,7 @@ static char nickname[127] = "";
 
 void Misc::RenderTab()
 {
+	const char *voteCastTypes[] = {"Chat", "Console"};
 	const char *strafeTypes[] = {"Forwards", "Backwards", "Left", "Right", "Rage"};
 	const char *animationTypes[] = {"Static", "Marquee", "Words", "Letters"};
 	const char *spammerTypes[] = {"None", "Normal", "Positions"};
@@ -438,6 +439,9 @@ void Misc::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
+				ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voteCast::enabled);
+				ImGui::Combo(XORSTR("##SHOWVOTETYPE"), (int *)&Settings::voteCast::type, voteCastTypes, IM_ARRAYSIZE(voteCastTypes));
+
 				ImGui::Checkbox(XORSTR("Screenshot Cleaner"), &Settings::ScreenshotCleaner::enabled);
 				UI::KeyBindButton(&Settings::Autoblock::key);
 				ImGui::Checkbox(XORSTR("Silent Defuse"), &Settings::AutoDefuse::silent);
