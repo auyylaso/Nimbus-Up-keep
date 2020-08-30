@@ -53,6 +53,7 @@ enum class AutostrafeType : int
 enum class voteCastType : int
 {
 	Chat,
+	ClientSideChat,
 	Console,
 
 };
@@ -1094,7 +1095,7 @@ namespace Settings
 	namespace voteCast
 	{
 		inline bool enabled;
-		inline voteCastType type = voteCastType::Console;
+		inline voteCastType type;
 	}
 
 	namespace ShowSpectators
