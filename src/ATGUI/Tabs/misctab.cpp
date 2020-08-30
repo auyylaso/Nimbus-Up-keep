@@ -24,7 +24,7 @@ static char nickname[127] = "";
 
 void Misc::RenderTab()
 {
-	const char *voteCastTypes[] = {"Chat", "ClientSideChat",  "Console"};
+	const char *voteCastTypes[] = {"Chat", "TeamSideChat",  "Console"};
 	const char *strafeTypes[] = {"Forwards", "Backwards", "Left", "Right", "Rage"};
 	const char *animationTypes[] = {"Static", "Marquee", "Words", "Letters"};
 	const char *spammerTypes[] = {"None", "Normal", "Positions"};

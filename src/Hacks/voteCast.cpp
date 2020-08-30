@@ -34,14 +34,36 @@ switch (Settings::voteCast::type){
                         IEngineClient::player_info_t playerInfo;
                         engine->GetPlayerInfo( vote_player_id, &playerInfo );
                         int option = event->GetInt("vote_option");
-                        std::string votestring = "Say";
+                        std::string votestring = "Say ";
                         votestring += playerInfo.name;
                         cvar->ConsoleDPrintf(std::string(playerInfo.name).c_str());
                         if (option == 0){
+				votestring += " Voted yes";
                                 cvar->ConsoleDPrintf(XORSTR(" Voted yes"));
                         }else{
+				votestring += " Voted no";
                                 cvar->ConsoleDPrintf(XORSTR(" Voted no"));
                         }
+			engine->ExecuteClientCmd(votestring.c_str());
+        }
+        break;
+        case voteCastType::TeamSideChat :
+                if (strstr(event->GetName(), XORSTR("vote_cast"))){ 
+                        int vote_player_id = event->GetInt(XORSTR("entityid"));
+                        IEngineClient::player_info_t playerInfo;
+                        engine->GetPlayerInfo( vote_player_id, &playerInfo );
+                        int option = event->GetInt("vote_option");
+                        std::string votestring = "Say_team ";
+                        votestring += playerInfo.name;
+                        cvar->ConsoleDPrintf(std::string(playerInfo.name).c_str());
+                        if (option == 0){
+				votestring += " Voted yes";
+                                cvar->ConsoleDPrintf(XORSTR(" Voted yes"));
+                        }else{
+				votestring += " Voted no";
+                                cvar->ConsoleDPrintf(XORSTR(" Voted no"));
+                        }
+			engine->ExecuteClientCmd(votestring.c_str());
         }
 }
         }

@@ -7,4 +7,4 @@ namespace voteCast
 	//Hooks
 	void BeginFrame(float frameTime);
 	void FireGameEvent(IGameEvent* event);
-} // namespace VoteCast
+} // namespace voteCast
