@@ -20,6 +20,7 @@ class ICommandLine;
 class KeyValues;
 class CBaseClientState;
 struct CGlowObjectManager;
+class CHudChat;
 
 /* function prototypes */
 typedef IClientMode *(*GetClientModeFn)(void);

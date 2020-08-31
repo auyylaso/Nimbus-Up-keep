@@ -8,6 +8,15 @@
 #include <link.h> // dl_iterate_phdr
 #include <sstream>
 
+template<class T>
+static T* FindHudElement(const char* name)
+{
+    static auto pThis = *reinterpret_cast<DWORD**>(utils::pattern_scan(GetModuleHandleW("/client_client.so"), "B9 ? ? ? ? E8 ? ? ? ? 83 7D F8 ?") + 1);
+
+    static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(utils::pattern_scan(GetModuleHandleW("/client_client.so"), "55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28"));
+    return (T*)find_hud_element(pThis, name);
+}
+
 IBaseClientDLL* client = nullptr;
 IClientMode* clientMode = nullptr;
 ICommandLine* commandline = nullptr;
@@ -43,6 +52,7 @@ IPanoramaUIEngine* panoramaEngine = nullptr;
 IFileSystem* fileSystem = nullptr;
 IGameTypes* gameTypes = nullptr;
 CItemSystem* itemSystem = nullptr;
+CHudChat* g_ChatElement = nullptr;
 
 
 void Interfaces::FindInterfaces()
@@ -72,6 +82,7 @@ void Interfaces::FindInterfaces()
     panoramaEngine = GetInterface<IPanoramaUIEngine>(XORSTR("./bin/linux64/panorama_client.so"), XORSTR("PanoramaUIEngine001"), true);
 	fileSystem = GetInterface<IFileSystem>( XORSTR( "./bin/linux64/filesystem_stdio_client.so" ), XORSTR( "VFileSystem" ) );
 	gameTypes = GetInterface<IGameTypes>(XORSTR("./csgo/bin/linux64/matchmaking_client.so"), XORSTR("VENGINE_GAMETYPES_VERSION002"), true);
+	g_ChatElement = FindHudElement<CHudChat>("CHudChat");
 }
 
 void Interfaces::DumpInterfaces()

@@ -83,3 +83,12 @@ public:
 		return getvfunc<oGetAllClasses>(this, 8)(this);
 	}
 };
+
+class CHudChat
+{
+public:
+    void ChatPrintf(int iPlayerIndex, int iFilter, const char* fmt, ...)
+    {
+        call_vfunc<void(__cdecl*)(void*, int, int, const char*, ...)>(this, 26)(this, iPlayerIndex, iFilter, fmt);
+    }
+};

@@ -1,6 +1,21 @@
 #pragma once
 
 #include "CViewRender.h"
+class CHudChat
+{
+public:
+    void ChatPrintf(int iPlayerIndex, int iFilter, const char* fmt, ...)
+    {
+        char msg[1024];
+
+        va_list args;
+        va_start(args, fmt);
+        vsprintf(msg, fmt, args);
+        CallVFunction<void(__cdecl*)(void*, int, int, const char*, ...)>(this, 26)(this, iPlayerIndex, iFilter, fmt);
+        va_end(args);
+    }
+};
+
 class IClientMode {
 public:
 	virtual ~IClientMode() {}
@@ -54,4 +69,9 @@ public:
 	virtual void OverrideMouseInput(float *x, float *y) = 0;
 
 	virtual bool CreateMove(float flInputSampleTime, CUserCmd *cmd) = 0;
+
+public:
+
+    CHudChat *m_pChatElement; 
+	
 };

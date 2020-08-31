@@ -38,6 +38,19 @@ extern IPanoramaUIEngine *panoramaEngine;
 extern IFileSystem *fileSystem;
 extern IGameTypes *gameTypes;
 extern CItemSystem *itemSystem;
+extern CHudChat *g_ChatElement;
+template<typename... Args>
+void ConMsg(const char* pMsg, Args... args)
+{
+    static auto import = (void(*)(const char*, ...))GetProcAddress(GetModuleHandleW(L"tier0.dll"), "?ConMsg@@YAXPBDZZ");
+    return import(pMsg, args...);
+}
+template<typename... Args>
+void ConColorMsg(const Color& clr, const char* pMsg, Args... args)
+{
+    static auto import = (void(*)(const Color&, const char*, ...))GetProcAddress(GetModuleHandleW(L"tier0.dll"), "?ConColorMsg@@YAXABVColor@@PBDZZ");
+    return import(clr, pMsg, args...);
+}
 
 extern VMT *panelVMT;
 extern VMT *clientVMT;

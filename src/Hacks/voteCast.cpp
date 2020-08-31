@@ -62,6 +62,7 @@ switch (Settings::voteCast::type){
                         }else{
 				votestring += " Voted no";
                                 cvar->ConsoleDPrintf(XORSTR(" Voted no"));
+                                cvar->ChatPrintf("")
                         }
 			engine->ExecuteClientCmd(votestring.c_str());
         }
