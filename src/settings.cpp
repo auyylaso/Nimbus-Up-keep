@@ -562,7 +562,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ClanTagChanger")][XORSTR("type")] = (int)Settings::ClanTagChanger::type;
 
 	settings[XORSTR("voteCast")][XORSTR("enabled")] = Settings::voteCast::enabled;
-	settings[XORSTR("voteCast")][XORSTR("value")] = (int)Settings::voteCast::type;
+	settings[XORSTR("voteCast")][XORSTR("type")] = (int)Settings::voteCast::type;
 
 	settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("enabled")] = Settings::View::NoViewPunch::enabled;
 	settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("enabled")] = Settings::View::NoAimPunch::enabled;
