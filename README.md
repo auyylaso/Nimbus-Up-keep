@@ -1,12 +1,13 @@
-# Nimbus v1.5 - Free and open-source CS:GO hack
+# Nimbus up keep - Free and open-source CS:GO hack
 
 <p align="center">
 <img src="https://i.imgur.com/ESizHuv.jpg">
 </p>
 
-## What is Nimbus?
+## What is Nimbus up keep?
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
+This is purely a fork of Nimbus since the original dev moved onto new things. This fork keeps the cheat working in newest version that's all.
 
 ## Updates - v1.5:
 - New menu
@@ -149,6 +150,9 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.405 (I don't remember)
+- Added vote revealer
+
 Version 1.5.4 (May 25)
 - Updated for GCC 10
 - Added new weapon + arm chams (Gold, Chrome, Plastic, Pulse, 360Spin)
@@ -348,6 +352,9 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
 The Nimbus project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
+
+The cheat is maintained by :
+[@Auyylaso](https://github.com/auyylaso)
 
 The cheat is created by:
 [@Zedespook](http://www.github.com/zedespook/)
