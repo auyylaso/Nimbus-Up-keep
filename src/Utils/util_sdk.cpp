@@ -1085,6 +1085,49 @@ IMaterial* Util::CreateMaterial(std::string type, std::string texture, bool igno
 	return material->CreateMaterial(materialName.c_str(), keyValues);
 }
 
+// This has been pasted from the Fuzed project.
+IMaterial* Util::CreateMaterial(std::string type, std::string texture, bool ignorez, bool nofog, bool model, bool nocull, bool halflambert, bool additive, std::string envmap, bool normalmapalphaenvmapmask, std::string envmaptint, bool envmapfresnel, std::string envmapfresnelminmaxexp, float alpha, bool envmapcontrast, bool selfillum, bool znearer, bool flat)
+{
+    static int matNum = 1;
+    std::stringstream materialData;
+    materialData << "\"" + type + "\"\n"
+            "{\n"
+            "\t\"$basetexture\" \"" + texture + "\"\n"
+            "\t\"$ignorez\" \"" + std::to_string(ignorez) + "\"\n"
+            "\t\"$nofog\" \"" + std::to_string(nofog) + "\"\n"
+            "\t\"$model\" \"" + std::to_string(model) + "\"\n"
+            "\t\"$nocull\" \"" + std::to_string(nocull) + "\"\n"
+            "\t\"$halflambert\" \"" + std::to_string(halflambert) + "\"\n"
+            "\t\"$additive\" \"" + std::to_string(additive) + "\"\n"
+            "\t\"$envmap\" \"" + envmap + "\"\n"
+            "\t\"$phong\" \"" + "1" + "\"\n"
+            "\t\"$basemapalphaphongmask\" \"" + "1" + "\"\n"
+            "\t\"$pearlescent\" \"" + "3" + "\"\n"
+            "\t\"$normalmapalphaenvmapmask\" \"" + std::to_string(additive) + "\"\n"
+            "\t\"$envmaptint\" \"" + envmaptint + "\"\n"
+            "\t\"$envmapfresnel\" \"" + std::to_string(envmapfresnel) + "\"\n"
+            "\t\"$envmapfresnelminmaxexp\" \"" + envmapfresnelminmaxexp + "\"\n"
+            "\t\"$alpha\" \"" + std::to_string(alpha) + "\"\n"
+            "\t\"$envmapcontrast\" \"" + std::to_string(envmapcontrast) + "\"\n"
+            "\t\"$selfillum\" \"" + std::to_string(selfillum) + "\"\n"
+            "\t\"$znearer\" \"" + std::to_string(znearer) + "\"\n"
+            "\t\"$flat\" \"" + std::to_string(flat) + "\"\n"
+            "}\n" << std::flush;
+
+    char randomLetter = 'a' + rand()%26;
+    std::string time = randomLetter + std::string( __TIME__ ); // compile time XX:XX:XX
+    time.erase( std::remove(time.begin(), time.end(), ':'), time.end() ); // remove colons
+    std::string materialName = time + "_" + std::to_string( matNum );
+    cvar->ConsoleDPrintf("MatName: %s\n", materialName.c_str());
+    matNum++;
+
+    KeyValues* keyValues = new KeyValues(materialName.c_str());
+    InitKeyValues(keyValues, type.c_str());
+    LoadFromBuffer(keyValues, materialName.c_str(), materialData.str().c_str(), nullptr, nullptr, nullptr);
+
+    return material->CreateMaterial(materialName.c_str(), keyValues);
+}
+
 const char* Util::GetActivityName(int actNum) {
 	if( actNum == -1 ){
 		return "ACT_INVALID";

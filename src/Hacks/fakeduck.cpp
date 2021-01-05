@@ -9,8 +9,29 @@ void FakeDuck::CreateMove(CUserCmd *cmd)
 	if (!Settings::FakeDuck::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
-		return;
+	switch (Settings::FakeDuck::type)
+	{
+		case FakeDuckType::HOLD:
+			if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
+				return;
+			break;
+
+		case FakeDuckType::TOGGLE:
+			static bool keyRelease = false;
+			static bool toggle = false;
+
+			if (inputSystem->IsButtonDown(Settings::FakeDuck::key) && !keyRelease)
+				toggle = !toggle;
+
+			keyRelease = inputSystem->IsButtonDown(Settings::FakeDuck::key);
+
+			if (!toggle)
+				return;
+			break;
+
+		default:
+			break;
+	}
 
 	CreateMove::sendPacket = false;
 
@@ -37,8 +58,29 @@ void FakeDuck::OverrideView(CViewSetup *pSetup)
 	if (!Settings::FakeDuck::enabled)
 		return;
 
-	if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
-		return;
+	switch (Settings::FakeDuck::type)
+	{
+		case FakeDuckType::HOLD:
+			if (!inputSystem->IsButtonDown(Settings::FakeDuck::key))
+				return;
+			break;
+
+		case FakeDuckType::TOGGLE:
+			static bool keyRelease = false;
+			static bool toggle = false;
+
+			if (inputSystem->IsButtonDown(Settings::FakeDuck::key) && !keyRelease)
+				toggle = !toggle;
+
+			keyRelease = inputSystem->IsButtonDown(Settings::FakeDuck::key);
+
+			if (!toggle)
+				return;
+			break;
+
+		default:
+			break;
+	}
 
 	C_BasePlayer *localplayer = (C_BasePlayer *)entityList->GetClientEntity(engine->GetLocalPlayer());
 

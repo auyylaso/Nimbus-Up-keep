@@ -7,45 +7,18 @@
 
 std::vector<LagComp::LagCompTickInfo> LagComp::lagCompTicks;
 
-static float GetLerpTime()
+// Checks the validity of a recorded tick in the specified time.
+static bool IsTickValid(float time)
 {
-	int updateRate = cvar->FindVar("cl_updaterate")->GetInt();
-	ConVar *minUpdateRate = cvar->FindVar("sv_minupdaterate");
-	ConVar *maxUpdateRate = cvar->FindVar("sv_maxupdaterate");
+	float deltaTime = globalVars->curtime - time;
 
-	if (minUpdateRate && maxUpdateRate)
-		updateRate = maxUpdateRate->GetInt();
-
-	float ratio = cvar->FindVar("cl_interp_ratio")->GetFloat();
-
-	if (ratio == 0)
-		ratio = 1.0f;
-
-	float lerp = cvar->FindVar("cl_interp")->GetFloat();
-	ConVar *c_min_ratio = cvar->FindVar("sv_client_min_interp_ratio");
-	ConVar *c_max_ratio = cvar->FindVar("sv_client_max_interp_ratio");
-
-	if (c_min_ratio && c_max_ratio && c_min_ratio->GetFloat() != 1)
-		ratio = std::clamp(ratio, c_min_ratio->GetFloat(), c_max_ratio->GetFloat());
-
-	return std::max(lerp, (ratio / updateRate));
-}
-
-static bool IsTickValid(float time) // pasted from polak getting some invalid ticks need some fix
-{
-	float correct = 0;
-
-	correct += GetLerpTime();
-	correct = std::clamp(correct, 0.f, cvar->FindVar("sv_maxunlag")->GetFloat());
-
-	float deltaTime = correct - (globalVars->curtime - time);
-
-	if (fabsf(deltaTime) < 0.2f)
+	if (fabsf(deltaTime) < Settings::LagComp::time)
 		return true;
 
 	return false;
 }
 
+// Removes the ticks which were found invalid.
 static void RemoveInvalidTicks()
 {
 	auto &records = LagComp::lagCompTicks;
@@ -64,6 +37,7 @@ static void RemoveInvalidTicks()
 	}
 }
 
+// Adds the valid tick to the tick record vector.
 static void RegisterTicks(C_BasePlayer *localplayer)
 {
 	const auto curtick = LagComp::lagCompTicks.insert(LagComp::lagCompTicks.begin(), {globalVars->tickcount, globalVars->curtime});
@@ -88,6 +62,7 @@ static void RegisterTicks(C_BasePlayer *localplayer)
 	}
 }
 
+// Runs the lag compensation/backtrack process every tick.
 void LagComp::CreateMove(CUserCmd *cmd)
 {
 	if (!Settings::LagComp::enabled)
@@ -114,7 +89,7 @@ void LagComp::CreateMove(CUserCmd *cmd)
 
 	if (cmd->buttons & IN_ATTACK && weapon->GetNextPrimaryAttack() <= serverTime)
 	{
-		float fov = 180.0f;
+		float fov = FLT_MAX;
 
 		int tickcount = 0;
 		bool has_target = false;

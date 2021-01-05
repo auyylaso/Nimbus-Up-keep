@@ -50,12 +50,22 @@ enum class AutostrafeType : int
 	AS_RAGE,
 };
 
+enum class voteCastType : int
+{
+	Chat,
+	TeamSideChat,
+	Console,
+
+};
+
 enum class ChamsType : int
 {
 	CHAMS,
 	CHAMS_XQZ,
 	CHAMS_FLAT,
 	CHAMS_FLAT_XQZ,
+	CHAMS_PASTE,
+    CHAMS_PASTE_XQZ,
 };
 
 enum class BoxType : int
@@ -87,6 +97,7 @@ enum class Sound : int {
 	ERROR,
 	ORCHESTRAL,
 	GAYSENSE,
+	CUM,
 };
 
 enum class BarType : int
@@ -110,18 +121,16 @@ enum class TeamColorType : int
 	RELATIVE,
 };
 
-enum class ArmsType : int
+enum class ViewChamsType : int
 {
-	DEFAULT,
-	WIREFRAME,
-	NONE,
-};
-
-enum class WeaponType : int
-{
-	DEFAULT,
-	WIREFRAME,
-	NONE,
+    DEFAULT,
+    WIREFRAME,
+    GOLD,
+    CHROME,
+    PLASTIC,
+    PULSE,
+    THREESIXTY,
+    NONE,
 };
 
 enum class SmokeType : int
@@ -157,6 +166,12 @@ enum class AntiAimType: int
 	LEGIT,
 	CUSTOM,
 	FREESTAND,
+};
+
+enum class FakeDuckType : int 
+{
+	HOLD,
+	TOGGLE,
 };
 
 struct AimbotWeapon_t
@@ -599,11 +614,13 @@ namespace Settings
 	{
 		inline bool enabled = false;
 		inline ButtonCode_t key = ButtonCode_t::KEY_C;
+		inline FakeDuckType type = FakeDuckType::HOLD;
 	}
 
 	namespace LagComp
 	{
 		inline bool enabled = false;
+		inline float time = 0.2f;
 	}
 
 	namespace Resolver
@@ -760,14 +777,14 @@ namespace Settings
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor(255, 255, 255, 255);
-				inline ArmsType type = ArmsType::DEFAULT;
+				inline ViewChamsType type = ViewChamsType::DEFAULT;
 			}
 
 			namespace Weapon
 			{
 				inline bool enabled = false;
 				inline ColorVar color = ImColor( 255, 255, 255, 255 );
-				inline WeaponType type = WeaponType::DEFAULT;
+				inline ViewChamsType type = ViewChamsType::DEFAULT;
 			}
 		}
 
@@ -1075,6 +1092,11 @@ namespace Settings
 	{
 		inline bool enabled = false;
 	}
+	namespace voteCast
+	{
+		inline bool enabled;
+		inline voteCastType type;
+	}
 
 	namespace ShowSpectators
 	{
@@ -1108,18 +1130,7 @@ namespace Settings
 		inline bool enabled = false;
 		inline int value = 12;
 
-		inline bool lagSpike = false;
-
-		/*
-		namespace States
-		{
-			inline bool enabled = false;
-
-			inline int standValue = 12;
-			inline int moveValue = 12;
-			inline int airValue = 12;
-		}
-		*/
+		inline bool onPeek = false;
 	}
 
 	namespace AutoAccept

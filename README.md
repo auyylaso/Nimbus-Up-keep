@@ -1,12 +1,13 @@
-# Nimbus v1.5 - Free and open-source CS:GO hack
+# Nimbus up keep - Free and open-source CS:GO hack
 
 <p align="center">
 <img src="https://i.imgur.com/ESizHuv.jpg">
 </p>
 
-## What is Nimbus?
+## What is Nimbus up keep?
 
 It is a fork of Fuzion, keeping the style and mentality. The difference being is the added features.
+This is purely a fork of Nimbus since the original dev moved onto new things. This fork keeps the cheat working in newest version that's all.
 
 ## Updates - v1.5:
 - New menu
@@ -17,7 +18,7 @@ It is a fork of Fuzion, keeping the style and mentality. The difference being is
 
 Want to chat or play with other Fuzion users? Join us on the [Fuzion Gitter](https://gitter.im/Aimtux-Fuzion/Lobby#)!
 
-Want to talk with the developers of Nimbus, and interact with the community? Join the [Nimbus Discord](https://discord.gg/bJXht72)!
+Want to talk with the developers of Nimbus, and interact with the community? Join the [Nimbus Discord](https://discord.gg/beD59v)!
 
 ## Compiling
 
@@ -149,6 +150,28 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.5.405 (I don't remember)
+- Added vote revealer
+
+Version 1.5.4 (May 25)
+- Updated for GCC 10
+- Added new weapon + arm chams (Gold, Chrome, Plastic, Pulse, 360Spin)
+- Added new Hitsound (Cum)
+- Fixed fake-lag.
+- Added toggle fake-duck.
+
+Version 1.5.3 (May 22)
+- Updated fake-lag on peek
+- Maximum backtrack now saves in config
+
+Version 1.5.2 (May 22)
+- Added new chams
+
+Version 1.5.1 (May 22)
+- Removed lag-comp correction (seems to be more accurate)
+- Added maximum backtrack time
+- Fixed the cursor issue in the in-game menus. (Now you don't need to alt-tab anymore)
+
 Version 1.5.0 (April 24)
 - Very minor change, removed some redefinitions
 - Removed meme-chance
@@ -329,6 +352,9 @@ This project was also originally based upon Atex's [Linux Basehook](http://unkno
 [telans](https://github.com/telans) for the AUR package [fuzion-git](https://aur.archlinux.org/packages/fuzion-git/)
 
 The Nimbus project is also glad to know [@LWSS](http://www.github.com/LWSS/) who is still providing us with quality code.
+
+The cheat is maintained by :
+[@Auyylaso](https://github.com/auyylaso)
 
 The cheat is created by:
 [@Zedespook](http://www.github.com/zedespook/)

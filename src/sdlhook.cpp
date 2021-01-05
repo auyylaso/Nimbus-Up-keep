@@ -120,7 +120,7 @@ static void SwapWindow(SDL_Window *window)
 	double currentTime = time / 1000.0;
 	io.DeltaTime = lastTime > 0.0 ? (float)(currentTime - lastTime) : (float)(1.0f / 60.0f);
 
-	io.MouseDrawCursor = UI::isVisible;
+	io.MouseDrawCursor = UI::isVisible && engine->IsInGame();
 	io.WantCaptureMouse = UI::isVisible;
 	io.WantCaptureKeyboard = UI::isVisible;
 
@@ -144,7 +144,7 @@ static void SwapWindow(SDL_Window *window)
 
 		io.MousePos = ImVec2((float)mx, (float)my);
 
-		SDL_ShowCursor(io.MouseDrawCursor ? 0 : 1);
+		// SDL_ShowCursor(io.MouseDrawCursor ? 0 : 1);
 	}
 
 	ImGui::NewFrame();

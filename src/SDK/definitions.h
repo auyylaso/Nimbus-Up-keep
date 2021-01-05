@@ -5,6 +5,7 @@
 
 #include "vector.h"
 #include <map>
+#include <string>
 #include <unordered_map>
 
 /* generic constants */
@@ -23,7 +24,7 @@ struct CGlowObjectManager;
 /* function prototypes */
 typedef IClientMode *(*GetClientModeFn)(void);
 typedef CGlowObjectManager *(*GlowObjectManagerFn)(void);
-typedef bool (*MsgFunc_ServerRankRevealAllFn)(float *);
+typedef bool (*MsgFunc_ServerRankRevealAllFn)(void *);
 typedef void (*SendClanTagFn)(const char *, const char *);
 typedef void (*SetLocalPlayerReadyFn)(const char *);
 typedef ILauncherMgr *(*ILauncherMgrCreateFn)(void);
@@ -325,6 +326,7 @@ enum class EClassIds : int
 	CKnife,
 	CKnifeGG,
 	CLightGlow,
+	CMapVetoPickController,
 	CMaterialModifyControl,
 	CMelee,
 	CMolotovGrenade,
@@ -488,6 +490,7 @@ enum class EClassIds : int
 	CWeaponUMP45,
 	CWeaponUSP,
 	CWeaponXM1014,
+	CWeaponZoneRepulsor,
 	CWorld,
 	CWorldVguiText,
 	DustTrail,

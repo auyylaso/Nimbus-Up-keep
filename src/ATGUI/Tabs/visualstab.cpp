@@ -19,11 +19,10 @@ void Visuals::RenderTab()
 	const char *BarTypes[] = {"Vertical Left", "Vertical Right", "Horizontal Below", "Horizontal Above", "Interwebz"};
 	const char *BarColorTypes[] = {"Static", "Health Based"};
 	const char *TeamColorTypes[] = {"Absolute", "Relative"};
-	const char *ChamsTypes[] = {"Normal", "Normal - XQZ", "Flat", "Flat - XQZ"};
-	const char *ArmsTypes[] = {"Default", "Wireframe", "None"};
-	const char *WeaponTypes[] = {"Default", "Wireframe", "None"};
+	const char *ChamsTypes[] = {"Normal", "Normal - XQZ", "Flat", "Flat - XQZ", "Paste", "Paste - XQZ"};
+	const char *viewChamsTypes[] = {"Default", "Wireframe", "Gold", "Chrome","Plastic","Pulse","360Spin","None"};
 	const char *SmokeTypes[] = {"Wireframe", "None"};
-	const char *Sounds[] = {"None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral", "Gaysense"};
+	const char *Sounds[] = {"None", "SpongeBob", "Half life", "Half life 2", "Half life 3", "Half life 4", "BB Gun Bell", "Dopamine", "Wub", "Pedo Yes!", "Meme", "Error", "Orchestral", "Gaysense", "Cum"};
 	const char *SkyBoxes[] = {
 		"cs_baggage_skybox_", // 0
 		"cs_tibet",
@@ -449,8 +448,8 @@ void Visuals::RenderTab()
 			ImGui::NextColumn();
 			{
 				ImGui::PushItemWidth(-1);
-				ImGui::Combo(XORSTR("##ARMSTYPE"), (int *)&Settings::ESP::Chams::Arms::type, ArmsTypes, IM_ARRAYSIZE(ArmsTypes));
-				ImGui::Combo(XORSTR("##WEAPONTYPE"), (int *)&Settings::ESP::Chams::Weapon::type, WeaponTypes, IM_ARRAYSIZE(WeaponTypes));
+				ImGui::Combo(XORSTR("##ARMSTYPE"), (int *)&Settings::ESP::Chams::Arms::type, viewChamsTypes, IM_ARRAYSIZE(viewChamsTypes));
+				ImGui::Combo(XORSTR("##WEAPONTYPE"), (int *)&Settings::ESP::Chams::Weapon::type, viewChamsTypes, IM_ARRAYSIZE(viewChamsTypes));
 				ImGui::SliderFloat(XORSTR("##DLIGHTRADIUS"), &Settings::Dlights::radius, 0, 1000, XORSTR("Radius: %0.f"));
 				ImGui::SliderFloat(XORSTR("##NOFLASHAMOUNT"), &Settings::Noflash::value, 0, 255, XORSTR("Amount: %0.f"));
 				ImGui::Combo(XORSTR("##SMOKETYPE"), (int *)&Settings::NoSmoke::type, SmokeTypes, IM_ARRAYSIZE(SmokeTypes));

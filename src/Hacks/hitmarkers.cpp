@@ -156,6 +156,9 @@ void Hitmarkers::FireGameEvent(IGameEvent* event)
 			case Sound::GAYSENSE:
 				engine->ClientCmd_Unrestricted( "play buttons\\arena_switch_press_02" );
 				break;
+				case Sound::CUM:
+				engine->ClientCmd_Unrestricted( "playvol player/winter/snowball_hit_02 1" );
+				break;
 			default:
 				break;
 		}

@@ -59,7 +59,7 @@ void HvH::RenderTab()
 			if (Settings::FakeLag::enabled)
 			{
 				ImGui::SliderInt(XORSTR("Default Fake-Lag"), &Settings::FakeLag::value, 0, 16, XORSTR("Amount: %0.f"));
-				ImGui::Checkbox(XORSTR("Fake Lag on Peek"), &Settings::FakeLag::lagSpike);
+				ImGui::Checkbox(XORSTR("Fake Lag on Peek"), &Settings::FakeLag::onPeek);
 				// ImGui::Checkbox(XORSTR("Fake Lag on Move States"), &Settings::FakeLag::States::enabled);
 			}
 

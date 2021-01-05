@@ -443,7 +443,7 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
 
 	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
-	// settings[XORSTR("LagComp")][XORSTR("value")] = Settings::LagComp::value;
+	settings[XORSTR("LagComp")][XORSTR("time")] = Settings::LagComp::time;
 
 	settings[XORSTR("AutoStrafe")][XORSTR("enabled")] = Settings::AutoStrafe::enabled;
 	settings[XORSTR("AutoStrafe")][XORSTR("type")] = (int)Settings::AutoStrafe::type;
@@ -561,12 +561,15 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ClanTagChanger")][XORSTR("animation_speed")] = Settings::ClanTagChanger::animationSpeed;
 	settings[XORSTR("ClanTagChanger")][XORSTR("type")] = (int)Settings::ClanTagChanger::type;
 
+	settings[XORSTR("voteCast")][XORSTR("enabled")] = Settings::voteCast::enabled;
+	settings[XORSTR("voteCast")][XORSTR("type")] = (int)Settings::voteCast::type;
+
 	settings[XORSTR("View")][XORSTR("NoViewPunch")][XORSTR("enabled")] = Settings::View::NoViewPunch::enabled;
 	settings[XORSTR("View")][XORSTR("NoAimPunch")][XORSTR("enabled")] = Settings::View::NoAimPunch::enabled;
 
 	settings[XORSTR("FakeLag")][XORSTR("enabled")] = Settings::FakeLag::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("value")] = Settings::FakeLag::value;
-	settings[XORSTR("FakeLag")][XORSTR("lagSpike")] = Settings::FakeLag::lagSpike;
+	settings[XORSTR("FakeLag")][XORSTR("onPeek")] = Settings::FakeLag::onPeek;
 	/*
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")] = Settings::FakeLag::States::enabled;
 	settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")] = Settings::FakeLag::States::standValue;
@@ -961,7 +964,7 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
 	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
-	// GetVal(settings[XORSTR("LagComp")][XORSTR("value")], &Settings::LagComp::value);
+	GetVal(settings[XORSTR("LagComp")][XORSTR("time")], &Settings::LagComp::time);
 
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("enabled")], &Settings::AutoStrafe::enabled);
 	GetVal(settings[XORSTR("AutoStrafe")][XORSTR("type")], (int *)&Settings::AutoStrafe::type);
@@ -1064,6 +1067,8 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("SkinChanger")][XORSTR("Skins")][XORSTR("perTeam")], &Settings::Skinchanger::Skins::perTeam);
 
 	GetVal(settings[XORSTR("ShowRanks")][XORSTR("enabled")], &Settings::ShowRanks::enabled);
+	GetVal(settings[XORSTR("voteCast")][XORSTR("enabled")], &Settings::voteCast::enabled);
+	GetVal(settings[XORSTR("voteCast")][XORSTR("type")], (int *)&Settings::voteCast::type);
 
 	GetVal(settings[XORSTR("UI")][XORSTR("Windows")][XORSTR("Colors")][XORSTR("posX")], &Settings::UI::Windows::Colors::posX);
 	GetVal(settings[XORSTR("UI")][XORSTR("Windows")][XORSTR("Colors")][XORSTR("posY")], &Settings::UI::Windows::Colors::posY);
@@ -1121,14 +1126,7 @@ void Settings::LoadConfig(std::string path)
 
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("enabled")], &Settings::FakeLag::enabled);
 	GetVal(settings[XORSTR("FakeLag")][XORSTR("value")], &Settings::FakeLag::value);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("lagSpike")], &Settings::FakeLag::lagSpike);
-
-	/*
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("enabled")], &Settings::FakeLag::States::enabled);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("standValue")], &Settings::FakeLag::States::standValue);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("moveValue")], &Settings::FakeLag::States::moveValue);
-	GetVal(settings[XORSTR("FakeLag")][XORSTR("States")][XORSTR("airValue")], &Settings::FakeLag::States::airValue);
-	*/
+	GetVal(settings[XORSTR("FakeLag")][XORSTR("onPeek")], &Settings::FakeLag::onPeek);
 
 	GetVal(settings[XORSTR("FakeDuck")][XORSTR("enabled")], &Settings::FakeDuck::enabled);
 	GetButtonCode(settings[XORSTR("FakeDuck")][XORSTR("key")], &Settings::FakeDuck::key);

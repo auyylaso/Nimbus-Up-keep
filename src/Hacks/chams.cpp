@@ -11,8 +11,14 @@ IMaterial *materialChams;
 IMaterial *materialChamsIgnorez;
 IMaterial *materialChamsFlat;
 IMaterial *materialChamsFlatIgnorez;
+IMaterial *materialPasteChams;
+IMaterial *materialPasteChamsIgnorez;
 IMaterial *materialChamsArms;
 IMaterial *materialChamsWeapons;
+
+// Main material variables
+IMaterial *visible_material = nullptr;
+IMaterial *hidden_material = nullptr;
 
 typedef void (*DrawModelExecuteFn)(void *, void *, void *, const ModelRenderInfo_t &, matrix3x4_t *);
 
@@ -37,23 +43,6 @@ static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRen
 
 	if (entity != localplayer && Entity::IsTeamMate(entity, localplayer) && !Settings::ESP::Filters::allies)
 		return;
-
-	IMaterial *visible_material = nullptr;
-	IMaterial *hidden_material = nullptr;
-
-	switch (Settings::ESP::Chams::type)
-	{
-		case ChamsType::CHAMS:
-		case ChamsType::CHAMS_XQZ:
-			visible_material = materialChams;
-			hidden_material = materialChamsIgnorez;
-			break;
-		case ChamsType::CHAMS_FLAT:
-		case ChamsType::CHAMS_FLAT_XQZ:
-			visible_material = materialChamsFlat;
-			hidden_material = materialChamsFlatIgnorez;
-			break;
-	}
 
 	visible_material->AlphaModulate(1.0f);
 	hidden_material->AlphaModulate(1.0f);
@@ -97,10 +86,29 @@ static void DrawPlayer(void *thisptr, void *context, void *state, const ModelRen
 		hidden_material->AlphaModulate(0.5f);
 	}
 
-	if (!Settings::ESP::Filters::legit && (Settings::ESP::Chams::type == ChamsType::CHAMS_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_FLAT_XQZ))
+	/*
+	// I figured that it's easier to read more shorter lines, than one long line. Sorry, if this upsets you. Chad "case" gang > Virgin "if" gang.
+	if (!Settings::ESP::Filters::legit && (Settings::ESP::Chams::type == ChamsType::CHAMS_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_FLAT_XQZ || Settings::ESP::Chams::type == ChamsType::CHAMS_PASTE_XQZ))
 	{
 		modelRender->ForcedMaterialOverride(hidden_material);
 		modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+	}
+	*/
+
+	if (!Settings::ESP::Filters::legit)
+	{
+		switch (Settings::ESP::Chams::type)
+		{
+			case ChamsType::CHAMS_XQZ:
+			case ChamsType::CHAMS_FLAT_XQZ:
+			case ChamsType::CHAMS_PASTE_XQZ:
+				modelRender->ForcedMaterialOverride(hidden_material);
+				modelRenderVMT->GetOriginalMethod<DrawModelExecuteFn>(21)(thisptr, context, state, pInfo, pCustomBoneToWorld);
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	modelRender->ForcedMaterialOverride(visible_material);
@@ -157,11 +165,47 @@ static void DrawWeapon(const ModelRenderInfo_t &pInfo)
 	if (!Settings::ESP::Chams::Weapon::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
 
+	switch (Settings::ESP::Chams::Weapon::type)
+	{
+		case ViewChamsType::DEFAULT:
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::CHROME:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/crystal_clear", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::GOLD:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/gold", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PLASTIC:
+			mat = material->FindMaterial("models/extras/speech_info", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PULSE:
+			mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::THREESIXTY:
+			mat = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+
+		default:
+			break;
+	}
+
 	mat->ColorModulate(Settings::ESP::Chams::Weapon::color.Color());
 	mat->AlphaModulate(Settings::ESP::Chams::Weapon::color.Color().Value.w);
 
-	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Weapon::type == WeaponType::WIREFRAME);
-	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == WeaponType::NONE);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Weapon::type == ViewChamsType::WIREFRAME);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Weapon::type == ViewChamsType::NONE);
 	modelRender->ForcedMaterialOverride(mat);
 }
 
@@ -176,11 +220,44 @@ static void DrawArms(const ModelRenderInfo_t &pInfo)
 	if (!Settings::ESP::Chams::Arms::enabled)
 		mat = material->FindMaterial(modelName.c_str(), TEXTURE_GROUP_MODEL);
 
-	mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
-	mat->AlphaModulate(Settings::ESP::Chams::Arms::color.Color().Value.w);
+	switch (Settings::ESP::Chams::Arms::type)
+	{
+		case ViewChamsType::DEFAULT:
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::CHROME:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/crystal_clear", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::GOLD:
+			mat = material->FindMaterial("models/inventory_items/trophy_majors/gold", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PLASTIC:
+			mat = material->FindMaterial("models/extras/speech_info", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::PULSE:
+			mat = material->FindMaterial("models/inventory_items/dogtags/dogtags_outline", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
+		case ViewChamsType::THREESIXTY:
+			mat = material->FindMaterial("models/inventory_items/music_kit/darude_01/mp3_detail", TEXTURE_GROUP_OTHER);
+			mat->AlphaModulate(1.0f);
+			mat->ColorModulate(Settings::ESP::Chams::Arms::color.Color());
+			break;
 
-	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ArmsType::WIREFRAME);
-	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ArmsType::NONE);
+		default:
+			break;
+	}
+
+	mat->SetMaterialVarFlag(MATERIAL_VAR_WIREFRAME, Settings::ESP::Chams::Arms::type == ViewChamsType::WIREFRAME);
+	mat->SetMaterialVarFlag(MATERIAL_VAR_NO_DRAW, Settings::ESP::Chams::Arms::type == ViewChamsType::NONE);
 	modelRender->ForcedMaterialOverride(mat);
 }
 
@@ -204,7 +281,29 @@ void Chams::DrawModelExecute(void *thisptr, void *context, void *state, const Mo
 		materialChamsFlatIgnorez = Util::CreateMaterial(XORSTR("UnlitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, true, true);
 		materialChamsArms = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
 		materialChamsWeapons = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, true, true);
+		materialPasteChams = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), false, true, true, false, true, false, XORSTR("models/effects/cube_white"), true, XORSTR("[0 0.26 1]"), true, XORSTR("[0 1 2]"), 0.8, true, true, false, true);
+		materialPasteChamsIgnorez = Util::CreateMaterial(XORSTR("VertexLitGeneric"), XORSTR("VGUI/white_additive"), true, true, true, false, true, false, XORSTR("models/effects/cube_white"), true, XORSTR("[0 0.26 1]"), true, XORSTR("[0 1 2]"), 0.8, true, true, false, true);
 		materialsCreated = true;
+	}
+
+	// Moved this switch, because now I don't have to make checks in every function.
+	switch (Settings::ESP::Chams::type)
+	{
+		case ChamsType::CHAMS:
+		case ChamsType::CHAMS_XQZ:
+			visible_material = materialChams;
+			hidden_material = materialChamsIgnorez;
+			break;
+		case ChamsType::CHAMS_FLAT:
+		case ChamsType::CHAMS_FLAT_XQZ:
+			visible_material = materialChamsFlat;
+			hidden_material = materialChamsFlatIgnorez;
+			break;
+		case ChamsType::CHAMS_PASTE:
+		case ChamsType::CHAMS_PASTE_XQZ:
+			visible_material = materialPasteChams;
+			hidden_material = materialPasteChamsIgnorez;
+			break;
 	}
 
 	std::string modelName = modelInfo->GetModelName(pInfo.pModel);

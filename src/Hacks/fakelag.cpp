@@ -1,17 +1,18 @@
 #include "fakelag.h"
 
 #include "../Hooks/hooks.h"
+#include "../Utils/entity.h"
 #include "../interfaces.h"
 #include "../settings.h"
 
-bool FakeLag::lagSpike = false;
-
+// Variables responsible for limiting the maximum chokable ticks.
 static int ticks = 0;
 int ticksMax = 16;
 
+// Runs the fakelag process every tick.
 void FakeLag::CreateMove(CUserCmd *cmd)
 {
-	if (!Settings::FakeLag::enabled)
+	if (!Settings::FakeLag::enabled || Settings::FakeLag::value == 0)
 		return;
 
 	if (Settings::FakeDuck::enabled && inputSystem->IsButtonDown(Settings::FakeDuck::key))
@@ -22,16 +23,8 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 	if (!localplayer || !localplayer->GetAlive())
 		return;
 
-	if (/* (!Settings::FakeLag::States::enabled || Settings::FakeLag::States::standValue == 0) && */ localplayer->GetVelocity().Length() < 0.1f)
+	if (localplayer->GetVelocity().Length() < 0.1f)
 		return;
-
-	/*
-	if (Settings::FakeLag::States::airValue == 0 && !(localplayer->GetFlags() & FL_ONGROUND))
-		return;
-
-	if (Settings::FakeLag::States::moveValue == 0 && localplayer->GetVelocity().Length() > 0.0f)
-		return;
-	*/
 
 	if (cmd->buttons & IN_ATTACK)
 	{
@@ -44,21 +37,19 @@ void FakeLag::CreateMove(CUserCmd *cmd)
 		CreateMove::sendPacket = true;
 		ticks = 0;
 	}
-	else if (FakeLag::lagSpike)
-		CreateMove::sendPacket = false;
-	/*
-	else if (Settings::FakeLag::States::enabled)
+	else if (Settings::FakeLag::onPeek)
 	{
-		if (!(localplayer->GetFlags() & FL_ONGROUND))
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::airValue;
-		else if (localplayer->GetVelocity().Length() > 0.1f)
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::moveValue;
-		else
-			CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::States::standValue;
-	}
-	*/
-	else
-		CreateMove::sendPacket = ticks < 16 - Settings::FakeLag::value;
+		for (int i = 1; i < engine->GetMaxClients(); ++i)
+		{
+			C_BasePlayer *player = (C_BasePlayer *)entityList->GetClientEntity(i);
 
+			if (!player || player == localplayer || player->GetDormant() || !player->GetAlive() || player->GetImmune() || Entity::IsTeamMate(player, localplayer))
+				continue;
+
+			CreateMove::sendPacket = !Entity::IsSpotVisible(player, player->GetVecOrigin());
+		}
+	}
+
+	CreateMove::sendPacket = ticks < ticksMax - Settings::FakeLag::value;
 	ticks++;
 }
