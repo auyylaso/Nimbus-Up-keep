@@ -4,6 +4,8 @@
 #include "../settings.h"
 #include <sstream>
 
+static bool ClanTagChanged = false;
+
 static std::vector<std::wstring> splitWords(std::wstring text)
 {
 	std::wistringstream stream(text);
@@ -52,8 +54,11 @@ static ClanTagChanger::Animation Words(std::string name, std::wstring text)
 std::vector<ClanTagChanger::Animation> ClanTagChanger::animations = {
 	Marquee("--", L"--"),
 	Words("--", L"--"),
-	Letters("--", L"--")};
+	Letters("--", L"--")
+};
+
 ClanTagChanger::Animation *ClanTagChanger::animation = &ClanTagChanger::animations[0];
+
 void ClanTagChanger::UpdateClanTagCallback()
 {
 	if (strlen(Settings::ClanTagChanger::value) > 0 && Settings::ClanTagChanger::type > ClanTagType::STATIC)
@@ -87,30 +92,40 @@ void ClanTagChanger::UpdateClanTagCallback()
 	if (current_animation >= 0)
 		ClanTagChanger::animation = &ClanTagChanger::animations[current_animation];
 }
-void ClanTagChanger::CreateMove() // Fixed the clan-tag changer, I guess?
+void ClanTagChanger::CreateMove() // Fixed the clan-tag changer, I guess? "(You didn't fix it so lmfao should be better now tho) - auyy"
 {
-	if (!Settings::ClanTagChanger::enabled)
+	if (!Settings::ClanTagChanger::enabled){
 		return;
+	}
 
-	if (!engine->IsInGame())
+	if (!engine->IsInGame()){
+		ClanTagChanged = false;
 		return;
+	}
 
 	if (Settings::ClanTagChanger::type == ClanTagType::STATIC)
 	{
 		std::string ctWithEscapesProcessed = std::string(Settings::ClanTagChanger::value);
-		Util::StdReplaceStr(ctWithEscapesProcessed, "\\n", "\n"); // compute time impact? also, referential so i assume RAII builtin cleans it up...
-		SendClanTag(ctWithEscapesProcessed.c_str(), "");
+		//Util::StdReplaceStr(ctWithEscapesProcessed, "\\n", "\n"); // compute time impact? also, referential so i assume RAII builtin cleans it up...
+		if (!ctWithEscapesProcessed.empty() && !ClanTagChanged) {
+			SendClanTag(ctWithEscapesProcessed.c_str(), ctWithEscapesProcessed.c_str());
+			ClanTagChanged = true;
+		}
 	}
 	else
 	{
 		long currentTime_ms = Util::GetEpochTime();
 		static long timeStamp = currentTime_ms;
 
-		if (currentTime_ms - timeStamp > ClanTagChanger::animation->GetCurrentFrame().time)
-		{
+		if (currentTime_ms - timeStamp > ClanTagChanger::animation->GetCurrentFrame().time) {
 			timeStamp = currentTime_ms;
 			ClanTagChanger::animation->NextFrame();
+			if (!ClanTagChanger::animation->GetCurrentFrame().text.empty()) {
+				SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(),
+				            Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str());
+			}
 		}
-		SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(), "");
+		//SendClanTag(Util::WstringToString(ClanTagChanger::animation->GetCurrentFrame().text).c_str(), "");
 	}
 }
+//Some code taken from missit fork credit goes over to https://github.com/HackerPolice

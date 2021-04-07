@@ -147,13 +147,6 @@ enum class AimTargetType : int
 	HP,
 };
 
-enum class SpammerType : int
-{
-	SPAMMER_NONE,
-	SPAMMER_NORMAL,
-	SPAMMER_POSITIONS,
-};
-
 enum class AimbotType : int
 {
 	LEGIT,
@@ -886,41 +879,6 @@ namespace Settings
 		inline ColorVar color = ImColor( 255, 79, 56, 255 );
 	}	
 
-	namespace Spammer
-	{
-		inline SpammerType type = SpammerType::SPAMMER_NONE;
-		inline bool say_team = false;
-
-		namespace KillSpammer
-		{
-			inline bool enabled = false;
-			inline bool sayTeam = false;
-			inline std::vector<std::string> messages = {};
-		}
-
-		namespace RadioSpammer
-		{
-			inline bool enabled = false;
-		}
-
-		namespace NormalSpammer
-		{
-			inline std::vector<std::string> messages = {};
-		}
-
-		namespace PositionSpammer
-		{
-			inline int team = 1;
-			inline bool showName = true;
-			inline bool showWeapon = true;
-			inline bool showRank = true;
-			inline bool showWins = true;
-			inline bool showHealth = true;
-			inline bool showMoney = true;
-			inline bool showLastplace = true;
-		}
-	}
-
 	namespace BHop
 	{
 		inline bool enabled = false;
@@ -938,11 +896,6 @@ namespace Settings
 			inline bool enabledMin = false;
 			inline int Min = 3;
 		}
-	}
-
-	namespace NoDuckCooldown
-	{
-		inline bool enabled = false;
 	}
 
 	namespace AutoStrafe
@@ -1206,11 +1159,6 @@ namespace Settings
 	{
 		inline bool enabled = false;
 		inline ButtonCode_t key = ButtonCode_t::KEY_T;
-	}
-
-	namespace NoFall
-	{
-		inline bool enabled = false;
 	}
 
 	namespace DisablePostProcessing

@@ -409,29 +409,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("TracerEffects")][XORSTR("effect")] = (int)Settings::TracerEffects::effect;
 	settings[XORSTR("TracerEffects")][XORSTR("frequency")] = Settings::TracerEffects::frequency;
 
-	settings[XORSTR("Spammer")][XORSTR("spammer_type")] = (int)Settings::Spammer::type;
-	settings[XORSTR("Spammer")][XORSTR("say_team")] = Settings::Spammer::say_team;
-
-	settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("enabled")] = Settings::Spammer::KillSpammer::enabled;
-	settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("say_team")] = Settings::Spammer::KillSpammer::sayTeam;
-	Json::Value killSpammerMessages;
-	for (auto it : Settings::Spammer::KillSpammer::messages)
-		killSpammerMessages.append(it);
-	settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("messages")] = killSpammerMessages;
-
-	Json::Value normalSpammerMessages;
-	for (auto it : Settings::Spammer::NormalSpammer::messages)
-		normalSpammerMessages.append(it);
-	settings[XORSTR("Spammer")][XORSTR("NormalSpammer")][XORSTR("messages")] = normalSpammerMessages;
-
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_name")] = Settings::Spammer::PositionSpammer::showName;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_weapon")] = Settings::Spammer::PositionSpammer::showWeapon;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_rank")] = Settings::Spammer::PositionSpammer::showRank;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_wins")] = Settings::Spammer::PositionSpammer::showWins;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_health")] = Settings::Spammer::PositionSpammer::showHealth;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_money")] = Settings::Spammer::PositionSpammer::showMoney;
-	settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_lastplace")] = Settings::Spammer::PositionSpammer::showLastplace;
-
 	settings[XORSTR("BHop")][XORSTR("enabled")] = Settings::BHop::enabled;
 	settings[XORSTR("BHop")][XORSTR("Chance")][XORSTR("enabled")] = Settings::BHop::Chance::enabled;
 	settings[XORSTR("BHop")][XORSTR("Chance")][XORSTR("value")] = Settings::BHop::Chance::value;
@@ -439,8 +416,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Max")] = Settings::BHop::Hops::Max;
 	settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("enabledMin")] = Settings::BHop::Hops::enabledMin;
 	settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Min")] = Settings::BHop::Hops::Min;
-
-	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
 
 	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
 	settings[XORSTR("LagComp")][XORSTR("time")] = Settings::LagComp::time;
@@ -623,7 +598,6 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("ThirdPerson")][XORSTR("key")] = Util::GetButtonName(Settings::ThirdPerson::key);
 
 	settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")] = Settings::DisablePostProcessing::enabled;
-	settings[XORSTR("NoFall")][XORSTR("enabled")] = Settings::NoFall::enabled;
 
 	// settings[XORSTR("RapidFire")][XORSTR("enabled")] = Settings::RapidFire::enabled;
 
@@ -929,30 +903,6 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("Dlights")][XORSTR("enabled")], &Settings::Dlights::enabled);
 	GetVal(settings[XORSTR("Dlights")][XORSTR("radius")], &Settings::Dlights::radius);
 
-	GetVal(settings[XORSTR("Spammer")][XORSTR("spammer_type")], (int *)&Settings::Spammer::type);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("say_team")], &Settings::Spammer::say_team);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("enabled")], &Settings::Spammer::KillSpammer::enabled);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("say_team")], &Settings::Spammer::KillSpammer::sayTeam);
-	if (!settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("messages")].isNull())
-	{
-		Settings::Spammer::KillSpammer::messages.clear();
-		for (const Json::Value &message : settings[XORSTR("Spammer")][XORSTR("KillSpammer")][XORSTR("messages")])
-			Settings::Spammer::KillSpammer::messages.push_back(message.asString());
-	}
-	if (!settings[XORSTR("Spammer")][XORSTR("NormalSpammer")][XORSTR("messages")].isNull())
-	{
-		Settings::Spammer::NormalSpammer::messages.clear();
-		for (const Json::Value &message : settings[XORSTR("Spammer")][XORSTR("NormalSpammer")][XORSTR("messages")])
-			Settings::Spammer::NormalSpammer::messages.push_back(message.asString());
-	}
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_name")], &Settings::Spammer::PositionSpammer::showName);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_weapon")], &Settings::Spammer::PositionSpammer::showWeapon);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_rank")], &Settings::Spammer::PositionSpammer::showRank);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_wins")], &Settings::Spammer::PositionSpammer::showWins);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_health")], &Settings::Spammer::PositionSpammer::showHealth);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_money")], &Settings::Spammer::PositionSpammer::showMoney);
-	GetVal(settings[XORSTR("Spammer")][XORSTR("PositionSpammer")][XORSTR("show_lastplace")], &Settings::Spammer::PositionSpammer::showLastplace);
-
 	GetVal(settings[XORSTR("BHop")][XORSTR("enabled")], &Settings::BHop::enabled);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Chance")][XORSTR("enabled")], &Settings::BHop::Chance::enabled);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Chance")][XORSTR("value")], &Settings::BHop::Chance::value);
@@ -960,8 +910,6 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Max")], &Settings::BHop::Hops::Max);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("enabledMin")], &Settings::BHop::Hops::enabledMin);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Min")], &Settings::BHop::Hops::Min);
-
-	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
 	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
 	GetVal(settings[XORSTR("LagComp")][XORSTR("time")], &Settings::LagComp::time);
@@ -1175,8 +1123,6 @@ void Settings::LoadConfig(std::string path)
 	GetButtonCode(settings[XORSTR("ThirdPerson")][XORSTR("key")], &Settings::ThirdPerson::key);
 
 	GetVal(settings[XORSTR("DisablePostProcessing")][XORSTR("enabled")], &Settings::DisablePostProcessing::enabled);
-
-	GetVal(settings[XORSTR("NoFall")][XORSTR("enabled")], &Settings::NoFall::enabled);
 
 	// GetVal(settings[XORSTR("RapidFire")][XORSTR("enabled")], &Settings::RapidFire::enabled);
 
