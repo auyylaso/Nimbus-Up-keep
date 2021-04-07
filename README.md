@@ -50,7 +50,7 @@ sudo dnf install cmake gcc-c++ gdb git libstdc++-static mesa-libGL-devel SDL2-de
 #### Download Nimbus:
 
 ```bash
-git clone --recursive https://github.com/Zedespook/Nimbus
+git clone --recursive https://github.com/auyylaso/Nimbus-Up-keep
 ```
 
 ```bash
