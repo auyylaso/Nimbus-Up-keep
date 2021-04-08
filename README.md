@@ -150,6 +150,12 @@ To add a config, copy the folder containing it to `~/.config/FuzionGH`
 ![esp](http://i.imgur.com/lnF42Ng.png)
 
 # Changelog
+Version 1.7.0 (April 7th 2021)
+- Fixed clan tag
+- Removed spammer
+- cleaned up misc to match features with settings
+- cleaned up visual tab slightly
+
 Version 1.5.405 (I don't remember)
 - Added vote revealer
 
