@@ -52,9 +52,9 @@ enum class AutostrafeType : int
 
 enum class voteCastType : int
 {
-	Chat,
-	TeamSideChat,
 	Console,
+	TeamSideChat,
+	Chat,
 
 };
 
