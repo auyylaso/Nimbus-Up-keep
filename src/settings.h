@@ -898,6 +898,11 @@ namespace Settings
 		}
 	}
 
+	namespace NoDuckCooldown
+	{
+		inline bool enabled = false;
+	}
+
 	namespace AutoStrafe
 	{
 		inline bool enabled = false;
