@@ -18,6 +18,7 @@
 #include "../Hacks/grenadehelper.h"
 #include "../Hacks/grenadeprediction.h"
 #include "../Hacks/lagcomp.h"
+#include "../Hacks/noduckcooldown.h"
 #include "../Hacks/predictionsystem.h"
 #include "../Hacks/showranks.h"
 #include "../Hacks/tracereffect.h"
@@ -43,6 +44,7 @@ bool Hooks::CreateMove(void *thisptr, float flInputSampleTime, CUserCmd *cmd)
 
 		/* run code that affects movement before prediction */
 		BHop::CreateMove(cmd);
+		NoDuckCooldown::CreateMove(cmd);
 		AutoStrafe::CreateMove(cmd);
 		ShowRanks::CreateMove(cmd);
 		AutoDefuse::CreateMove(cmd);

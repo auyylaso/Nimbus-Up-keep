@@ -30,6 +30,7 @@ void Misc::RenderTab()
 	const char *teams[] = {"Allies", "Enemies", "Both"};
 	const char *grenadeTypes[] = {"FLASH", "SMOKE", "MOLOTOV", "HEGRENADE"};
 	const char *throwTypes[] = {"NORMAL", "RUN", "JUMP", "WALK"};
+	const char *fakeDuckTypes[] = {"HOLD", "TOGGLE"};
 
 	ImGui::Columns(2, nullptr, true);
 	{
@@ -291,6 +292,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Show Votes"), &Settings::voteCast::enabled);
 				ImGui::Checkbox(XORSTR("Autoblock"), &Settings::Autoblock::enabled);
 				ImGui::Checkbox(XORSTR("Backtrack"), &Settings::LagComp::enabled);
+				ImGui::Checkbox(XORSTR("Fake Duck"), &Settings::FakeDuck::enabled);
 				ImGui::Checkbox(XORSTR("Screenshot Cleaner"), &Settings::ScreenshotCleaner::enabled);
 				ImGui::Checkbox(XORSTR("Auto Accept"), &Settings::AutoAccept::enabled);
 				ImGui::Checkbox(XORSTR("Auto Defuse"), &Settings::AutoDefuse::enabled);
@@ -299,6 +301,7 @@ void Misc::RenderTab()
 				ImGui::Checkbox(XORSTR("Show Ranks"), &Settings::ShowRanks::enabled);
 				ImGui::Checkbox(XORSTR("Silent Defuse"), &Settings::AutoDefuse::silent);
 				ImGui::Checkbox(XORSTR("Auto Crouch"), &Settings::Aimbot::AutoCrouch::enabled);
+				ImGui::Checkbox(XORSTR("No Duck Cooldown"), &Settings::NoDuckCooldown::enabled);
 			}
 			ImGui::NextColumn();
 			{
@@ -306,6 +309,8 @@ void Misc::RenderTab()
 				ImGui::Combo(XORSTR("##SHOWVOTETYPE"), (int *)&Settings::voteCast::type, voteCastTypes, IM_ARRAYSIZE(voteCastTypes));
 				UI::KeyBindButton(&Settings::Autoblock::key);
 				ImGui::SliderFloat(XORSTR("##TRACKTIME"), &Settings::LagComp::time, 0.0f, 0.2f);
+				UI::KeyBindButton(&Settings::FakeDuck::key);
+				ImGui::Combo(XORSTR("##FAKEDUCKTYPE"), (int *)&Settings::FakeDuck::type, fakeDuckTypes, IM_ARRAYSIZE(fakeDuckTypes));
 			}
 			ImGui::Columns(1);
 			ImGui::Separator();
