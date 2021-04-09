@@ -417,6 +417,8 @@ void Settings::LoadDefaultsOrSave(std::string path)
 	settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("enabledMin")] = Settings::BHop::Hops::enabledMin;
 	settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Min")] = Settings::BHop::Hops::Min;
 
+	settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")] = Settings::NoDuckCooldown::enabled;
+
 	settings[XORSTR("LagComp")][XORSTR("enabled")] = Settings::LagComp::enabled;
 	settings[XORSTR("LagComp")][XORSTR("time")] = Settings::LagComp::time;
 
@@ -910,6 +912,8 @@ void Settings::LoadConfig(std::string path)
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Max")], &Settings::BHop::Hops::Max);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("enabledMin")], &Settings::BHop::Hops::enabledMin);
 	GetVal(settings[XORSTR("BHop")][XORSTR("Hops")][XORSTR("Min")], &Settings::BHop::Hops::Min);
+
+	GetVal(settings[XORSTR("NoDuckCooldown")][XORSTR("enabled")], &Settings::NoDuckCooldown::enabled);
 
 	GetVal(settings[XORSTR("LagComp")][XORSTR("enabled")], &Settings::LagComp::enabled);
 	GetVal(settings[XORSTR("LagComp")][XORSTR("time")], &Settings::LagComp::time);
